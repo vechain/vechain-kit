@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { LuCircleCheck, LuLockKeyhole, LuTriangleAlert } from 'react-icons/lu';
 import { lookupAppByUrl } from '../cross-app/_lib/app-hub';
 import styles from './RequesterChip.module.css';
@@ -27,6 +28,7 @@ type ChipKind =
  * ambiguous. One glyph, one chip background; the colour does the talking.
  */
 export function RequesterChip({ url }: Props) {
+    const { t } = useTranslation();
     const parsed = safeParseUrl(url);
     if (!parsed) {
         return <span className={styles.fallback}>{url}</span>;
@@ -40,10 +42,10 @@ export function RequesterChip({ url }: Props) {
                 <span className={`${styles.chip} ${styles.chipWarn}`}>
                     <LuTriangleAlert
                         className={`${styles.icon} ${styles.iconWarn}`}
-                        aria-label="Local development site"
+                        aria-label={t('requester.localDev')}
                     />
                     <span className={styles.label}>
-                        Local development site
+                        {t('requester.localDev')}
                         <span className={styles.sep}> · </span>
                         <span className={styles.host}>{chip.host}</span>
                     </span>
@@ -54,7 +56,6 @@ export function RequesterChip({ url }: Props) {
                 <span className={`${styles.chip} ${styles.chipWarn}`}>
                     <LuTriangleAlert
                         className={`${styles.icon} ${styles.iconWarn}`}
-                        aria-label="Not encrypted (HTTP)"
                     />
                     <span className={styles.host}>{chip.host}</span>
                 </span>
@@ -64,7 +65,6 @@ export function RequesterChip({ url }: Props) {
                 <span className={`${styles.chip} ${styles.chipVerified}`}>
                     <LuCircleCheck
                         className={`${styles.icon} ${styles.iconVerified}`}
-                        aria-label="Listed in the VeChain App Hub"
                     />
                     <span className={styles.label}>{chip.name}</span>
                 </span>
@@ -74,7 +74,6 @@ export function RequesterChip({ url }: Props) {
                 <span className={styles.chip}>
                     <LuLockKeyhole
                         className={`${styles.icon} ${styles.iconSecure}`}
-                        aria-label="Secure (HTTPS)"
                     />
                     <span className={styles.host}>{chip.host}</span>
                 </span>

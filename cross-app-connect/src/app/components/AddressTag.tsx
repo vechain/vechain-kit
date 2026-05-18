@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { LuCircleCheck, LuTriangleAlert } from 'react-icons/lu';
 import { resolveContractLabel } from '../cross-app/_lib/contracts';
 import { useAddressInfo } from '../cross-app/_lib/useAddressInfo';
@@ -30,6 +31,7 @@ export function AddressTag({
     kind = 'contract',
     avatarSize = 20,
 }: Props) {
+    const { t } = useTranslation();
     const { domain, avatar } = useAddressInfo(address);
     const resolved = resolveContractLabel(address, self);
 
@@ -50,8 +52,8 @@ export function AddressTag({
                 {resolved.verified && (
                     <LuCircleCheck
                         className={styles.iconVerified}
-                        aria-label="Verified"
-                        title="Verified VeChain contract"
+                        aria-label={t('addressTag.verifiedContract')}
+                        title={t('addressTag.verifiedContract')}
                     />
                 )}
             </span>
@@ -83,8 +85,8 @@ export function AddressTag({
             {kind === 'contract' && (
                 <LuTriangleAlert
                     className={styles.iconWarn}
-                    aria-label="Unverified"
-                    title="Unverified contract — make sure you trust it before continuing"
+                    aria-label={t('addressTag.unverifiedContract')}
+                    title={t('addressTag.unverifiedContract')}
                 />
             )}
         </span>

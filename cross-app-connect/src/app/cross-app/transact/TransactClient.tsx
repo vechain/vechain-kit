@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     LuChevronDown,
     LuChevronUp,
@@ -137,6 +138,7 @@ function parseClauses(typedData: SmartAccountTypedData): Clause[] {
 
 
 export function TransactClient() {
+    const { t } = useTranslation();
     const client = useCrossAppClient();
     const {
         ready,
@@ -429,13 +431,10 @@ export function TransactClient() {
     if (parseError?.kind === 'no_params') {
         return (
             <>
-                <VechainHeader title="No transaction request" />
+                <VechainHeader title={t('transact.title.noRequest')} />
                 <div className={styles.card}>
                     <p className={styles.fallbackText}>
-                        This page handles cross-app transaction requests from
-                        other VeChain dApps. It can&apos;t be opened directly
-                        &mdash; the requesting app will open it with the
-                        parameters it needs.
+                        {t('transact.noRequestBody')}
                     </p>
                 </div>
             </>
@@ -445,7 +444,7 @@ export function TransactClient() {
     if (!ready) {
         return (
             <>
-                <VechainHeader title="Reviewing transaction" />
+                <VechainHeader title={t('transact.title.reviewing')} />
                 <div className={styles.center}>
                     <div className={styles.spinner} />
                 </div>
@@ -457,8 +456,8 @@ export function TransactClient() {
         return (
             <>
                 <VechainHeader
-                    title="Sign in to continue"
-                    subtitle="A signing request is waiting. Sign in to review it."
+                    title={t('transact.title.signIn')}
+                    subtitle={t('transact.subtitle.signInWaiting')}
                 />
                 <div className={styles.card}>
                     <button
@@ -466,7 +465,7 @@ export function TransactClient() {
                         className={styles.btnBrand}
                         onClick={() => login()}
                     >
-                        Continue
+                        {t('common.button.continue')}
                     </button>
                 </div>
             </>
@@ -476,7 +475,7 @@ export function TransactClient() {
     if (parseError?.kind === 'invalid') {
         return (
             <>
-                <VechainHeader title="Couldn't load request" />
+                <VechainHeader title={t('transact.title.couldNotLoad')} />
                 <div className={`${styles.alert} ${styles.alertError}`}>
                     {parseError.message}
                 </div>
@@ -492,7 +491,7 @@ export function TransactClient() {
     if (!verified || !parsed || !smartAccount?.address) {
         return (
             <>
-                <VechainHeader title="Reviewing transaction" />
+                <VechainHeader title={t('transact.title.reviewing')} />
                 <div className={styles.center}>
                     <div className={styles.spinner} />
                 </div>
@@ -515,16 +514,16 @@ export function TransactClient() {
     const title = isSmartAccount
         ? titleForActions(decoded, blocked)
         : parsed.kind === 'message'
-        ? 'Sign a message'
-        : 'Sign data';
+        ? t('transact.title.signMessage')
+        : t('transact.title.signData');
     const subtitle = isSmartAccount
         ? decoded
             ? summarizeActions(decoded)
-            : 'Checking what this does…'
+            : ''
         : parsed.kind === 'message'
-        ? 'Review the message this app wants you to sign.'
-        : 'Review the data this app wants you to sign.';
-    const ctaLabel = isSmartAccount ? continueLabel(risk) : 'Sign';
+        ? t('transact.subtitle.reviewMessage')
+        : t('transact.subtitle.reviewData');
+    const ctaLabel = isSmartAccount ? continueLabel(risk) : t('transact.button.sign');
     // Always surface the smart account as "your account" -- it's the address
     // apps see on-chain and where the user's identity sits. The embedded EOA
     // is an implementation detail; for personal_sign / generic typed data
@@ -557,7 +556,7 @@ export function TransactClient() {
                     {parsed.kind === 'smart_account' && (
                         <div className={styles.section}>
                             <p className={styles.sectionHeader}>
-                                Actions to approve
+                                {t('transact.section.actionsToApprove')}
                             </p>
                             {stillDecoding ? (
                                 <div className={styles.actionList}>
@@ -598,15 +597,13 @@ export function TransactClient() {
 
                     {!blocked && hasUnknown && (
                         <div className={`${styles.alert} ${styles.alertWarn}`}>
-                            We couldn&rsquo;t double-check every step, so only
-                            continue if you trust this app.
+                            {t('transact.alert.unverifiedStep')}
                         </div>
                     )}
 
                     {!blocked && !hasUnknown && hasUnlimitedApprove && (
                         <div className={`${styles.alert} ${styles.alertWarn}`}>
-                            This app is asking for unlimited access to one of
-                            your tokens — make sure you trust it.
+                            {t('transact.alert.unlimitedApprove')}
                         </div>
                     )}
 
@@ -622,7 +619,7 @@ export function TransactClient() {
                         onClick={onApprove}
                         disabled={continueDisabled}
                     >
-                        {submitting ? 'Signing…' : ctaLabel}
+                        {submitting ? t('transact.button.signing') : ctaLabel}
                     </button>
                     <button
                         type="button"
@@ -630,19 +627,21 @@ export function TransactClient() {
                         onClick={onReject}
                         disabled={submitting}
                     >
-                        Cancel
+                        {t('common.button.cancel')}
                     </button>
 
                     <div className={styles.inspectRow}>
                         <span className={styles.muted}>
-                            Want the technical details?
+                            {t('transact.inspect.prompt')}
                         </span>
                         <button
                             type="button"
                             className={styles.linkBtn}
                             onClick={() => setInspectOpen((s) => !s)}
                         >
-                            {inspectOpen ? 'Hide' : 'Inspect'}
+                            {inspectOpen
+                                ? t('transact.inspect.hide')
+                                : t('transact.inspect.show')}
                             {inspectOpen ? (
                                 <LuChevronUp size={12} />
                             ) : (
@@ -659,21 +658,21 @@ export function TransactClient() {
                     >
                         <div className={styles.detailsList}>
                             <DetailRow
-                                label="Your account"
+                                label={t('transact.detail.yourAccount')}
                                 value={
                                     accountChipAddress
                                         ? truncateAddress(accountChipAddress)
-                                        : 'resolving…'
+                                        : t('transact.detail.resolving')
                                 }
                             />
                             <DetailRow
-                                label="Network"
-                                value={networkLabel(networkType)}
+                                label={t('transact.detail.network')}
+                                value={networkLabel(networkType, t)}
                             />
                             {parsed.kind === 'smart_account' && (
                                 <>
                                     <DetailRow
-                                        label="Type"
+                                        label={t('transact.detail.type')}
                                         value={humanPrimaryType(
                                             parsed.typedData.primaryType,
                                         )}
@@ -681,8 +680,8 @@ export function TransactClient() {
                                     <div className={styles.clauseStack}>
                                         <p className={styles.typedHead}>
                                             {parsed.clauses.length === 1
-                                                ? 'Clause'
-                                                : `Clauses (${parsed.clauses.length})`}
+                                                ? t('transact.detail.clauseSingular')
+                                                : t('transact.detail.clausePlural', { count: parsed.clauses.length })}
                                         </p>
                                         {parsed.clauses.map((c, i) => (
                                             <RawClauseRow
@@ -698,19 +697,19 @@ export function TransactClient() {
                             {parsed.kind === 'typed_data' && (
                                 <>
                                     <DetailRow
-                                        label="Type"
+                                        label={t('transact.detail.type')}
                                         value={humanPrimaryType(
                                             parsed.typedData.primaryType,
                                         )}
                                     />
                                     {parsed.typedData.domain.name && (
                                         <DetailRow
-                                            label="Domain"
+                                            label={t('transact.detail.domain')}
                                             value={parsed.typedData.domain.name}
                                         />
                                     )}
                                     <RawJsonBlock
-                                        label="Raw data"
+                                        label={t('transact.detail.rawData')}
                                         value={JSON.stringify(
                                             parsed.typedData,
                                             null,
@@ -721,7 +720,7 @@ export function TransactClient() {
                             )}
                             {parsed.kind === 'message' && (
                                 <RawJsonBlock
-                                    label="Raw hex"
+                                    label={t('transact.detail.rawHex')}
                                     value={parsed.raw}
                                 />
                             )}
@@ -734,10 +733,13 @@ export function TransactClient() {
 }
 
 function MessageView({ message }: { message: string }) {
+    const { t } = useTranslation();
     return (
         <div className={styles.subPanel}>
-            <p className={styles.subPanelLabel}>Message</p>
-            <p className={styles.messageBody}>{message || '(empty message)'}</p>
+            <p className={styles.subPanelLabel}>{t('transact.detail.message')}</p>
+            <p className={styles.messageBody}>
+                {message || t('transact.detail.emptyMessage')}
+            </p>
         </div>
     );
 }
@@ -801,28 +803,40 @@ function TypedField({
                 {humanizeFieldName(label)}
             </span>
             <div className={styles.typedFieldValue}>
-                {renderTypedValue(type, value, types)}
+                <TypedValue type={type} value={value} types={types} />
             </div>
         </div>
     );
 }
 
-function renderTypedValue(
-    type: string,
-    value: unknown,
-    types: Record<string, Array<{ name: string; type: string }>>,
-): React.ReactNode {
+function TypedValue({
+    type,
+    value,
+    types,
+}: {
+    type: string;
+    value: unknown;
+    types: Record<string, Array<{ name: string; type: string }>>;
+}) {
+    const { t } = useTranslation();
+
     // Array type: render each entry recursively.
     if (type.endsWith('[]')) {
         const elemType = type.slice(0, -2);
         const arr = Array.isArray(value) ? value : [];
         if (arr.length === 0) {
-            return <span style={{ color: 'var(--text-subtle)' }}>(empty)</span>;
+            return (
+                <span style={{ color: 'var(--text-subtle)' }}>
+                    {t('common.empty')}
+                </span>
+            );
         }
         return (
             <ul className={styles.typedFieldList}>
                 {arr.map((entry, i) => (
-                    <li key={i}>{renderTypedValue(elemType, entry, types)}</li>
+                    <li key={i}>
+                        <TypedValue type={elemType} value={entry} types={types} />
+                    </li>
                 ))}
             </ul>
         );
@@ -851,7 +865,7 @@ function renderTypedValue(
         return <AddressTag address={value} kind="recipient" />;
     }
     if (type === 'bool') {
-        return <span>{value ? 'Yes' : 'No'}</span>;
+        return <span>{value ? t('common.yes') : t('common.no')}</span>;
     }
     if (type === 'string') {
         return <span>{String(value)}</span>;
@@ -939,12 +953,15 @@ function ActionRowDetail({
     action: DecodedClause;
     self?: string;
 }) {
+    const { t } = useTranslation();
     switch (action.kind) {
         case 'native_transfer':
         case 'token_transfer':
             return (
                 <p className={styles.actionDetail}>
-                    <span className={styles.actionDetailLabel}>To</span>
+                    <span className={styles.actionDetailLabel}>
+                        {t('transact.detail.to')}
+                    </span>
                     <AddressTag
                         address={action.recipient}
                         self={self}
@@ -955,7 +972,9 @@ function ActionRowDetail({
         case 'token_approve':
             return (
                 <p className={styles.actionDetail}>
-                    <span className={styles.actionDetailLabel}>Spender</span>
+                    <span className={styles.actionDetailLabel}>
+                        {t('transact.detail.spender')}
+                    </span>
                     <AddressTag
                         address={action.spender}
                         self={self}
@@ -967,7 +986,9 @@ function ActionRowDetail({
             if (action.recipient) {
                 return (
                     <p className={styles.actionDetail}>
-                        <span className={styles.actionDetailLabel}>To</span>
+                        <span className={styles.actionDetailLabel}>
+                            {t('transact.detail.to')}
+                        </span>
                         <AddressTag
                             address={action.recipient}
                             self={self}
@@ -979,7 +1000,9 @@ function ActionRowDetail({
             if (action.spender) {
                 return (
                     <p className={styles.actionDetail}>
-                        <span className={styles.actionDetailLabel}>Operator</span>
+                        <span className={styles.actionDetailLabel}>
+                            {t('transact.detail.operator')}
+                        </span>
                         <AddressTag
                             address={action.spender}
                             self={self}
@@ -998,14 +1021,14 @@ function ActionRowDetail({
             if (action.signature) {
                 return (
                     <p className={styles.actionDetail}>
-                        Function: {action.signature}
+                        {t('transact.detail.function', { signature: action.signature })}
                     </p>
                 );
             }
             if (action.selector) {
                 return (
                     <p className={styles.actionDetail}>
-                        Selector: {action.selector}
+                        {t('transact.detail.selector', { selector: action.selector })}
                     </p>
                 );
             }
@@ -1041,6 +1064,7 @@ function RawClauseRow({
     index: number;
     total: number;
 }) {
+    const { t } = useTranslation();
     const [showRaw, setShowRaw] = useState(false);
     const valueWei = parseValueOrZero(clause.value);
     const hasValue = valueWei > BigInt(0);
@@ -1049,13 +1073,16 @@ function RawClauseRow({
         <div className={styles.subPanel}>
             <div className={styles.clauseHeader}>
                 <span className={styles.detailLabel}>
-                    Clause {index + 1} of {total} · to
+                    {t('transact.detail.clauseLabel', {
+                        index: index + 1,
+                        total,
+                    })}
                 </span>
                 <AddressTag address={clause.to} />
             </div>
             {hasValue && (
                 <DetailRow
-                    label="Value"
+                    label={t('transact.detail.value')}
                     value={`${formatAmount(valueWei, 18)} VET`}
                 />
             )}
@@ -1066,7 +1093,9 @@ function RawClauseRow({
                         className={styles.linkBtn}
                         onClick={() => setShowRaw((s) => !s)}
                     >
-                        {showRaw ? 'Hide raw calldata' : 'Show raw calldata'}
+                        {showRaw
+                            ? t('transact.detail.hideCalldata')
+                            : t('transact.detail.showCalldata')}
                         {showRaw ? (
                             <LuChevronUp size={12} />
                         ) : (
@@ -1107,14 +1136,17 @@ function DetailRow({
     );
 }
 
-function networkLabel(type: string): string {
+function networkLabel(
+    type: string,
+    t: (key: string) => string,
+): string {
     switch (type) {
         case 'main':
-            return 'VeChain Mainnet';
+            return t('transact.network.mainnet');
         case 'test':
-            return 'VeChain Testnet';
+            return t('transact.network.testnet');
         case 'solo':
-            return 'Local Thor Solo';
+            return t('transact.network.solo');
         default:
             return type;
     }

@@ -1,29 +1,31 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import { VechainHeader } from './components/VechainHeader';
 import styles from './page.module.css';
 
 export default function LandingPage() {
+    const { t } = useTranslation();
     return (
         <main className={styles.shell}>
             <VechainHeader
-                title="VeChain Cross-App Connect"
-                subtitle="Whitelabel host for Privy cross-app connection and transaction flows."
+                title={t('landing.title')}
+                subtitle={t('landing.subtitle')}
             />
             <section>
-                <h2 className={styles.heading}>Routes</h2>
+                <h2 className={styles.heading}>{t('landing.routes')}</h2>
                 <ul className={styles.list}>
                     <li>
                         <code className={styles.code}>/cross-app/connect</code>
-                        {' '}&mdash; handles connection requests
+                        {' '}&mdash; {t('landing.connectDesc')}
                     </li>
                     <li>
                         <code className={styles.code}>/cross-app/transact</code>
-                        {' '}&mdash; handles transaction / signing requests
+                        {' '}&mdash; {t('landing.transactDesc')}
                     </li>
                 </ul>
             </section>
-            <p className={styles.footer}>
-                This page isn&apos;t opened directly by users.
-            </p>
+            <p className={styles.footer}>{t('landing.footer')}</p>
         </main>
     );
 }

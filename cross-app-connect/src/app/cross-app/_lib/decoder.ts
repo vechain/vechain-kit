@@ -28,7 +28,11 @@ import {
     recognizeKnownAction,
     type KnownAction,
     type KnownActionCategory,
+    type KnownActionData,
 } from './knownActions';
+import i18n from '../../i18n/config';
+
+const t = i18n.t.bind(i18n);
 
 const ERC20_ABI = parseAbi([
     'function transfer(address to, uint256 amount)',
@@ -91,6 +95,10 @@ export type DecodedClause =
           category: KnownActionCategory;
           recipient?: string;
           spender?: string;
+          /** Structured fields the batch subtitle logic reads instead of
+           *  parsing localized summaries. Populated by each known-action
+           *  decoder when relevant; see `KnownActionData` in knownActions.ts. */
+          data?: KnownActionData;
       }
     | {
           kind: 'unknown';
@@ -122,7 +130,7 @@ export async function decodeClause(
             kind: 'native_transfer',
             recipient: clause.to,
             amount,
-            summary: `Send ${trimAmount(amount)} VET`,
+            summary: t('action.transfer.native', { amount: trimAmount(amount) }),
         };
     }
 
@@ -154,7 +162,10 @@ export async function decodeClause(
                         recipient,
                         token,
                         amount,
-                        summary: `Send ${trimAmount(amount)} ${token.symbol}`,
+                        summary: t('action.transfer.token', {
+                            amount: trimAmount(amount),
+                            symbol: token.symbol,
+                        }),
                     };
                 }
                 if (decoded.functionName === 'approve') {
@@ -173,8 +184,13 @@ export async function decodeClause(
                         amount,
                         unlimited,
                         summary: unlimited
-                            ? `Allow unlimited ${token.symbol} spending`
-                            : `Allow spending up to ${trimAmount(amount)} ${token.symbol}`,
+                            ? t('action.approve.unlimited', {
+                                  symbol: token.symbol,
+                              })
+                            : t('action.approve.upTo', {
+                                  amount: trimAmount(amount),
+                                  symbol: token.symbol,
+                              }),
                     };
                 }
             } catch {
@@ -198,6 +214,7 @@ export async function decodeClause(
             category: known.category,
             recipient: known.recipient,
             spender: known.spender,
+            data: known.data,
         };
     }
 
@@ -212,19 +229,19 @@ export async function decodeClause(
                 selector,
                 functionName: fnName,
                 signature: sig,
-                summary: `Run ${humanize(fnName)} on a contract`,
+                summary: t('action.unknown.runOn', { fn: humanize(fnName) }),
             };
         }
         return {
             kind: 'unknown',
             selector,
-            summary: 'Interact with a contract',
+            summary: t('action.unknown.interact'),
         };
     }
 
     return {
         kind: 'unknown',
-        summary: 'Interact with a contract',
+        summary: t('action.unknown.interact'),
     };
 }
 
@@ -288,7 +305,7 @@ async function lookupToken(
     const cached = tokenInfoCache.get(lower);
     if (cached) return cached;
     if (!thor) {
-        return { address, symbol: 'tokens', decimals: 18 };
+        return { address, symbol: t('common.tokens'), decimals: 18 };
     }
     try {
         const contract = thor.contracts.load(address, ERC20_METADATA_ABI);
@@ -306,7 +323,7 @@ async function lookupToken(
     } catch {
         const fallback: TokenInfo = {
             address,
-            symbol: 'tokens',
+            symbol: t('common.tokens'),
             decimals: 18,
         };
         tokenInfoCache.set(lower, fallback);

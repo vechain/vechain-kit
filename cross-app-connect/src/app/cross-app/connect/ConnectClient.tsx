@@ -7,6 +7,7 @@ import {
     useRef,
     useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SiFarcaster } from 'react-icons/si';
 import { LuPhone } from 'react-icons/lu';
 import {
@@ -78,6 +79,7 @@ function isOAuthIntent(value: IntentMethod | null): value is OAuthProvider {
 }
 
 export function ConnectClient() {
+    const { t } = useTranslation();
     const client = useCrossAppClient();
     const { ready, authenticated, user, getAccessToken } = usePrivy();
     const { wallets } = useWallets();
@@ -237,13 +239,10 @@ export function ConnectClient() {
     if (phase === 'no_params') {
         return (
             <>
-                <VechainHeader title="VeChain Cross-App Connect" />
+                <VechainHeader title={t('connect.title.default')} />
                 <div className={styles.card}>
                     <p className={styles.fallbackText}>
-                        This page handles cross-app connection requests from
-                        other VeChain dApps. It can&apos;t be opened directly
-                        &mdash; the requesting app will open it with the
-                        parameters it needs.
+                        {t('connect.copy.noRequestBody')}
                     </p>
                 </div>
             </>
@@ -253,11 +252,11 @@ export function ConnectClient() {
     if (phase === 'parse_error') {
         return (
             <>
-                <VechainHeader title="Couldn't load request" />
+                <VechainHeader title={t('connect.title.couldNotLoad')} />
                 <div className={`${styles.alert} ${styles.alertError}`}>
                     {parseError?.kind === 'invalid'
                         ? parseError.message
-                        : 'Invalid connection request'}
+                        : t('connect.title.couldNotLoad')}
                 </div>
             </>
         );
@@ -271,8 +270,8 @@ export function ConnectClient() {
         return (
             <>
                 <VechainHeader
-                    title="Log in to your wallet"
-                    subtitle="Connecting…"
+                    title={t('connect.title.logIn')}
+                    subtitle={t('connect.subtitle.connecting')}
                     requesterUrl={request?.callbackUrl}
                 />
                 <div className={styles.center}>
@@ -286,7 +285,7 @@ export function ConnectClient() {
         return (
             <>
                 <VechainHeader
-                    subtitle="Sign in to grant access to"
+                    subtitle={t('connect.subtitle.grantAccessTo')}
                     requesterUrl={request?.callbackUrl}
                 />
                 <SignInPanel intent={intent} onCancel={onReject} />
@@ -301,13 +300,13 @@ export function ConnectClient() {
             <VechainHeader
                 title={
                     appHubEntry
-                        ? `Connect to ${appHubEntry.name}`
-                        : 'Confirm connection'
+                        ? t('connect.title.connectTo', { app: appHubEntry.name })
+                        : t('connect.title.confirmConnection')
                 }
                 subtitle={
                     appHubEntry
                         ? undefined
-                        : 'You haven’t connected here before'
+                        : t('connect.subtitle.notBefore')
                 }
                 requesterUrl={request?.callbackUrl}
             />
@@ -319,8 +318,7 @@ export function ConnectClient() {
                     />
                     {!verifiedApp && (
                         <div className={`${styles.alert} ${styles.alertWarn}`}>
-                            This app isn&rsquo;t listed in the VeChain App Hub,
-                            so only continue if you trust the site.
+                            {t('connect.alert.notListed')}
                         </div>
                     )}
                     {submitError && (
@@ -335,10 +333,10 @@ export function ConnectClient() {
                         disabled={!embedded || submitting}
                     >
                         {submitting
-                            ? 'Connecting…'
+                            ? t('connect.button.connecting')
                             : verifiedApp
-                            ? 'Continue'
-                            : 'Continue anyway'}
+                            ? t('common.button.continue')
+                            : t('common.button.continueAnyway')}
                     </button>
                     <button
                         type="button"
@@ -346,10 +344,12 @@ export function ConnectClient() {
                         onClick={onReject}
                         disabled={submitting}
                     >
-                        Cancel
+                        {t('common.button.cancel')}
                     </button>
                     <div className={styles.notYouRow}>
-                        <span className={styles.muted}>Not you?</span>
+                        <span className={styles.muted}>
+                            {t('connect.copy.notYou')}
+                        </span>
                         <button
                             type="button"
                             className={styles.linkBtn}
@@ -362,7 +362,7 @@ export function ConnectClient() {
                                 )
                             }
                         >
-                            Use another account
+                            {t('connect.button.useAnotherAccount')}
                         </button>
                     </div>
                 </div>
@@ -380,6 +380,7 @@ function SignInPanel({
     intent: IntentMethod | null;
     onCancel: () => void;
 }) {
+    const { t } = useTranslation();
     const [error, setError] = useState<string | null>(null);
     const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
         onError: (e) => setError(String(e)),
@@ -470,7 +471,9 @@ function SignInPanel({
                                     className={styles.linkBtn}
                                     onClick={() => setShowOther(true)}
                                 >
-                                    + {rows.other.length + 1} more options
+                                    {t('connect.provider.moreOptions', {
+                                        count: rows.other.length + 1,
+                                    })}
                                 </button>
                             </div>
                         )}
@@ -516,15 +519,14 @@ function SignInPanel({
                     <div className={styles.cardBodyTight}>
                         <input
                             type="tel"
-                            placeholder="+1 555 555 5555"
+                            placeholder={t('connect.phone.placeholder')}
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             autoFocus
                             className={styles.inputRow}
                         />
                         <p className={styles.muted}>
-                            Include the country code, e.g. +1 for US, +44 for
-                            UK.
+                            {t('connect.phone.codeHint')}
                         </p>
                         <button
                             type="button"
@@ -532,14 +534,16 @@ function SignInPanel({
                             onClick={onSendCode}
                             disabled={!phone || sendingCode}
                         >
-                            {sendingCode ? 'Sending…' : 'Send code'}
+                            {sendingCode
+                                ? t('connect.phone.sending')
+                                : t('connect.phone.sendCode')}
                         </button>
                         <button
                             type="button"
                             className={`${styles.btnGhost} ${styles.btnSm}`}
                             onClick={() => setView('picker')}
                         >
-                            Back
+                            {t('common.button.back')}
                         </button>
                     </div>
                 )}
@@ -547,8 +551,7 @@ function SignInPanel({
                 {view === 'phone' && (awaitingCode || submittingCode) && (
                     <div className={styles.cardBodyTight}>
                         <p className={styles.mutedBody}>
-                            We sent a 6-digit code to{' '}
-                            <span className={styles.strong}>{phone}</span>.
+                            {t('connect.phone.codeSent', { phone })}
                         </p>
                         <div className={styles.pinRow}>
                             <PinInput
@@ -568,7 +571,9 @@ function SignInPanel({
                             onClick={onSubmitCode}
                             disabled={code.length !== 6 || submittingCode}
                         >
-                            {submittingCode ? 'Verifying…' : 'Verify'}
+                            {submittingCode
+                                ? t('connect.phone.verifying')
+                                : t('connect.phone.verify')}
                         </button>
                         <button
                             type="button"
@@ -578,7 +583,7 @@ function SignInPanel({
                                 setView('picker');
                             }}
                         >
-                            Back
+                            {t('common.button.back')}
                         </button>
                     </div>
                 )}
@@ -586,17 +591,14 @@ function SignInPanel({
                 {view === 'farcaster' && (
                     <div className={styles.cardBodyTight}>
                         <p className={styles.mutedBody}>
-                            Farcaster sign-in is coming soon. It uses Sign In
-                            With Farcaster (SIWF), which needs a Warpcast scan
-                            and isn&apos;t wired up here yet. Please choose
-                            another option for now.
+                            {t('connect.farcaster.comingSoon')}
                         </p>
                         <button
                             type="button"
                             className={`${styles.btnGhost} ${styles.btnSm}`}
                             onClick={() => setView('picker')}
                         >
-                            Back
+                            {t('common.button.back')}
                         </button>
                     </div>
                 )}
@@ -606,7 +608,7 @@ function SignInPanel({
                     className={styles.btnGhost}
                     onClick={onCancel}
                 >
-                    Cancel
+                    {t('common.button.cancel')}
                 </button>
             </div>
         </div>
@@ -624,6 +626,7 @@ function ProviderRow({
     onClick: () => void;
     isDisabled?: boolean;
 }) {
+    const { t } = useTranslation();
     const brandColor = BRAND_GLYPH_COLOR[provider.id];
     const monoFlip =
         provider.id === 'apple' ||
@@ -644,7 +647,9 @@ function ProviderRow({
         >
             <Icon className={styles.rowIcon} style={{ color: iconColor }} />
             <span className={styles.rowLabel}>
-                Continue with {provider.label}
+                {t('connect.provider.continueWith', {
+                    provider: provider.label,
+                })}
             </span>
             {isRecent && <RecentDot />}
         </button>
@@ -658,13 +663,16 @@ function PhoneRow({
     onClick: () => void;
     isRecent?: boolean;
 }) {
+    const { t } = useTranslation();
     return (
         <button type="button" className={styles.btnRow} onClick={onClick}>
             <LuPhone
                 className={styles.rowIcon}
                 style={{ color: PHONE_GLYPH_COLOR }}
             />
-            <span className={styles.rowLabel}>Continue with Phone</span>
+            <span className={styles.rowLabel}>
+                {t('connect.provider.continueWithPhone')}
+            </span>
             {isRecent && <RecentDot />}
         </button>
     );
@@ -677,25 +685,30 @@ function FarcasterRow({
     onClick: () => void;
     isRecent?: boolean;
 }) {
+    const { t } = useTranslation();
     return (
         <button type="button" className={styles.btnRow} onClick={onClick}>
             <SiFarcaster
                 className={styles.rowIcon}
                 style={{ color: FARCASTER_GLYPH_COLOR }}
             />
-            <span className={styles.rowLabel}>Continue with Farcaster</span>
+            <span className={styles.rowLabel}>
+                {t('connect.provider.continueWithFarcaster')}
+            </span>
             {isRecent && <RecentDot />}
         </button>
     );
 }
 
 function RecentDot() {
+    const { t } = useTranslation();
+    const label = t('connect.provider.lastUsed');
     return (
         <span
             className={styles.recentDot}
             role="img"
-            aria-label="Last used"
-            title="Last used"
+            aria-label={label}
+            title={label}
         />
     );
 }

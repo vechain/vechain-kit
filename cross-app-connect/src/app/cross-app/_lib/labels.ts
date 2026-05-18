@@ -3,10 +3,18 @@
  * smart-account flow surfaces. Kept separate from decoder.ts so it stays
  * trivial to scan and extend when new EIP-712 primary types or action
  * shapes show up.
+ *
+ * All copy goes through i18next so the cross-app popup speaks the user's
+ * language. Batch-level title/subtitle logic reads structured fields off
+ * `known_action` clauses (see `KnownActionData` in knownActions.ts) rather
+ * than parsing the localized summary text back out.
  */
 import type { DecodedClause } from './decoder';
 import { isDexRouterAddress } from './knownActions';
 import { truncateAddress } from './format';
+import i18n from '../../i18n/config';
+
+const t = i18n.t.bind(i18n);
 
 export type Risk = 'safe' | 'caution' | 'danger';
 
@@ -26,16 +34,15 @@ export function computeRisk(
 }
 
 /**
- * Title for the transact card. Specific verbs read better than the previous
- * generic "Confirm action" -- users land on the page and immediately know
- * what kind of thing they're about to do.
+ * Title for the transact card — always verb-led "Confirm X" so the user
+ * sees a parallel structure across every kind of transaction.
  */
 export function titleForActions(
     decoded: DecodedClause[] | null,
     blocked: boolean,
 ): string {
-    if (blocked) return 'Action blocked';
-    if (!decoded || decoded.length === 0) return 'Confirm action';
+    if (blocked) return t('transact.title.actionBlocked');
+    if (!decoded || decoded.length === 0) return t('transact.title.confirmAction');
 
     const transfers = decoded.filter(
         (d) => d.kind === 'native_transfer' || d.kind === 'token_transfer',
@@ -46,46 +53,44 @@ export function titleForActions(
 
     if (transfers.length === decoded.length) {
         return decoded.length === 1
-            ? 'Confirm token transfer'
-            : 'Confirm token transfers';
+            ? t('transact.title.confirmTokenTransfer')
+            : t('transact.title.confirmTokenTransfers');
     }
     if (approves.length === decoded.length) {
         return decoded.length === 1
-            ? 'Confirm token approval'
-            : 'Confirm token approvals';
+            ? t('transact.title.confirmTokenApproval')
+            : t('transact.title.confirmTokenApprovals');
     }
-    if (unknowns.length === decoded.length) return 'Confirm contract call';
+    if (unknowns.length === decoded.length) {
+        return t('transact.title.confirmContractCall');
+    }
 
-    // Approve → swap is the canonical DEX pattern. Coalesce into a single
-    // "Confirm token swap" title rather than the generic "Confirm 2 actions".
-    if (isSwapBatch(decoded)) return 'Confirm token swap';
+    if (isSwapBatch(decoded)) return t('transact.title.confirmTokenSwap');
 
-    // All clauses share a single ecosystem category → use a domain-specific
-    // title rather than "Confirm 3 actions".
     if (
         decoded.every((d) => d.kind === 'known_action') &&
         knownByCategory.length === 1
     ) {
         switch (knownByCategory[0]) {
             case 'domain':
-                return 'Confirm domain update';
+                return t('transact.title.confirmDomainUpdate');
             case 'governance':
-                return 'Confirm VeBetterDAO vote';
+                return t('transact.title.confirmVeBetterDaoVote');
             case 'rewards':
-                return 'Confirm rewards claim';
+                return t('transact.title.confirmRewardsClaim');
             case 'nft':
                 return decoded.length === 1
-                    ? 'Confirm NFT transfer'
-                    : 'Confirm NFT actions';
+                    ? t('transact.title.confirmNftTransfer')
+                    : t('transact.title.confirmNftActions');
             case 'token':
-                return 'Confirm token action';
+                return t('transact.title.confirmTokenAction');
             case 'staking':
-                return 'Confirm stake update';
+                return t('transact.title.confirmStakeUpdate');
             case 'swap':
-                return 'Confirm token swap';
+                return t('transact.title.confirmTokenSwap');
         }
     }
-    return `Confirm ${decoded.length} actions`;
+    return t('transact.title.confirmNActions', { count: decoded.length });
 }
 
 /**
@@ -126,25 +131,22 @@ function groupKnownByCategory(
  * approve together).
  */
 export function continueLabel(risk: Risk): string {
-    // "Confirm" beats "Continue" / "Approve": Continue is too soft for a
-    // signing action, Approve overlaps with ERC-20 `approve()` and clashes
-    // with the per-clause rows that say things like "Allow spending up to X".
     switch (risk) {
         case 'safe':
-            return 'Confirm';
+            return t('transact.button.confirm');
         case 'caution':
-            return 'Confirm anyway';
+            return t('transact.button.confirmAnyway');
         case 'danger':
-            return 'I understand, confirm';
+            return t('transact.button.confirmAsDanger');
     }
 }
 
 export function humanPrimaryType(value: string): string {
     switch (value) {
         case 'ExecuteWithAuthorization':
-            return 'Authorized call';
+            return t('transact.detail.authorizedCall');
         case 'ExecuteBatchWithAuthorization':
-            return 'Authorized batch call';
+            return t('transact.detail.authorizedBatchCall');
         default:
             // Fallback: SCREAMING_SNAKE -> Title Case, camelCase -> Title Case.
             return value
@@ -156,11 +158,10 @@ export function humanPrimaryType(value: string): string {
 }
 
 /**
- * One-line subtitle that carries the *specifics* of the batch (amounts,
+ * One-line subtitle carrying the *specifics* of the batch (amounts,
  * counterparties, DEX names) — complementing the title which carries the
- * *kind* of action ("Swap tokens", "Send tokens", "Update your VeChain
- * domain"). Returns empty when the per-clause action list below already
- * communicates the specifics on its own.
+ * *kind* of action. Returns empty when the per-clause action list below
+ * already communicates the specifics on its own.
  */
 export function summarizeActions(decoded: DecodedClause[]): string {
     if (decoded.length === 0) return '';
@@ -169,14 +170,27 @@ export function summarizeActions(decoded: DecodedClause[]): string {
     if (decoded.length === 1) {
         const d = decoded[0];
         if (d.kind === 'native_transfer') {
-            return `${trimAmount(d.amount)} VET to ${truncateAddress(d.recipient)}`;
+            return t('transact.subtitle.sendVet', {
+                amount: trimAmount(d.amount),
+                recipient: truncateAddress(d.recipient),
+            });
         }
         if (d.kind === 'token_transfer') {
-            return `${trimAmount(d.amount)} ${d.token.symbol} to ${truncateAddress(d.recipient)}`;
+            return t('transact.subtitle.sendToken', {
+                amount: trimAmount(d.amount),
+                symbol: d.token.symbol,
+                recipient: truncateAddress(d.recipient),
+            });
         }
         if (d.kind === 'token_approve') {
-            const amt = d.unlimited ? 'Unlimited' : trimAmount(d.amount);
-            return `${amt} ${d.token.symbol} for ${truncateAddress(d.spender)}`;
+            const amt = d.unlimited
+                ? t('common.amount.unlimited')
+                : trimAmount(d.amount);
+            return t('transact.subtitle.approveFor', {
+                amount: amt,
+                symbol: d.token.symbol,
+                spender: truncateAddress(d.spender),
+            });
         }
         // known_action / unknown: title or per-clause row says enough.
         return '';
@@ -190,13 +204,20 @@ export function summarizeActions(decoded: DecodedClause[]): string {
         const dex = dexNameFromSwapBatch(decoded);
         if (approve) {
             const amt = approve.unlimited
-                ? 'Unlimited'
+                ? t('common.amount.unlimited')
                 : trimAmount(approve.amount);
             return dex
-                ? `${amt} ${approve.token.symbol} via ${dex}`
-                : `${amt} ${approve.token.symbol}`;
+                ? t('transact.subtitle.swapVia', {
+                      amount: amt,
+                      symbol: approve.token.symbol,
+                      dex,
+                  })
+                : t('transact.subtitle.swapAmount', {
+                      amount: amt,
+                      symbol: approve.token.symbol,
+                  });
         }
-        return dex ? `via ${dex}` : '';
+        return dex ? t('transact.subtitle.swapViaOnly', { dex }) : '';
     }
 
     // Pure transfer batch — list the moved assets compactly.
@@ -213,21 +234,33 @@ export function summarizeActions(decoded: DecodedClause[]): string {
         return assetsList(approves);
     }
 
-    // Multi-clause known-action of one category: extract the most-meaningful
-    // identifier from the batch so the user sees the *target* (domain name
-    // being set, proposal id, app being endorsed) at a glance.
+    // Multi-clause known-action of one category — read structured data
+    // off the clauses instead of parsing localized summaries back out.
     const known = decoded.filter((d) => d.kind === 'known_action');
     if (known.length === decoded.length && sameCategory(known) !== null) {
-        return batchSubtitleForCategory(sameCategory(known)!, known);
+        return batchSubtitleForCategory(sameCategory(known)!, decoded);
     }
 
     // Mixed batches: the per-clause rows show the breakdown. Subtitle stays
     // empty unless there's an unverified clause worth calling out.
     const unknowns = decoded.filter((d) => d.kind === 'unknown');
     if (unknowns.length > 0) {
-        return `${decoded.length} actions, ${unknowns.length} unverified`;
+        return t('transact.subtitle.actionsWithUnverified', {
+            count: decoded.length,
+            unverified: unknowns.length,
+        });
     }
     return '';
+}
+
+/** DEX name from any `swap` known_action in the batch (data.dex). */
+function dexNameFromSwapBatch(decoded: DecodedClause[]): string | null {
+    for (const d of decoded) {
+        if (d.kind !== 'known_action') continue;
+        if (d.category !== 'swap') continue;
+        if (d.data?.dex) return d.data.dex;
+    }
+    return null;
 }
 
 /**
@@ -235,9 +268,7 @@ export function summarizeActions(decoded: DecodedClause[]): string {
  * transfers or approvals — "1 B3TR, 50 VOT3" rather than enumerating
  * recipients which would overflow the subtitle.
  */
-function assetsList(
-    clauses: DecodedClause[],
-): string {
+function assetsList(clauses: DecodedClause[]): string {
     const parts: string[] = [];
     for (const c of clauses) {
         if (c.kind === 'native_transfer') {
@@ -245,7 +276,9 @@ function assetsList(
         } else if (c.kind === 'token_transfer') {
             parts.push(`${trimAmount(c.amount)} ${c.token.symbol}`);
         } else if (c.kind === 'token_approve') {
-            const amt = c.unlimited ? 'Unlimited' : trimAmount(c.amount);
+            const amt = c.unlimited
+                ? t('common.amount.unlimited')
+                : trimAmount(c.amount);
             parts.push(`${amt} ${c.token.symbol}`);
         }
     }
@@ -253,94 +286,85 @@ function assetsList(
 }
 
 /**
- * Most useful detail for a single-category known-action batch.
- *
- * - Domain: the new primary domain name we're switching to (extracted
- *   from the trailing setName clause). For "Remove your primary" only,
- *   we surface that intent instead.
- * - Governance: the proposal / round id from the castVote summary.
- * - Rewards: the cycle / round being claimed.
- * - Token: the converted amount (B3TR ↔ VOT3).
- * - NFT / staking: per-clause rows carry the targets cleanly, no subtitle
- *   adds anything obvious without overflowing.
+ * Batch subtitle for a single-category known-action group. Reads
+ * `KnownActionData` fields off the clauses rather than parsing summaries.
  */
 function batchSubtitleForCategory(
     category: string,
-    known: DecodedClause[],
+    decoded: DecodedClause[],
 ): string {
     if (category === 'domain') {
-        // Find a setName clause whose summary names a new primary domain.
-        for (const k of known) {
-            if (k.kind !== 'known_action') continue;
-            const m = k.summary.match(/^Set (\S+) as your primary/);
-            if (m) return `Switching to ${m[1]}`;
+        // Final setName carries the new primary domain.
+        for (const d of decoded) {
+            if (d.kind !== 'known_action') continue;
+            if (d.data?.setPrimaryName) {
+                return t('transact.subtitle.switchingTo', {
+                    domain: d.data.setPrimaryName,
+                });
+            }
         }
         if (
-            known.length === 1 &&
-            known[0].kind === 'known_action' &&
-            known[0].summary === 'Remove your primary VeChain domain'
+            decoded.length === 1 &&
+            decoded[0].kind === 'known_action' &&
+            decoded[0].data?.removePrimary
         ) {
-            return 'Clearing your primary';
+            return t('transact.subtitle.clearingPrimary');
         }
         return '';
     }
     if (category === 'governance') {
-        for (const k of known) {
-            if (k.kind !== 'known_action') continue;
-            // "Vote FOR on a VeBetterDAO proposal" → "FOR proposal"
-            const v = k.summary.match(/^Vote (FOR|AGAINST|ABSTAIN)/);
-            if (v) return `${v[1]} proposal`;
-            const alloc = k.summary.match(
-                /across (\d+) apps/,
-            );
-            if (alloc) return `Allocating across ${alloc[1]} apps`;
-            if (k.summary.startsWith('Endorse')) return 'Endorsing an app';
+        for (const d of decoded) {
+            if (d.kind !== 'known_action') continue;
+            if (d.data?.voteSupport) {
+                return t('transact.subtitle.voteOnProposal', {
+                    vote: t(`vote.${d.data.voteSupport}`),
+                });
+            }
+            if (d.data?.allocationAppCount && d.data.allocationAppCount > 0) {
+                return t('transact.subtitle.allocatingAcross', {
+                    count: d.data.allocationAppCount,
+                });
+            }
+            if (d.data?.endorse) {
+                return t('transact.subtitle.endorsingApp');
+            }
         }
         return '';
     }
     if (category === 'rewards') {
-        for (const k of known) {
-            if (k.kind !== 'known_action') continue;
-            const cycle = k.summary.match(/cycle (\d+)/i);
-            if (cycle) return `From cycle ${cycle[1]}`;
-            const round = k.summary.match(/round (\d+)/i);
-            if (round) return `From round ${round[1]}`;
+        for (const d of decoded) {
+            if (d.kind !== 'known_action') continue;
+            if (d.data?.rewardCycle) {
+                return t('transact.subtitle.fromCycle', {
+                    cycle: d.data.rewardCycle,
+                });
+            }
+            if (d.data?.rewardRound) {
+                return t('transact.subtitle.fromRound', {
+                    round: d.data.rewardRound,
+                });
+            }
         }
         return '';
     }
     if (category === 'token') {
-        for (const k of known) {
-            if (k.kind !== 'known_action') continue;
-            const conv = k.summary.match(/Convert (\S+) (B3TR|VOT3) → (B3TR|VOT3)/);
-            if (conv) return `${conv[1]} ${conv[2]} → ${conv[3]}`;
+        for (const d of decoded) {
+            if (d.kind !== 'known_action') continue;
+            if (
+                d.data?.convertAmount &&
+                d.data?.convertFrom &&
+                d.data?.convertTo
+            ) {
+                return t('transact.subtitle.conversion', {
+                    amount: d.data.convertAmount,
+                    from: d.data.convertFrom,
+                    to: d.data.convertTo,
+                });
+            }
         }
         return '';
     }
     return '';
-}
-
-/**
- * Pull the DEX name (BetterSwap / VeTrade) out of a swap clause's summary.
- * The recogniser produces "Swap tokens on <DEX>" — we parse the suffix back
- * out rather than thread an extra structured field through the type.
- */
-function dexNameFromSwapBatch(decoded: DecodedClause[]): string | null {
-    const swap = decoded.find(
-        (d) => d.kind === 'known_action' && d.category === 'swap',
-    );
-    if (!swap || swap.kind !== 'known_action') return null;
-    const match = swap.summary.match(/on (.+)$/);
-    return match ? match[1] : null;
-}
-
-// Trim a `formatUnits` output to a human-readable amount: 2 decimals for
-// values ≥ 1, up to 4 for values < 1, no trailing zeros.
-function trimAmount(amount: string): string {
-    if (!amount.includes('.')) return amount;
-    const [whole, frac] = amount.split('.');
-    const cap = whole === '0' ? 4 : 2;
-    const trimmed = frac.replace(/0+$/, '').slice(0, cap);
-    return trimmed.length === 0 ? whole : `${whole}.${trimmed}`;
 }
 
 function sameCategory(known: DecodedClause[]): string | null {
@@ -353,3 +377,12 @@ function sameCategory(known: DecodedClause[]): string | null {
     return cat;
 }
 
+// Trim a `formatUnits` output to a human-readable amount: 2 decimals for
+// values ≥ 1, up to 4 for values < 1, no trailing zeros.
+function trimAmount(amount: string): string {
+    if (!amount.includes('.')) return amount;
+    const [whole, frac] = amount.split('.');
+    const cap = whole === '0' ? 4 : 2;
+    const trimmed = frac.replace(/0+$/, '').slice(0, cap);
+    return trimmed.length === 0 ? whole : `${whole}.${trimmed}`;
+}

@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
 import type { IconType } from 'react-icons';
 import { RequesterChip } from './RequesterChip';
 import styles from './VechainHeader.module.css';
@@ -25,12 +28,14 @@ type Props = {
 };
 
 export function VechainHeader({
-    title = 'Log in to your wallet',
+    title,
     titleIcon: TitleIcon,
     titleIconColor = 'var(--accent)',
     subtitle,
     requesterUrl,
 }: Props) {
+    const { t } = useTranslation();
+    const effectiveTitle = title ?? t('header.title.default');
     return (
         <header className={styles.header}>
             <div className={styles.logoBox}>
@@ -50,7 +55,7 @@ export function VechainHeader({
                             aria-hidden
                         />
                     )}
-                    <h1 className={styles.title}>{title}</h1>
+                    <h1 className={styles.title}>{effectiveTitle}</h1>
                 </div>
 
                 {subtitle && <p className={styles.subtitle}>{subtitle}</p>}

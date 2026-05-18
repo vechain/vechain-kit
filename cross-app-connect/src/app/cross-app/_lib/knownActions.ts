@@ -18,6 +18,9 @@
  */
 import { decodeFunctionData, parseAbi, formatUnits, type Abi } from 'viem';
 import { knownContracts, type KnownContracts } from './appConfig';
+import i18n from '../../i18n/config';
+
+const t = i18n.t.bind(i18n);
 
 export type KnownActionCategory =
     | 'domain'
@@ -28,14 +31,38 @@ export type KnownActionCategory =
     | 'staking'
     | 'swap';
 
+/**
+ * Structured side-channel that travels alongside the localized summary so
+ * batch-level title/subtitle logic in `labels.ts` can read facts about a
+ * clause without parsing localized text back out. Populate the fields a
+ * given action genuinely produces; leave the rest undefined.
+ */
+export type KnownActionData = {
+    // Domain
+    setPrimaryName?: string;
+    removePrimary?: boolean;
+    // Governance
+    voteSupport?: 'for' | 'against' | 'abstain';
+    allocationAppCount?: number;
+    endorse?: boolean;
+    // Rewards
+    rewardCycle?: string;
+    rewardRound?: string;
+    // Token conversion (B3TR ↔ VOT3)
+    convertAmount?: string;
+    convertFrom?: string;
+    convertTo?: string;
+    // DEX
+    dex?: string;
+};
+
 export type KnownAction = {
     summary: string;
     detail?: string;
     category: KnownActionCategory;
-    // Optional structured fields the UI can render distinctly (e.g. a
-    // recipient address that should get an AddressTag treatment).
     recipient?: string;
     spender?: string;
+    data?: KnownActionData;
 };
 
 type DecodeContext = {
@@ -62,13 +89,15 @@ const reverseRegistrarPattern: Pattern = {
             const v = String(name ?? '');
             if (v === '') {
                 return {
-                    summary: 'Remove your primary VeChain domain',
+                    summary: t('action.domain.removePrimary'),
                     category: 'domain',
+                    data: { removePrimary: true },
                 };
             }
             return {
-                summary: `Set ${v} as your primary VeChain domain`,
+                summary: t('action.domain.setPrimary', { name: v }),
                 category: 'domain',
+                data: { setPrimaryName: v },
             };
         },
     },
@@ -86,13 +115,13 @@ const publicResolverPattern: Pattern = {
             const self = ctx.self?.toLowerCase();
             if (self && a === self) {
                 return {
-                    summary: 'Point your VeChain domain to your account',
+                    summary: t('action.domain.pointToYou'),
                     category: 'domain',
                 };
             }
             return {
-                summary: 'Update your VeChain domain address',
-                detail: `New target: ${addr}`,
+                summary: t('action.domain.updateAddress'),
+                detail: t('action.domain.newTarget', { addr }),
                 category: 'domain',
                 recipient: String(addr ?? ''),
             };
@@ -103,7 +132,7 @@ const publicResolverPattern: Pattern = {
             const label = friendlyTextRecordKey(k);
             if (v === '') {
                 return {
-                    summary: `Remove ${label}`,
+                    summary: t('action.domain.removeRecord', { label }),
                     category: 'domain',
                 };
             }
@@ -113,12 +142,12 @@ const publicResolverPattern: Pattern = {
             // value is meaningless to a human anyway.
             if (isReadableValue(v)) {
                 return {
-                    summary: `Set ${label} to ${v}`,
+                    summary: t('action.domain.setRecordTo', { label, value: v }),
                     category: 'domain',
                 };
             }
             return {
-                summary: `Update ${label}`,
+                summary: t('action.domain.updateRecord', { label }),
                 category: 'domain',
             };
         },
@@ -130,8 +159,10 @@ const subdomainClaimerPattern: Pattern = {
     abi: parseAbi(['function claim(string subdomain, address resolver)']),
     decoders: {
         claim: ([subdomain]) => ({
-            summary: `Claim ${subdomain}.veworld.vet`,
+            summary: t('action.domain.claim', { subdomain: String(subdomain) }),
             category: 'domain',
+            // The cascade ends with a setName for the new primary, which
+            // already populates setPrimaryName. Subtitle uses that.
         }),
     },
 };
@@ -145,15 +176,29 @@ const governorPattern: Pattern = {
         'function castVoteWithReason(uint256 proposalId, uint8 support, string reason)',
     ]),
     decoders: {
-        castVote: ([, support]) => ({
-            summary: `Vote ${voteLabel(Number(support))} on a VeBetterDAO proposal`,
-            category: 'governance',
-        }),
-        castVoteWithReason: ([, support, reason]) => ({
-            summary: `Vote ${voteLabel(Number(support))} on a VeBetterDAO proposal`,
-            detail: `Reason: ${String(reason ?? '')}`,
-            category: 'governance',
-        }),
+        castVote: ([, support]) => {
+            const vote = voteKey(Number(support));
+            return {
+                summary: t('action.governance.voteOnProposal', {
+                    vote: voteLabel(vote),
+                }),
+                category: 'governance',
+                data: { voteSupport: vote },
+            };
+        },
+        castVoteWithReason: ([, support, reason]) => {
+            const vote = voteKey(Number(support));
+            return {
+                summary: t('action.governance.voteOnProposal', {
+                    vote: voteLabel(vote),
+                }),
+                detail: t('action.governance.reason', {
+                    reason: String(reason ?? ''),
+                }),
+                category: 'governance',
+                data: { voteSupport: vote },
+            };
+        },
     },
 };
 
@@ -168,9 +213,10 @@ const xAllocationVotingPattern: Pattern = {
             return {
                 summary:
                     count === 1
-                        ? 'Vote in this VeBetterDAO allocation round'
-                        : `Allocate your vote across ${count} apps this round`,
+                        ? t('action.governance.allocateSingle')
+                        : t('action.governance.allocateMany', { count }),
                 category: 'governance',
+                data: { allocationAppCount: count },
             };
         },
     },
@@ -184,12 +230,14 @@ const x2EarnAppsPattern: Pattern = {
     ]),
     decoders: {
         endorseApp: () => ({
-            summary: 'Endorse a VeBetterDAO app',
+            summary: t('action.governance.endorse'),
             category: 'governance',
+            data: { endorse: true },
         }),
         unendorseApp: () => ({
-            summary: 'Withdraw your endorsement from a VeBetterDAO app',
+            summary: t('action.governance.unendorse'),
             category: 'governance',
+            data: { endorse: true },
         }),
     },
 };
@@ -205,14 +253,30 @@ const vot3Pattern: Pattern = {
         'function convertToB3TR(uint256 amount)',
     ]),
     decoders: {
-        convertToVOT3: ([amount]) => ({
-            summary: `Convert ${trimUnits(amount as bigint, 18)} B3TR → VOT3 (lock to vote)`,
-            category: 'token',
-        }),
-        convertToB3TR: ([amount]) => ({
-            summary: `Convert ${trimUnits(amount as bigint, 18)} VOT3 → B3TR (unlock)`,
-            category: 'token',
-        }),
+        convertToVOT3: ([amount]) => {
+            const amt = trimUnits(amount as bigint, 18);
+            return {
+                summary: t('action.token.convertToVot3', { amount: amt }),
+                category: 'token',
+                data: {
+                    convertAmount: amt,
+                    convertFrom: 'B3TR',
+                    convertTo: 'VOT3',
+                },
+            };
+        },
+        convertToB3TR: ([amount]) => {
+            const amt = trimUnits(amount as bigint, 18);
+            return {
+                summary: t('action.token.convertToB3tr', { amount: amt }),
+                category: 'token',
+                data: {
+                    convertAmount: amt,
+                    convertFrom: 'VOT3',
+                    convertTo: 'B3TR',
+                },
+            };
+        },
     },
 };
 
@@ -220,35 +284,36 @@ const vot3Pattern: Pattern = {
 
 const voterRewardsPattern: Pattern = {
     contractField: 'voterRewardsContractAddress',
-    abi: parseAbi([
-        'function claimReward(uint256 cycle, address user)',
-    ]),
+    abi: parseAbi(['function claimReward(uint256 cycle, address user)']),
     decoders: {
-        claimReward: ([cycle]) => ({
-            summary: `Claim VeBetterDAO voter rewards (cycle ${cycle})`,
-            category: 'rewards',
-        }),
+        claimReward: ([cycle]) => {
+            const c = String(cycle);
+            return {
+                summary: t('action.rewards.voter', { cycle: c }),
+                category: 'rewards',
+                data: { rewardCycle: c },
+            };
+        },
     },
 };
 
 const xAllocationPoolPattern: Pattern = {
     contractField: 'xAllocationPoolContractAddress',
-    abi: parseAbi([
-        'function claim(uint256 roundId, bytes32 appId)',
-    ]),
+    abi: parseAbi(['function claim(uint256 roundId, bytes32 appId)']),
     decoders: {
-        claim: ([roundId]) => ({
-            summary: `Claim allocation rewards for round ${roundId}`,
-            category: 'rewards',
-        }),
+        claim: ([roundId]) => {
+            const r = String(roundId);
+            return {
+                summary: t('action.rewards.allocation', { round: r }),
+                category: 'rewards',
+                data: { rewardRound: r },
+            };
+        },
     },
 };
 
 // --- DEX routers ----------------------------------------------------------
 
-// Friendly DEX name keyed by router address — used both for label rendering
-// and for the "is this clause a swap?" check (e.g. coalescing an approve →
-// swap pair into a single "Swap tokens" summary at the batch level).
 const DEX_ROUTERS: Array<{
     field: keyof KnownContracts;
     name: string;
@@ -275,10 +340,6 @@ export function dexRouterName(address: string): string | null {
     return null;
 }
 
-// Standard Uniswap V2 router functions — match against the two routers
-// that follow the Uniswap V2 ABI (BetterSwap and VeTrade's Uniswap-compatible
-// router). The VeTrade custom router uses different selectors and falls
-// through to the generic address-only recogniser below.
 const UNISWAP_V2_ROUTER_ABI = parseAbi([
     'function swapExactETHForTokens(uint256 amountOutMin, address[] path, address to, uint256 deadline) payable',
     'function swapETHForExactTokens(uint256 amountOut, address[] path, address to, uint256 deadline) payable',
@@ -289,10 +350,14 @@ const UNISWAP_V2_ROUTER_ABI = parseAbi([
 ]);
 
 function uniswapV2RouterPattern(field: keyof KnownContracts): Pattern {
-    const swap = (): KnownAction => ({
-        summary: `Swap tokens on ${routerNameForField(field)}`,
-        category: 'swap',
-    });
+    const swap = (): KnownAction => {
+        const dex = routerNameForField(field);
+        return {
+            summary: t('action.swap.onDex', { dex }),
+            category: 'swap',
+            data: { dex },
+        };
+    };
     return {
         contractField: field,
         abi: UNISWAP_V2_ROUTER_ABI,
@@ -353,23 +418,17 @@ const GLOBAL_PATTERNS: Pattern[] = [
             safeTransferFrom: (args) => {
                 const to = String(args[1] ?? '');
                 return {
-                    summary: 'Send an NFT',
-                    detail: `To: ${to}`,
+                    summary: t('action.nft.send'),
+                    detail: t('action.nft.toDetail', { to }),
                     category: 'nft',
                     recipient: to,
                 };
             },
             transferFrom: (args) => {
-                // ERC-721 transferFrom takes (from, to, tokenId). ERC-20
-                // transferFrom takes (from, to, amount). We can't tell from
-                // calldata alone; treat as NFT here, ERC-20 below
-                // double-checks via the token registry. The ERC20-side
-                // already gets handled inside the decoder; this catches
-                // the NFT case when the ERC20 path doesn't fire.
                 const to = String(args[1] ?? '');
                 return {
-                    summary: 'Transfer an NFT',
-                    detail: `To: ${to}`,
+                    summary: t('action.nft.transfer'),
+                    detail: t('action.nft.toDetail', { to }),
                     category: 'nft',
                     recipient: to,
                 };
@@ -385,9 +444,11 @@ const GLOBAL_PATTERNS: Pattern[] = [
                 return {
                     summary:
                         (amount ?? BigInt(0)) > BigInt(1)
-                            ? `Send ${amount} editions of an NFT`
-                            : 'Send an NFT',
-                    detail: `To: ${to}`,
+                            ? t('action.nft.sendEditions', {
+                                  count: Number(amount),
+                              })
+                            : t('action.nft.send'),
+                    detail: t('action.nft.toDetail', { to }),
                     category: 'nft',
                     recipient: to,
                 };
@@ -397,8 +458,8 @@ const GLOBAL_PATTERNS: Pattern[] = [
                 const ids = args[2] as readonly unknown[];
                 const count = Array.isArray(ids) ? ids.length : 0;
                 return {
-                    summary: `Send ${count} NFTs in one go`,
-                    detail: `To: ${to}`,
+                    summary: t('action.nft.sendBatch', { count }),
+                    detail: t('action.nft.toDetail', { to }),
                     category: 'nft',
                     recipient: to,
                 };
@@ -412,15 +473,15 @@ const GLOBAL_PATTERNS: Pattern[] = [
                 const op = String(operator ?? '');
                 if (approved) {
                     return {
-                        summary: 'Allow this site to manage your NFTs',
-                        detail: `Operator: ${op}`,
+                        summary: t('action.nft.approveAll'),
+                        detail: t('action.nft.operatorDetail', { operator: op }),
                         category: 'nft',
                         spender: op,
                     };
                 }
                 return {
-                    summary: 'Revoke NFT management permission',
-                    detail: `Operator: ${op}`,
+                    summary: t('action.nft.revokeAll'),
+                    detail: t('action.nft.operatorDetail', { operator: op }),
                     category: 'nft',
                     spender: op,
                 };
@@ -431,8 +492,10 @@ const GLOBAL_PATTERNS: Pattern[] = [
         abi: ERC20_TRANSFER_FROM_ABI,
         decoders: {
             transferFrom: ([, to]) => ({
-                summary: 'Pull tokens from an address',
-                detail: `Recipient: ${String(to ?? '')}`,
+                summary: t('action.token.pullFrom'),
+                detail: t('action.token.recipientDetail', {
+                    to: String(to ?? ''),
+                }),
                 category: 'token',
                 recipient: String(to ?? ''),
             }),
@@ -473,8 +536,9 @@ export function recognizeKnownAction(
     const dex = dexRouterName(to);
     if (dex) {
         return {
-            summary: `Swap tokens on ${dex}`,
+            summary: t('action.swap.onDex', { dex }),
             category: 'swap',
+            data: { dex },
         };
     }
 
@@ -514,38 +578,42 @@ function isReadableValue(v: string): boolean {
 function friendlyTextRecordKey(key: string): string {
     switch (key) {
         case 'avatar':
-            return 'avatar';
+            return t('domains.label.avatar');
         case 'description':
-            return 'description';
+            return t('domains.label.description');
         case 'email':
-            return 'email';
+            return t('domains.label.email');
         case 'url':
-            return 'website';
+            return t('domains.label.website');
         case 'com.twitter':
         case 'twitter':
-            return 'Twitter handle';
+            return t('domains.label.twitter');
         case 'com.github':
         case 'github':
-            return 'GitHub';
+            return t('domains.label.github');
         case 'org.telegram':
         case 'telegram':
-            return 'Telegram';
+            return t('domains.label.telegram');
         default:
-            return `${key} record`;
+            return t('domains.label.fallback', { key });
     }
 }
 
-function voteLabel(support: number): string {
+function voteKey(support: number): 'for' | 'against' | 'abstain' {
     switch (support) {
         case 0:
-            return 'AGAINST';
+            return 'against';
         case 1:
-            return 'FOR';
+            return 'for';
         case 2:
-            return 'ABSTAIN';
+            return 'abstain';
         default:
-            return '';
+            return 'for';
     }
+}
+
+function voteLabel(key: 'for' | 'against' | 'abstain'): string {
+    return t(`vote.${key}`);
 }
 
 function trimUnits(raw: bigint, decimals: number): string {

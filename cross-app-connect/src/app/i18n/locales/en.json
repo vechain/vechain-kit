@@ -1,1 +1,253 @@
-{}
+{
+    "common": {
+        "button": {
+            "back": "Back",
+            "cancel": "Cancel",
+            "continue": "Continue",
+            "continueAnyway": "Continue anyway"
+        },
+        "amount": {
+            "unlimited": "Unlimited"
+        },
+        "tokens": "tokens",
+        "yes": "Yes",
+        "no": "No",
+        "empty": "(empty)"
+    },
+    "vote": {
+        "for": "FOR",
+        "against": "AGAINST",
+        "abstain": "ABSTAIN"
+    },
+    "header": {
+        "title": {
+            "default": "Log in to your wallet"
+        }
+    },
+    "identity": {
+        "creatingAccount": "Creating your VeChain account…",
+        "signedIn": "Signed in"
+    },
+    "addressTag": {
+        "verifiedContract": "Verified VeChain contract",
+        "unverifiedContract": "Unverified contract — make sure you trust it before continuing"
+    },
+    "requester": {
+        "localDev": "Local development site"
+    },
+    "domains": {
+        "label": {
+            "avatar": "avatar",
+            "description": "description",
+            "email": "email",
+            "website": "website",
+            "twitter": "Twitter handle",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "{{key}} record"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "Send {{amount}} VET",
+            "token": "Send {{amount}} {{symbol}}"
+        },
+        "approve": {
+            "unlimited": "Allow unlimited {{symbol}} spending",
+            "upTo": "Allow spending up to {{amount}} {{symbol}}"
+        },
+        "unknown": {
+            "runOn": "Run {{fn}} on a contract",
+            "interact": "Interact with a contract"
+        },
+        "domain": {
+            "removePrimary": "Remove your primary VeChain domain",
+            "setPrimary": "Set {{name}} as your primary VeChain domain",
+            "pointToYou": "Point your VeChain domain to your account",
+            "updateAddress": "Update your VeChain domain address",
+            "newTarget": "New target: {{addr}}",
+            "removeRecord": "Remove {{label}}",
+            "setRecordTo": "Set {{label}} to {{value}}",
+            "updateRecord": "Update {{label}}",
+            "claim": "Claim {{subdomain}}.veworld.vet"
+        },
+        "governance": {
+            "voteOnProposal": "Vote {{vote}} on a VeBetterDAO proposal",
+            "reason": "Reason: {{reason}}",
+            "allocateSingle": "Vote in this VeBetterDAO allocation round",
+            "allocateMany": "Allocate your vote across {{count}} apps this round",
+            "endorse": "Endorse a VeBetterDAO app",
+            "unendorse": "Withdraw your endorsement from a VeBetterDAO app"
+        },
+        "token": {
+            "convertToVot3": "Convert {{amount}} B3TR → VOT3 (lock to vote)",
+            "convertToB3tr": "Convert {{amount}} VOT3 → B3TR (unlock)",
+            "pullFrom": "Pull tokens from an address",
+            "recipientDetail": "Recipient: {{to}}"
+        },
+        "rewards": {
+            "voter": "Claim VeBetterDAO voter rewards (cycle {{cycle}})",
+            "allocation": "Claim allocation rewards for round {{round}}"
+        },
+        "swap": {
+            "onDex": "Swap tokens on {{dex}}"
+        },
+        "nft": {
+            "send": "Send an NFT",
+            "transfer": "Transfer an NFT",
+            "sendEditions": "Send {{count}} editions of an NFT",
+            "sendBatch": "Send {{count}} NFTs in one go",
+            "approveAll": "Allow this site to manage your NFTs",
+            "revokeAll": "Revoke NFT management permission",
+            "toDetail": "To: {{to}}",
+            "operatorDetail": "Operator: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "Action blocked",
+            "confirmAction": "Confirm action",
+            "confirmTokenTransfer": "Confirm token transfer",
+            "confirmTokenTransfers": "Confirm token transfers",
+            "confirmTokenApproval": "Confirm token approval",
+            "confirmTokenApprovals": "Confirm token approvals",
+            "confirmContractCall": "Confirm contract call",
+            "confirmTokenSwap": "Confirm token swap",
+            "confirmDomainUpdate": "Confirm domain update",
+            "confirmVeBetterDaoVote": "Confirm VeBetterDAO vote",
+            "confirmRewardsClaim": "Confirm rewards claim",
+            "confirmNftTransfer": "Confirm NFT transfer",
+            "confirmNftActions": "Confirm NFT actions",
+            "confirmTokenAction": "Confirm token action",
+            "confirmStakeUpdate": "Confirm stake update",
+            "confirmNActions": "Confirm {{count}} actions",
+            "noRequest": "No transaction request",
+            "reviewing": "Reviewing transaction",
+            "signIn": "Sign in to continue",
+            "couldNotLoad": "Couldn't load request",
+            "signMessage": "Sign a message",
+            "signData": "Sign data"
+        },
+        "subtitle": {
+            "sendVet": "{{amount}} VET to {{recipient}}",
+            "sendToken": "{{amount}} {{symbol}} to {{recipient}}",
+            "approveFor": "{{amount}} {{symbol}} for {{spender}}",
+            "swapVia": "{{amount}} {{symbol}} via {{dex}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "via {{dex}}",
+            "switchingTo": "Switching to {{domain}}",
+            "clearingPrimary": "Clearing your primary",
+            "voteOnProposal": "{{vote}} proposal",
+            "allocatingAcross": "Allocating across {{count}} apps",
+            "endorsingApp": "Endorsing an app",
+            "fromCycle": "From cycle {{cycle}}",
+            "fromRound": "From round {{round}}",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} actions, {{unverified}} unverified",
+            "reviewMessage": "Review the message this app wants you to sign.",
+            "reviewData": "Review the data this app wants you to sign.",
+            "signInWaiting": "A signing request is waiting. Sign in to review it."
+        },
+        "button": {
+            "confirm": "Confirm",
+            "confirmAnyway": "Confirm anyway",
+            "confirmAsDanger": "I understand, confirm",
+            "signing": "Signing…",
+            "sign": "Sign"
+        },
+        "section": {
+            "actionsToApprove": "Actions to approve"
+        },
+        "alert": {
+            "unverifiedStep": "We couldn't double-check every step, so only continue if you trust this app.",
+            "unlimitedApprove": "This app is asking for unlimited access to one of your tokens — make sure you trust it."
+        },
+        "inspect": {
+            "prompt": "Want the technical details?",
+            "show": "Inspect",
+            "hide": "Hide",
+            "showCalldata": "Show raw calldata",
+            "hideCalldata": "Hide raw calldata"
+        },
+        "detail": {
+            "yourAccount": "Your account",
+            "resolving": "resolving…",
+            "network": "Network",
+            "type": "Type",
+            "clauseSingular": "Clause",
+            "clausePlural": "Clauses ({{count}})",
+            "clauseLabel": "Clause {{index}} of {{total}} · to",
+            "value": "Value",
+            "domain": "Domain",
+            "rawData": "Raw data",
+            "rawHex": "Raw hex",
+            "function": "Function: {{signature}}",
+            "selector": "Selector: {{selector}}",
+            "message": "Message",
+            "emptyMessage": "(empty message)",
+            "authorizedCall": "Authorized call",
+            "authorizedBatchCall": "Authorized batch call",
+            "to": "To",
+            "spender": "Spender",
+            "operator": "Operator"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "Local Thor Solo"
+        },
+        "noRequestBody": "This page handles cross-app transaction requests from other VeChain dApps. It can't be opened directly — the requesting app will open it with the parameters it needs."
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "Couldn't load request",
+            "logIn": "Log in to your wallet",
+            "connectTo": "Connect to {{app}}",
+            "confirmConnection": "Confirm connection"
+        },
+        "subtitle": {
+            "grantAccessTo": "Sign in to grant access to",
+            "notBefore": "You haven't connected here before",
+            "connecting": "Connecting…"
+        },
+        "button": {
+            "connecting": "Connecting…",
+            "useAnotherAccount": "Use another account"
+        },
+        "copy": {
+            "notYou": "Not you?",
+            "noRequestBody": "This page handles cross-app connection requests from other VeChain dApps. It can't be opened directly — the requesting app will open it with the parameters it needs."
+        },
+        "phone": {
+            "placeholder": "+1 555 555 5555",
+            "codeHint": "Include the country code, e.g. +1 for US, +44 for UK.",
+            "sendCode": "Send code",
+            "sending": "Sending…",
+            "codeSent": "We sent a 6-digit code to {{phone}}.",
+            "verify": "Verify",
+            "verifying": "Verifying…"
+        },
+        "farcaster": {
+            "comingSoon": "Farcaster sign-in is coming soon. It uses Sign In With Farcaster (SIWF), which needs a Warpcast scan and isn't wired up here yet. Please choose another option for now."
+        },
+        "provider": {
+            "continueWith": "Continue with {{provider}}",
+            "continueWithPhone": "Continue with Phone",
+            "continueWithFarcaster": "Continue with Farcaster",
+            "lastUsed": "Last used",
+            "moreOptions": "+ {{count}} more options"
+        },
+        "alert": {
+            "notListed": "This app isn't listed in the VeChain App Hub, so only continue if you trust the site."
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Whitelabel host for Privy cross-app connection and transaction flows.",
+        "routes": "Routes",
+        "connectDesc": "handles connection requests",
+        "transactDesc": "handles transaction / signing requests",
+        "footer": "This page isn't opened directly by users."
+    }
+}

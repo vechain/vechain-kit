@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAddressInfo } from '../cross-app/_lib/useAddressInfo';
 import { truncateAddress } from '../cross-app/_lib/format';
 import { linkedSocials } from './socials';
@@ -44,6 +45,7 @@ export function IdentityRow({
     user,
     pendingLabel,
 }: Props) {
+    const { t } = useTranslation();
     const { domain, avatar, isLoading } = useAddressInfo(walletAddress);
     const u = user as PrivyUserShape | null | undefined;
     const email = u?.email?.address ?? u?.google?.email ?? u?.id;
@@ -69,7 +71,7 @@ export function IdentityRow({
             <div className={styles.body}>
                 <div className={styles.head}>
                     <p className={styles.name} title={email ?? undefined}>
-                        {email ?? 'Signed in'}
+                        {email ?? t('identity.signedIn')}
                     </p>
                     {linked.length > 0 && (
                         <span className={styles.badges}>
@@ -100,7 +102,7 @@ export function IdentityRow({
                     </p>
                 ) : (
                     <p className={styles.placeholder}>
-                        {pendingLabel ?? 'Creating your VeChain account…'}
+                        {pendingLabel ?? t('identity.creatingAccount')}
                     </p>
                 )}
             </div>
