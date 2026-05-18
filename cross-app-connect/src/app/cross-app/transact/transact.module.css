@@ -16,7 +16,23 @@
 .cardBody {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 24px;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sectionHeader {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-subtle);
+    margin: 0;
+    padding: 0 4px;
 }
 
 .center {
@@ -146,18 +162,43 @@
 .actionList {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
 .actionRow {
     display: flex;
-    flex-direction: column;
-    padding-left: 12px;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 4px 0 4px 12px;
     border-left: 2px solid var(--border-button);
 }
 
 .actionRowWarn {
     border-left-color: var(--warn);
+}
+
+.actionStep {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--radius-full);
+    background: var(--login-btn-hover-bg);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.actionBody {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
 }
 
 .actionTitle {
@@ -169,10 +210,19 @@
 .actionDetail {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     font-size: 14px;
     color: var(--text-muted);
     margin: 0;
+}
+
+.actionDetailLabel {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-subtle);
+    flex-shrink: 0;
 }
 
 .skeletonStack {

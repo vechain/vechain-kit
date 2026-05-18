@@ -24,6 +24,11 @@ import {
 } from 'viem';
 import type { ThorClient } from '@vechain/sdk-network';
 import { type NETWORK_TYPE, getConfig } from './network-tokens';
+import {
+    recognizeKnownAction,
+    type KnownAction,
+    type KnownActionCategory,
+} from './knownActions';
 
 const ERC20_ABI = parseAbi([
     'function transfer(address to, uint256 amount)',
@@ -77,6 +82,17 @@ export type DecodedClause =
           unlimited: boolean;
       }
     | {
+          // Ecosystem-recognized call (VeChain Kit domain ops, VeBetterDAO
+          // governance, NFT transfers, etc.). Treated as fully understood —
+          // no "couldn't double-check" warning fires for these.
+          kind: 'known_action';
+          summary: string;
+          detail?: string;
+          category: KnownActionCategory;
+          recipient?: string;
+          spender?: string;
+      }
+    | {
           kind: 'unknown';
           summary: string;
           selector?: string;
@@ -88,6 +104,7 @@ export async function decodeClause(
     clause: Clause,
     thor: ThorClient | null,
     network: NETWORK_TYPE,
+    self?: string,
 ): Promise<DecodedClause> {
     const data = (clause.data ?? '0x').toLowerCase();
     const value = (() => {
@@ -165,12 +182,26 @@ export async function decodeClause(
             }
         }
         if (selector === SELECTOR_TRANSFER_FROM) {
-            // Common but messier; classify as unknown so the caller shows
-            // a "couldn't be checked" warning rather than a half-decoded line.
+            // Falls through to the known-action recognizer below, which
+            // handles ERC-721 transferFrom and ERC-20 pull-style transfers.
         }
     }
 
-    // 3. b32 fallback — at least show the function name when known.
+    // 3. Ecosystem-recognized calls — VeChain Kit domain ops, VeBetterDAO
+    // governance, NFT transfers, etc. Defined in `knownActions.ts`.
+    const known = recognizeKnownAction(clause.to, data, { self });
+    if (known) {
+        return {
+            kind: 'known_action',
+            summary: known.summary,
+            detail: known.detail,
+            category: known.category,
+            recipient: known.recipient,
+            spender: known.spender,
+        };
+    }
+
+    // 4. b32 fallback — at least show the function name when known.
     if (data.length >= 10) {
         const selector = data.slice(0, 10);
         const sig = await fetchB32Signature(selector);

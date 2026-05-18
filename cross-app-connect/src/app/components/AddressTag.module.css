@@ -8,6 +8,8 @@
 .avatar {
     border-radius: var(--radius-full);
     flex-shrink: 0;
+    object-fit: cover;
+    object-position: center;
 }
 
 .label {

@@ -335,7 +335,7 @@ export function ConnectClient() {
                         disabled={!embedded || submitting}
                     >
                         {submitting
-                            ? 'Working…'
+                            ? 'Connecting…'
                             : verifiedApp
                             ? 'Continue'
                             : 'Continue anyway'}

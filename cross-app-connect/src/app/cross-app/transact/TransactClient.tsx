@@ -24,7 +24,6 @@ import {
     humanPrimaryType,
     summarizeActions,
     titleForActions,
-    uniqueTokensFromDecoded,
     type Risk,
 } from '../_lib/labels';
 import {
@@ -329,17 +328,20 @@ export function TransactClient() {
             setDecoded(null);
             return;
         }
+        const selfAddress = smartAccount?.address;
         let cancelled = false;
         (async () => {
             const results = await Promise.all(
-                parsed.clauses.map((c) => decodeClause(c, thor, networkType)),
+                parsed.clauses.map((c) =>
+                    decodeClause(c, thor, networkType, selfAddress),
+                ),
             );
             if (!cancelled) setDecoded(results);
         })();
         return () => {
             cancelled = true;
         };
-    }, [parsed]);
+    }, [parsed, smartAccount?.address]);
 
     const onApprove = useCallback(async () => {
         if (!verified || !parsed) return;
@@ -482,7 +484,12 @@ export function TransactClient() {
         );
     }
 
-    if (!verified || !parsed) {
+    // Keep the loading shell until *all* account info is ready: the
+    // verified cross-app request, the parsed clause shape, AND the user's
+    // smart-account address. Without the smart account we'd render a card
+    // with a hole where the IdentityRow goes, then pop it in -- jarring.
+    // Better to spin a beat longer and reveal the full UI in one frame.
+    if (!verified || !parsed || !smartAccount?.address) {
         return (
             <>
                 <VechainHeader title="Reviewing transaction" />
@@ -518,9 +525,6 @@ export function TransactClient() {
         ? 'Review the message this app wants you to sign.'
         : 'Review the data this app wants you to sign.';
     const ctaLabel = isSmartAccount ? continueLabel(risk) : 'Sign';
-    const relevantTokens = isSmartAccount
-        ? uniqueTokensFromDecoded(decoded)
-        : [];
     // Always surface the smart account as "your account" -- it's the address
     // apps see on-chain and where the user's identity sits. The embedded EOA
     // is an implementation detail; for personal_sign / generic typed data
@@ -548,27 +552,37 @@ export function TransactClient() {
                         <IdentityRow
                             walletAddress={accountChipAddress}
                             user={user}
-                            balanceTokens={relevantTokens}
                         />
                     )}
-                    {parsed.kind === 'smart_account' &&
-                        (stillDecoding ? (
-                            <div className={styles.actionList}>
-                                {parsed.clauses.map((_, i) => (
-                                    <ActionRowSkeleton key={i} />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className={styles.actionList}>
-                                {decoded!.map((d, i) => (
-                                    <ActionRow
-                                        key={i}
-                                        action={d}
-                                        self={smartAccount?.address}
-                                    />
-                                ))}
-                            </div>
-                        ))}
+                    {parsed.kind === 'smart_account' && (
+                        <div className={styles.section}>
+                            <p className={styles.sectionHeader}>
+                                Actions to approve
+                            </p>
+                            {stillDecoding ? (
+                                <div className={styles.actionList}>
+                                    {parsed.clauses.map((_, i) => (
+                                        <ActionRowSkeleton key={i} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className={styles.actionList}>
+                                    {decoded!.map((d, i) => (
+                                        <ActionRow
+                                            key={i}
+                                            action={d}
+                                            self={smartAccount?.address}
+                                            index={
+                                                decoded!.length > 1
+                                                    ? i + 1
+                                                    : undefined
+                                            }
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
                     {parsed.kind === 'message' && (
                         <MessageView message={parsed.message} />
                     )}
@@ -608,7 +622,7 @@ export function TransactClient() {
                         onClick={onApprove}
                         disabled={continueDisabled}
                     >
-                        {submitting ? 'Working…' : ctaLabel}
+                        {submitting ? 'Signing…' : ctaLabel}
                     </button>
                     <button
                         type="button"
@@ -765,9 +779,13 @@ function ActionRowSkeleton() {
 function ActionRow({
     action,
     self,
+    index,
 }: {
     action: DecodedClause;
     self?: string;
+    /** When set, renders a small numbered chip before the title. Used to
+     *  visually frame multi-step batches as a sequence. */
+    index?: number;
 }) {
     const warn =
         action.kind === 'unknown' ||
@@ -777,8 +795,13 @@ function ActionRow({
         <div
             className={`${styles.actionRow} ${warn ? styles.actionRowWarn : ''}`}
         >
-            <p className={styles.actionTitle}>{action.summary}</p>
-            <ActionRowDetail action={action} self={self} />
+            {index !== undefined && (
+                <span className={styles.actionStep}>{index}</span>
+            )}
+            <div className={styles.actionBody}>
+                <p className={styles.actionTitle}>{action.summary}</p>
+                <ActionRowDetail action={action} self={self} />
+            </div>
         </div>
     );
 }
@@ -795,7 +818,7 @@ function ActionRowDetail({
         case 'token_transfer':
             return (
                 <p className={styles.actionDetail}>
-                    <span>To</span>
+                    <span className={styles.actionDetailLabel}>To</span>
                     <AddressTag
                         address={action.recipient}
                         self={self}
@@ -806,7 +829,7 @@ function ActionRowDetail({
         case 'token_approve':
             return (
                 <p className={styles.actionDetail}>
-                    <span>Spender:</span>
+                    <span className={styles.actionDetailLabel}>Spender</span>
                     <AddressTag
                         address={action.spender}
                         self={self}
@@ -814,6 +837,37 @@ function ActionRowDetail({
                     />
                 </p>
             );
+        case 'known_action':
+            if (action.recipient) {
+                return (
+                    <p className={styles.actionDetail}>
+                        <span className={styles.actionDetailLabel}>To</span>
+                        <AddressTag
+                            address={action.recipient}
+                            self={self}
+                            kind="recipient"
+                        />
+                    </p>
+                );
+            }
+            if (action.spender) {
+                return (
+                    <p className={styles.actionDetail}>
+                        <span className={styles.actionDetailLabel}>Operator</span>
+                        <AddressTag
+                            address={action.spender}
+                            self={self}
+                            kind="contract"
+                        />
+                    </p>
+                );
+            }
+            if (action.detail) {
+                return (
+                    <p className={styles.actionDetail}>{action.detail}</p>
+                );
+            }
+            return null;
         case 'unknown':
             if (action.signature) {
                 return (

@@ -41,6 +41,11 @@ export type KnownContracts = {
     vvetContractAddress: string;
     stargateContractAddress: string;
     stargateNftContractAddress: string;
+    // DEX router addresses (not in the kit's AppConfig — sourced from
+    // `packages/vechain-kit/src/utils/swap/*`).
+    betterSwapRouterAddress: string;
+    veTradeRouterAddress: string;
+    veTradeCustomRouterAddress: string;
 };
 
 const MAINNET: KnownContracts = {
@@ -86,6 +91,9 @@ const MAINNET: KnownContracts = {
     vvetContractAddress: '0x45429A2255e7248e57fce99E7239aED3f84B7a53',
     stargateContractAddress: '0x03C557bE98123fdb6faD325328AC6eB77de7248C',
     stargateNftContractAddress: '0x1856c533ac2d94340aaa8544d35a5c1d4a21dee7',
+    betterSwapRouterAddress: '0xf21Dd7108D93af56FaB07423EfB90F4a3604DA89',
+    veTradeRouterAddress: '0xE5fA980a6EfE5B79C2150a529da06AeF455963b6',
+    veTradeCustomRouterAddress: '0x7C755EC0165fCD926cC6faB10E7BB16a72E9f34A',
 };
 
 // Testnet contract addresses are out of scope for this host (cross-app
