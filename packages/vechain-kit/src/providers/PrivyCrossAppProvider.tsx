@@ -16,6 +16,7 @@ import { VECHAIN_PRIVY_APP_ID } from '../utils';
 import { defineChain } from 'viem';
 import { handlePopupError } from '@/utils/handlePopupError';
 import { isBrowser } from '@/utils/ssrUtils';
+import i18n from '../../i18n';
 import {
     VECHAIN_EXPLORER_BASE_URL,
     VECHAIN_MAINNET_NODE_BASE_URL,
@@ -48,9 +49,24 @@ export type LoginWithCrossAppOptions = {
     intent?: CrossAppLoginIntent;
 };
 
-const appendIntent = (url: string, intent: CrossAppLoginIntent) => {
+/**
+ * Append the params our whitelabel cross-app-connect host understands:
+ *  - `intent`: pre-selects an OAuth provider on the picker.
+ *  - `lng`:    language code so the popup renders in the same locale as
+ *              the kit-using app. The host falls back to navigator/locale
+ *              if absent.
+ *
+ * Privy's SDK fixes the transact URL (can't append params there), so the
+ * host stashes whatever it sees on the connect popup in localStorage and
+ * the transact popup re-reads it.
+ */
+const appendCrossAppParams = (
+    url: string,
+    params: { intent?: CrossAppLoginIntent; lng?: string },
+) => {
     const parsed = new URL(url);
-    parsed.searchParams.set('intent', intent);
+    if (params.intent) parsed.searchParams.set('intent', params.intent);
+    if (params.lng) parsed.searchParams.set('lng', params.lng);
     return parsed.toString();
 };
 
@@ -163,17 +179,24 @@ export const usePrivyCrossAppSdk = () => {
 
                 const resolvedAppId = appID || VECHAIN_PRIVY_APP_ID;
 
-                if (options?.intent) {
+                // Pull the kit's current language so the whitelabel cross-app
+                // host renders the popup in the same locale. The host then
+                // stashes it in its own localStorage so the transact popup
+                // (whose URL is built by Privy's SDK and not editable from
+                // the kit) reads the same value.
+                const lng = i18n.language;
+
+                if (options?.intent || lng) {
                     // Resolve the registered whitelabel connect URL via the
-                    // Privy backend and append intent. This avoids hardcoding
+                    // Privy backend and append params. This avoids hardcoding
                     // the whitelabel domain in the kit.
                     const baseUrl = await resolveProviderConnectUrl(
                         resolvedAppId,
                     );
-                    const overrideConnectUrl = appendIntent(
-                        baseUrl,
-                        options.intent,
-                    );
+                    const overrideConnectUrl = appendCrossAppParams(baseUrl, {
+                        intent: options?.intent,
+                        lng,
+                    });
                     const customConnector = toPrivyWalletConnector({
                         id: resolvedAppId,
                         name:
