@@ -137,14 +137,15 @@ function persistLanguage(lng: SupportedLanguage) {
     }
 }
 
-// Initialise once at module load. Subsequent `useTranslation()` calls hit
-// this same instance. `resolveLanguage()` is safe to call on the server
-// (returns 'en'); SSR renders English, then the client hydrates with the
-// detected language without a re-render storm because i18next's React
-// integration is reactive.
+// Initialise once at module load with 'en' so server-rendered HTML and the
+// client's first React render produce *identical* strings — that's what
+// avoids React's hydration-mismatch warning. The actual language detection
+// happens in `<I18nProvider>` via a layout effect that calls
+// `i18n.changeLanguage(resolveLanguage())` immediately after mount, before
+// browser paint. Result: no flash of English, no console error.
 i18n.use(initReactI18next).init({
     resources,
-    lng: resolveLanguage(),
+    lng: 'en',
     fallbackLng: 'en',
     interpolation: {
         escapeValue: false, // React already escapes
