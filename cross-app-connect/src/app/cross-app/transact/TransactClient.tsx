@@ -15,7 +15,8 @@ import { formatUnits } from 'viem';
 import { useCrossAppClient } from '../_lib/client';
 import { VechainHeader } from '../../components/VechainHeader';
 import { AddressTag } from '../../components/AddressTag';
-import { AccountChip } from '../../components/AccountChip';
+import { IdentityRow } from '../../components/IdentityRow';
+import { BalanceLine } from '../../components/BalanceLine';
 import { decodeClause, type DecodedClause } from '../_lib/decoder';
 import {
     computeRisk,
@@ -525,7 +526,7 @@ export function TransactClient() {
         ? uniqueTokensFromDecoded(decoded)
         : [];
     // Always surface the smart account as "your account" -- it's the address
-    // apps see on-chain and where the user's balance sits. The embedded EOA
+    // apps see on-chain and where the user's identity sits. The embedded EOA
     // is an implementation detail; for personal_sign / generic typed data
     // the signature comes from it, but the user thinks in terms of their
     // VeChain identity. We render the chip only once the smart account
@@ -548,10 +549,16 @@ export function TransactClient() {
             <div className={styles.card}>
                 <div className={styles.cardBody}>
                     {accountChipAddress && (
-                        <AccountChip
-                            address={accountChipAddress}
-                            relevantTokens={relevantTokens}
-                        />
+                        <div className={styles.identityGroup}>
+                            <IdentityRow
+                                walletAddress={accountChipAddress}
+                                user={user}
+                            />
+                            <BalanceLine
+                                address={accountChipAddress}
+                                relevantTokens={relevantTokens}
+                            />
+                        </div>
                     )}
                     {parsed.kind === 'smart_account' &&
                         (stillDecoding ? (

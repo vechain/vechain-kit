@@ -7,12 +7,8 @@ import {
     useRef,
     useState,
 } from 'react';
-import { FcGoogle } from 'react-icons/fc';
-import { FaApple, FaDiscord, FaGithub, FaLine, FaTiktok } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
 import { SiFarcaster } from 'react-icons/si';
 import { LuPhone } from 'react-icons/lu';
-import type { IconType } from 'react-icons';
 import {
     useLoginWithOAuth,
     useLoginWithSms,
@@ -27,37 +23,21 @@ import {
     getSmartAccountAddress,
     type SmartAccountInfo,
 } from '../_lib/thor';
-import { useAddressInfo } from '../_lib/useAddressInfo';
 import { VechainHeader } from '../../components/VechainHeader';
+import { IdentityRow } from '../../components/IdentityRow';
+import {
+    BRAND_GLYPH_COLOR,
+    FARCASTER_GLYPH_COLOR,
+    OAUTH_PROVIDERS,
+    PHONE_GLYPH_COLOR,
+    type OAuthProvider,
+} from '../../components/socials';
 import { PinInput } from './PinInput';
 import styles from './connect.module.css';
 
 type ConnectionRequest = ReturnType<
     ReturnType<typeof useCrossAppClient>['getConnectionRequestFromUrlParams']
 >;
-
-const OAUTH_PROVIDERS = [
-    { id: 'google', label: 'Google', Icon: FcGoogle, tier: 'primary' },
-    { id: 'apple', label: 'Apple', Icon: FaApple, tier: 'primary' },
-    { id: 'twitter', label: 'X', Icon: FaXTwitter, tier: 'primary' },
-    { id: 'discord', label: 'Discord', Icon: FaDiscord, tier: 'other' },
-    { id: 'github', label: 'GitHub', Icon: FaGithub, tier: 'other' },
-    { id: 'tiktok', label: 'TikTok', Icon: FaTiktok, tier: 'other' },
-    { id: 'line', label: 'LINE', Icon: FaLine, tier: 'other' },
-] as const satisfies ReadonlyArray<{
-    id: string;
-    label: string;
-    Icon: IconType;
-    tier: 'primary' | 'other';
-}>;
-type OAuthProvider = (typeof OAUTH_PROVIDERS)[number]['id'];
-
-const BRAND_GLYPH_COLOR: Partial<Record<OAuthProvider, string>> = {
-    discord: '#5865F2',
-    tiktok: '#FE2C55',
-    line: '#06C755',
-};
-const PHONE_GLYPH_COLOR = '#34C759';
 
 const INTENT_METHODS = [
     ...OAUTH_PROVIDERS.map((p) => p.id),
@@ -95,11 +75,6 @@ function hasLinkedProvider(
 
 function isOAuthIntent(value: IntentMethod | null): value is OAuthProvider {
     return !!value && OAUTH_PROVIDERS.some((p) => p.id === value);
-}
-
-function truncateAddress(addr?: string): string {
-    if (!addr) return '';
-    return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
 export function ConnectClient() {
@@ -706,7 +681,7 @@ function FarcasterRow({
         <button type="button" className={styles.btnRow} onClick={onClick}>
             <SiFarcaster
                 className={styles.rowIcon}
-                style={{ color: '#8A63D2' }}
+                style={{ color: FARCASTER_GLYPH_COLOR }}
             />
             <span className={styles.rowLabel}>Continue with Farcaster</span>
             {isRecent && <RecentDot />}
@@ -725,117 +700,3 @@ function RecentDot() {
     );
 }
 
-function IdentityRow({
-    walletAddress,
-    user,
-}: {
-    walletAddress?: string;
-    user: ReturnType<typeof usePrivy>['user'];
-}) {
-    const { domain, avatar, isLoading } = useAddressInfo(walletAddress);
-    const email = user?.email?.address ?? user?.google?.email ?? user?.id;
-    const linked = linkedSocials(user);
-    const walletPending = !walletAddress || isLoading;
-
-    return (
-        <div className={styles.identityRow}>
-            {isLoading ? (
-                <div
-                    className={`${styles.skeleton} ${styles.skeletonAvatar}`}
-                />
-            ) : avatar ? (
-                <img
-                    src={avatar}
-                    alt=""
-                    className={styles.identityAvatar}
-                    draggable={false}
-                />
-            ) : (
-                <div className={styles.identityAvatarPlaceholder} />
-            )}
-            <div className={styles.identityBody}>
-                <div className={styles.identityHead}>
-                    <p
-                        className={styles.identityName}
-                        title={email ?? undefined}
-                    >
-                        {email ?? 'Signed in'}
-                    </p>
-                    {linked.length > 0 && (
-                        <span className={styles.identityBadges}>
-                            {linked.map((s) => {
-                                const Icon = s.Icon;
-                                return (
-                                    <Icon
-                                        key={s.id}
-                                        className={styles.identityBadge}
-                                        style={{ color: s.color }}
-                                        aria-label={s.label}
-                                        title={s.label}
-                                    />
-                                );
-                            })}
-                        </span>
-                    )}
-                </div>
-                {walletPending ? (
-                    <div
-                        className={`${styles.skeleton} ${styles.skeletonWallet}`}
-                    />
-                ) : walletAddress ? (
-                    <p className={styles.identityWallet}>
-                        {domain
-                            ? `${domain} · ${truncateAddress(walletAddress)}`
-                            : truncateAddress(walletAddress)}
-                    </p>
-                ) : (
-                    <p className={styles.muted}>
-                        Creating your VeChain account…
-                    </p>
-                )}
-            </div>
-        </div>
-    );
-}
-
-type LinkedSocialBadge = {
-    id: string;
-    label: string;
-    Icon: IconType;
-    color?: string;
-};
-
-function linkedSocials(
-    user: ReturnType<typeof usePrivy>['user'],
-): LinkedSocialBadge[] {
-    if (!user) return [];
-    const u = user as unknown as Record<string, unknown>;
-    const badges: LinkedSocialBadge[] = [];
-    for (const p of OAUTH_PROVIDERS) {
-        if (u[p.id]) {
-            badges.push({
-                id: p.id,
-                label: p.label,
-                Icon: p.Icon,
-                color: BRAND_GLYPH_COLOR[p.id],
-            });
-        }
-    }
-    if (u.phone) {
-        badges.push({
-            id: 'phone',
-            label: 'Phone',
-            Icon: LuPhone,
-            color: PHONE_GLYPH_COLOR,
-        });
-    }
-    if (u.farcaster) {
-        badges.push({
-            id: 'farcaster',
-            label: 'Farcaster',
-            Icon: SiFarcaster,
-            color: '#8A63D2',
-        });
-    }
-    return badges;
-}

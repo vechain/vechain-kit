@@ -19,6 +19,12 @@
     gap: 16px;
 }
 
+.identityGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
 .center {
     display: flex;
     justify-content: center;

@@ -1,0 +1,38 @@
+.row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    padding: 0 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+.label {
+    font-size: 12px;
+    color: var(--text-subtle);
+    font-family: var(--font-body);
+}
+
+.value {
+    color: var(--text-strong);
+    font-weight: 500;
+}
+
+.sep {
+    color: var(--text-subtle);
+}
+
+.skeleton {
+    height: 14px;
+    width: 120px;
+    background: var(--login-btn-hover-bg);
+    border-radius: var(--radius-sm);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
