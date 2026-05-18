@@ -11230,9 +11230,11 @@ __metadata:
     "@vechain/sdk-network": "npm:2.0.7"
     eslint: "npm:^9.12.0"
     eslint-config-next: "npm:14.1.4"
+    i18next: "npm:^23.16.8"
     next: "npm:~16.2.3"
     react: "npm:^18"
     react-dom: "npm:^18"
+    react-i18next: "npm:^15.4.0"
     react-icons: "npm:^5.4.0"
     typescript: "npm:5.3.3"
     viem: "npm:^2.22.0"
@@ -13674,6 +13676,15 @@ __metadata:
   dependencies:
     "@babel/runtime": "npm:^7.23.2"
   checksum: 10c0/4fcb6ec316e0fd4a10eee67a8d1e3d7e1407f14d5bed98978c50ed6f1853f5d559dc18ea7fd4b2de445ac0a4ed44df5b38f0b31b89b9ac883f99050d59ffec82
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^23.16.8":
+  version: 23.16.8
+  resolution: "i18next@npm:23.16.8"
+  dependencies:
+    "@babel/runtime": "npm:^7.23.2"
+  checksum: 10c0/57d249191e8a39bbbbe190cfa2e2bb651d0198e14444fe80453d3df8d02927de3c147c77724e9ae6c72fa241898cd761e3fdcd55d053db373471f1ac084bf345
   languageName: node
   linkType: hard
 
