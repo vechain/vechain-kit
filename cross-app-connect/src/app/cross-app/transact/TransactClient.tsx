@@ -16,7 +16,7 @@ import { useCrossAppClient } from '../_lib/client';
 import { VechainHeader } from '../../components/VechainHeader';
 import { AddressTag } from '../../components/AddressTag';
 import { IdentityRow } from '../../components/IdentityRow';
-import { BalanceLine } from '../../components/BalanceLine';
+import { truncateAddress } from '../_lib/format';
 import { decodeClause, type DecodedClause } from '../_lib/decoder';
 import {
     computeRisk,
@@ -136,10 +136,6 @@ function parseClauses(typedData: SmartAccountTypedData): Clause[] {
     ];
 }
 
-function truncate(addr: string): string {
-    if (!addr || addr.length < 12) return addr;
-    return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
-}
 
 export function TransactClient() {
     const client = useCrossAppClient();
@@ -549,16 +545,11 @@ export function TransactClient() {
             <div className={styles.card}>
                 <div className={styles.cardBody}>
                     {accountChipAddress && (
-                        <div className={styles.identityGroup}>
-                            <IdentityRow
-                                walletAddress={accountChipAddress}
-                                user={user}
-                            />
-                            <BalanceLine
-                                address={accountChipAddress}
-                                relevantTokens={relevantTokens}
-                            />
-                        </div>
+                        <IdentityRow
+                            walletAddress={accountChipAddress}
+                            user={user}
+                            balanceTokens={relevantTokens}
+                        />
                     )}
                     {parsed.kind === 'smart_account' &&
                         (stillDecoding ? (
@@ -657,7 +648,7 @@ export function TransactClient() {
                                 label="Your account"
                                 value={
                                     accountChipAddress
-                                        ? truncate(accountChipAddress)
+                                        ? truncateAddress(accountChipAddress)
                                         : 'resolving…'
                                 }
                             />

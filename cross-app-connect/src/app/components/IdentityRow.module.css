@@ -1,11 +1,17 @@
-.row {
+.container {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-direction: column;
+    gap: 10px;
     padding: 12px;
     border-radius: var(--radius-md);
     background: var(--bg-card-elevated);
     border: 1px solid var(--border-default);
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .avatar {
@@ -93,6 +99,39 @@
 .skeletonWallet {
     height: 14px;
     width: 60%;
+}
+
+.balanceRow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-default);
+    font-size: 13px;
+}
+
+.balanceLabel {
+    font-size: 12px;
+    color: var(--text-subtle);
+    margin: 0;
+}
+
+.balanceValue {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-strong);
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    margin: 0;
+}
+
+.balanceSep {
+    color: var(--text-subtle);
+}
+
+.skeletonBalance {
+    height: 14px;
+    width: 140px;
 }
 
 @keyframes pulse {

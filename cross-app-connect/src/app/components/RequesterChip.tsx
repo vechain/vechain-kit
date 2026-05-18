@@ -1,12 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import {
-    LuCircleCheck,
-    LuGlobe,
-    LuLockKeyhole,
-    LuTriangleAlert,
-} from 'react-icons/lu';
+import { LuCircleCheck, LuLockKeyhole, LuTriangleAlert } from 'react-icons/lu';
 import { lookupAppByUrl } from '../cross-app/_lib/app-hub';
 import styles from './RequesterChip.module.css';
 
@@ -14,67 +8,108 @@ type Props = {
     url: string;
 };
 
+type ChipKind =
+    | { kind: 'local'; host: string }
+    | { kind: 'insecure'; host: string }
+    | { kind: 'verified'; name: string }
+    | { kind: 'secure'; host: string };
+
 /**
- * Identifies the dApp asking to connect. Three signals stacked on the chip:
+ * Identifies the dApp asking to connect with a single, clear signal:
  *
- *   1. HTTPS lock      -- raw transport security check.
- *   2. Favicon          -- visual recognition cue from the requester's domain.
- *   3. Verified badge   -- match against vechain/app-hub registry. Listed
- *                          apps render their canonical Name + green check;
- *                          everything else gets an orange warning triangle.
+ *   • local dev origin  →  ⚠ yellow chip, "Local development site · host"
+ *   • HTTP non-local    →  ⚠ yellow chip, host
+ *   • HTTPS verified    →  ✓ green-outlined chip, App-Hub name
+ *   • HTTPS unverified  →  🔒 neutral chip, host
+ *
+ * The favicon and dual-icon treatment from the earlier version were dropped
+ * because three icons (globe + favicon + warning) made the trust signal
+ * ambiguous. One glyph, one chip background; the colour does the talking.
  */
 export function RequesterChip({ url }: Props) {
-    const [iconBroken, setIconBroken] = useState(false);
     const parsed = safeParseUrl(url);
     if (!parsed) {
         return <span className={styles.fallback}>{url}</span>;
     }
 
-    const isSecure = parsed.protocol === 'https:';
+    const chip = classify(parsed, url);
+
+    switch (chip.kind) {
+        case 'local':
+            return (
+                <span className={`${styles.chip} ${styles.chipWarn}`}>
+                    <LuTriangleAlert
+                        className={`${styles.icon} ${styles.iconWarn}`}
+                        aria-label="Local development site"
+                    />
+                    <span className={styles.label}>
+                        Local development site
+                        <span className={styles.sep}> · </span>
+                        <span className={styles.host}>{chip.host}</span>
+                    </span>
+                </span>
+            );
+        case 'insecure':
+            return (
+                <span className={`${styles.chip} ${styles.chipWarn}`}>
+                    <LuTriangleAlert
+                        className={`${styles.icon} ${styles.iconWarn}`}
+                        aria-label="Not encrypted (HTTP)"
+                    />
+                    <span className={styles.host}>{chip.host}</span>
+                </span>
+            );
+        case 'verified':
+            return (
+                <span className={`${styles.chip} ${styles.chipVerified}`}>
+                    <LuCircleCheck
+                        className={`${styles.icon} ${styles.iconVerified}`}
+                        aria-label="Listed in the VeChain App Hub"
+                    />
+                    <span className={styles.label}>{chip.name}</span>
+                </span>
+            );
+        case 'secure':
+            return (
+                <span className={styles.chip}>
+                    <LuLockKeyhole
+                        className={`${styles.icon} ${styles.iconSecure}`}
+                        aria-label="Secure (HTTPS)"
+                    />
+                    <span className={styles.host}>{chip.host}</span>
+                </span>
+            );
+    }
+}
+
+function classify(parsed: URL, originalUrl: string): ChipKind {
     const display =
         parsed.port && parsed.port !== '80' && parsed.port !== '443'
             ? `${parsed.hostname}:${parsed.port}`
             : parsed.hostname;
-    const faviconSrc = `https://www.google.com/s2/favicons?domain=${parsed.hostname}&sz=64`;
-    const appHubEntry = lookupAppByUrl(url);
-    const verified = Boolean(appHubEntry);
-    const SecurityIcon = isSecure ? LuLockKeyhole : LuGlobe;
-    const VerifiedIcon = verified ? LuCircleCheck : LuTriangleAlert;
 
+    if (isLocalHost(parsed.hostname)) {
+        return { kind: 'local', host: display };
+    }
+    if (parsed.protocol !== 'https:') {
+        return { kind: 'insecure', host: display };
+    }
+    const appHubEntry = lookupAppByUrl(originalUrl);
+    if (appHubEntry) {
+        return { kind: 'verified', name: appHubEntry.name };
+    }
+    return { kind: 'secure', host: display };
+}
+
+function isLocalHost(host: string): boolean {
     return (
-        <span
-            className={`${styles.chip} ${verified ? styles.chipVerified : ''}`}
-        >
-            <SecurityIcon
-                className={`${styles.icon} ${isSecure ? styles.iconSecure : styles.iconInsecure}`}
-                aria-label={
-                    isSecure ? 'Secure (HTTPS)' : 'Not encrypted (HTTP)'
-                }
-            />
-            {!iconBroken && (
-                <img
-                    src={faviconSrc}
-                    alt=""
-                    className={styles.favicon}
-                    onError={() => setIconBroken(true)}
-                    draggable={false}
-                />
-            )}
-            <span className={styles.label}>
-                {verified ? appHubEntry!.name : display}
-            </span>
-            <VerifiedIcon
-                className={`${styles.icon} ${verified ? styles.iconVerified : styles.iconUnverified}`}
-                aria-label={
-                    verified ? 'Verified VeChain app' : 'Unverified app'
-                }
-                title={
-                    verified
-                        ? 'Listed in the VeChain App Hub'
-                        : 'Not listed in the VeChain App Hub — proceed only if you recognize this site'
-                }
-            />
-        </span>
+        host === 'localhost' ||
+        host === '127.0.0.1' ||
+        host === '0.0.0.0' ||
+        host === '::1' ||
+        host.endsWith('.local') ||
+        host.endsWith('.localhost') ||
+        host.endsWith('.test')
     );
 }
 

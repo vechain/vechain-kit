@@ -1,49 +1,47 @@
 .chip {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 3px 8px;
+    gap: 6px;
+    padding: 2px 8px;
     border-radius: var(--radius-full);
-    background: var(--bg-card);
     border: 1px solid var(--border-button);
+    background: var(--bg-card);
     max-width: 100%;
+    line-height: 1.4;
 }
 
+/* Verified production app — subtle green outline + check */
 .chipVerified {
     border-color: var(--success);
 }
 
+/* Local dev / HTTP origins — loud warning is the whole point. Yellow
+   tint + warning glyph; no other ornament. */
+.chipWarn {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: var(--warn);
+}
+
 .icon {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     flex-shrink: 0;
 }
 
 .iconSecure {
-    color: var(--success);
+    color: var(--text-subtle);
 }
 
-.iconInsecure {
-    color: var(--text-subtle);
+.iconWarn {
+    color: var(--warn);
 }
 
 .iconVerified {
     color: var(--success);
 }
 
-.iconUnverified {
-    color: var(--warn);
-}
-
-.favicon {
-    width: 16px;
-    height: 16px;
-    border-radius: var(--radius-sm);
-    flex-shrink: 0;
-}
-
 .label {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-strong);
     white-space: nowrap;
@@ -51,7 +49,19 @@
     text-overflow: ellipsis;
 }
 
+.sep {
+    color: var(--text-subtle);
+    font-weight: 400;
+}
+
+.host {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-strong);
+}
+
 .fallback {
-    font-size: 14px;
+    font-size: 12px;
     color: var(--text-muted);
 }

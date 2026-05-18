@@ -3,6 +3,7 @@
 import { LuCircleCheck, LuTriangleAlert } from 'react-icons/lu';
 import { resolveContractLabel } from '../cross-app/_lib/contracts';
 import { useAddressInfo } from '../cross-app/_lib/useAddressInfo';
+import { truncateAddress } from '../cross-app/_lib/format';
 import styles from './AddressTag.module.css';
 
 type Props = {
@@ -22,11 +23,6 @@ type Props = {
     /** Avatar size in px. Defaults to 20 for inline use. */
     avatarSize?: number;
 };
-
-function truncate(addr: string): string {
-    if (!addr || addr.length < 12) return addr;
-    return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
-}
 
 export function AddressTag({
     address,
@@ -78,11 +74,11 @@ export function AddressTag({
                 <span className={styles.domainStack}>
                     <span className={styles.domainName}>{domain}</span>
                     <span className={styles.addressLine}>
-                        {truncate(address)}
+                        {truncateAddress(address)}
                     </span>
                 </span>
             ) : (
-                <span className={styles.addressOnly}>{truncate(address)}</span>
+                <span className={styles.addressOnly}>{truncateAddress(address)}</span>
             )}
             {kind === 'contract' && (
                 <LuTriangleAlert
