@@ -1,1 +1,253 @@
-{}
+{
+    "common": {
+        "button": {
+            "back": "Quay lại",
+            "cancel": "Hủy",
+            "continue": "Tiếp tục",
+            "continueAnyway": "Vẫn tiếp tục"
+        },
+        "amount": {
+            "unlimited": "Không giới hạn"
+        },
+        "tokens": "token",
+        "yes": "Có",
+        "no": "Không",
+        "empty": "(trống)"
+    },
+    "vote": {
+        "for": "TÁN THÀNH",
+        "against": "PHẢN ĐỐI",
+        "abstain": "BỎ PHIẾU TRẮNG"
+    },
+    "header": {
+        "title": {
+            "default": "Đăng nhập vào ví của bạn"
+        }
+    },
+    "identity": {
+        "creatingAccount": "Đang tạo tài khoản VeChain của bạn…",
+        "signedIn": "Đã đăng nhập"
+    },
+    "addressTag": {
+        "verifiedContract": "Hợp đồng VeChain đã xác minh",
+        "unverifiedContract": "Hợp đồng chưa xác minh — hãy chắc chắn bạn tin tưởng nó trước khi tiếp tục"
+    },
+    "requester": {
+        "localDev": "Trang phát triển cục bộ"
+    },
+    "domains": {
+        "label": {
+            "avatar": "ảnh đại diện",
+            "description": "mô tả",
+            "email": "email",
+            "website": "trang web",
+            "twitter": "tài khoản Twitter",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "bản ghi {{key}}"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "Gửi {{amount}} VET",
+            "token": "Gửi {{amount}} {{symbol}}"
+        },
+        "approve": {
+            "unlimited": "Cho phép chi tiêu {{symbol}} không giới hạn",
+            "upTo": "Cho phép chi tiêu tối đa {{amount}} {{symbol}}"
+        },
+        "unknown": {
+            "runOn": "Chạy {{fn}} trên một hợp đồng",
+            "interact": "Tương tác với một hợp đồng"
+        },
+        "domain": {
+            "removePrimary": "Xóa tên miền VeChain chính của bạn",
+            "setPrimary": "Đặt {{name}} làm tên miền VeChain chính",
+            "pointToYou": "Trỏ tên miền VeChain về tài khoản của bạn",
+            "updateAddress": "Cập nhật địa chỉ tên miền VeChain",
+            "newTarget": "Đích mới: {{addr}}",
+            "removeRecord": "Xóa {{label}}",
+            "setRecordTo": "Đặt {{label}} thành {{value}}",
+            "updateRecord": "Cập nhật {{label}}",
+            "claim": "Yêu cầu {{subdomain}}.veworld.vet"
+        },
+        "governance": {
+            "voteOnProposal": "Bỏ phiếu {{vote}} cho một đề xuất VeBetterDAO",
+            "reason": "Lý do: {{reason}}",
+            "allocateSingle": "Bỏ phiếu trong vòng phân bổ VeBetterDAO này",
+            "allocateMany": "Phân bổ phiếu của bạn cho {{count}} ứng dụng trong vòng này",
+            "endorse": "Ủng hộ một ứng dụng VeBetterDAO",
+            "unendorse": "Rút lại sự ủng hộ của bạn cho một ứng dụng VeBetterDAO"
+        },
+        "token": {
+            "convertToVot3": "Chuyển đổi {{amount}} B3TR → VOT3 (khóa để bỏ phiếu)",
+            "convertToB3tr": "Chuyển đổi {{amount}} VOT3 → B3TR (mở khóa)",
+            "pullFrom": "Rút token từ một địa chỉ",
+            "recipientDetail": "Người nhận: {{to}}"
+        },
+        "rewards": {
+            "voter": "Nhận phần thưởng cử tri VeBetterDAO (chu kỳ {{cycle}})",
+            "allocation": "Nhận phần thưởng phân bổ cho vòng {{round}}"
+        },
+        "swap": {
+            "onDex": "Hoán đổi token trên {{dex}}"
+        },
+        "nft": {
+            "send": "Gửi một NFT",
+            "transfer": "Chuyển một NFT",
+            "sendEditions": "Gửi {{count}} bản phát hành của một NFT",
+            "sendBatch": "Gửi {{count}} NFT cùng lúc",
+            "approveAll": "Cho phép trang này quản lý các NFT của bạn",
+            "revokeAll": "Thu hồi quyền quản lý NFT",
+            "toDetail": "Đến: {{to}}",
+            "operatorDetail": "Người vận hành: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "Hành động bị chặn",
+            "confirmAction": "Xác nhận hành động",
+            "confirmTokenTransfer": "Xác nhận chuyển token",
+            "confirmTokenTransfers": "Xác nhận các giao dịch chuyển token",
+            "confirmTokenApproval": "Xác nhận cấp phép token",
+            "confirmTokenApprovals": "Xác nhận các cấp phép token",
+            "confirmContractCall": "Xác nhận gọi hợp đồng",
+            "confirmTokenSwap": "Xác nhận hoán đổi token",
+            "confirmDomainUpdate": "Xác nhận cập nhật tên miền",
+            "confirmVeBetterDaoVote": "Xác nhận phiếu bầu VeBetterDAO",
+            "confirmRewardsClaim": "Xác nhận yêu cầu phần thưởng",
+            "confirmNftTransfer": "Xác nhận chuyển NFT",
+            "confirmNftActions": "Xác nhận các hành động NFT",
+            "confirmTokenAction": "Xác nhận hành động token",
+            "confirmStakeUpdate": "Xác nhận cập nhật stake",
+            "confirmNActions": "Xác nhận {{count}} hành động",
+            "noRequest": "Không có yêu cầu giao dịch",
+            "reviewing": "Đang xem xét giao dịch",
+            "signIn": "Đăng nhập để tiếp tục",
+            "couldNotLoad": "Không thể tải yêu cầu",
+            "signMessage": "Ký một thông điệp",
+            "signData": "Ký dữ liệu"
+        },
+        "subtitle": {
+            "sendVet": "{{amount}} VET đến {{recipient}}",
+            "sendToken": "{{amount}} {{symbol}} đến {{recipient}}",
+            "approveFor": "{{amount}} {{symbol}} cho {{spender}}",
+            "swapVia": "{{amount}} {{symbol}} qua {{dex}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "qua {{dex}}",
+            "switchingTo": "Đang chuyển sang {{domain}}",
+            "clearingPrimary": "Đang xóa tên miền chính",
+            "voteOnProposal": "Đề xuất {{vote}}",
+            "allocatingAcross": "Phân bổ cho {{count}} ứng dụng",
+            "endorsingApp": "Đang ủng hộ một ứng dụng",
+            "fromCycle": "Từ chu kỳ {{cycle}}",
+            "fromRound": "Từ vòng {{round}}",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} hành động, {{unverified}} chưa xác minh",
+            "reviewMessage": "Xem lại thông điệp mà ứng dụng này muốn bạn ký.",
+            "reviewData": "Xem lại dữ liệu mà ứng dụng này muốn bạn ký.",
+            "signInWaiting": "Có một yêu cầu ký đang chờ. Đăng nhập để xem lại."
+        },
+        "button": {
+            "confirm": "Xác nhận",
+            "confirmAnyway": "Vẫn xác nhận",
+            "confirmAsDanger": "Tôi hiểu, xác nhận",
+            "signing": "Đang ký…",
+            "sign": "Ký"
+        },
+        "section": {
+            "actionsToApprove": "Các hành động cần phê duyệt"
+        },
+        "alert": {
+            "unverifiedStep": "Chúng tôi không thể kiểm tra kỹ mọi bước, vì vậy chỉ tiếp tục nếu bạn tin tưởng ứng dụng này.",
+            "unlimitedApprove": "Ứng dụng này đang yêu cầu quyền truy cập không giới hạn vào một trong các token của bạn — hãy chắc chắn bạn tin tưởng nó."
+        },
+        "inspect": {
+            "prompt": "Bạn muốn xem chi tiết kỹ thuật?",
+            "show": "Xem chi tiết",
+            "hide": "Ẩn",
+            "showCalldata": "Hiển thị calldata thô",
+            "hideCalldata": "Ẩn calldata thô"
+        },
+        "detail": {
+            "yourAccount": "Tài khoản của bạn",
+            "resolving": "đang phân giải…",
+            "network": "Mạng",
+            "type": "Loại",
+            "clauseSingular": "Mệnh đề",
+            "clausePlural": "Mệnh đề ({{count}})",
+            "clauseLabel": "Mệnh đề {{index}} trên {{total}} · đến",
+            "value": "Giá trị",
+            "domain": "Tên miền",
+            "rawData": "Dữ liệu thô",
+            "rawHex": "Hex thô",
+            "function": "Hàm: {{signature}}",
+            "selector": "Selector: {{selector}}",
+            "message": "Thông điệp",
+            "emptyMessage": "(thông điệp trống)",
+            "authorizedCall": "Cuộc gọi được ủy quyền",
+            "authorizedBatchCall": "Cuộc gọi hàng loạt được ủy quyền",
+            "to": "Đến",
+            "spender": "Người chi tiêu",
+            "operator": "Người vận hành"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "Thor Solo cục bộ"
+        },
+        "noRequestBody": "Trang này xử lý các yêu cầu giao dịch xuyên ứng dụng từ các dApp VeChain khác. Không thể mở trực tiếp — ứng dụng yêu cầu sẽ mở nó với các tham số cần thiết."
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "Không thể tải yêu cầu",
+            "logIn": "Đăng nhập vào ví của bạn",
+            "connectTo": "Kết nối với {{app}}",
+            "confirmConnection": "Xác nhận kết nối"
+        },
+        "subtitle": {
+            "grantAccessTo": "Đăng nhập để cấp quyền truy cập cho",
+            "notBefore": "Bạn chưa từng kết nối ở đây trước đây",
+            "connecting": "Đang kết nối…"
+        },
+        "button": {
+            "connecting": "Đang kết nối…",
+            "useAnotherAccount": "Dùng tài khoản khác"
+        },
+        "copy": {
+            "notYou": "Không phải bạn?",
+            "noRequestBody": "Trang này xử lý các yêu cầu kết nối xuyên ứng dụng từ các dApp VeChain khác. Không thể mở trực tiếp — ứng dụng yêu cầu sẽ mở nó với các tham số cần thiết."
+        },
+        "phone": {
+            "placeholder": "+84 912 345 678",
+            "codeHint": "Nhập kèm mã quốc gia, ví dụ +84 cho Việt Nam, +1 cho Mỹ.",
+            "sendCode": "Gửi mã",
+            "sending": "Đang gửi…",
+            "codeSent": "Chúng tôi đã gửi mã 6 chữ số đến {{phone}}.",
+            "verify": "Xác minh",
+            "verifying": "Đang xác minh…"
+        },
+        "farcaster": {
+            "comingSoon": "Đăng nhập Farcaster sắp ra mắt. Tính năng này dùng Sign In With Farcaster (SIWF), cần quét mã trên Warpcast và chưa được kết nối ở đây. Vui lòng chọn tùy chọn khác lúc này."
+        },
+        "provider": {
+            "continueWith": "Tiếp tục với {{provider}}",
+            "continueWithPhone": "Tiếp tục với Số điện thoại",
+            "continueWithFarcaster": "Tiếp tục với Farcaster",
+            "lastUsed": "Đã dùng gần nhất",
+            "moreOptions": "+ {{count}} tùy chọn khác"
+        },
+        "alert": {
+            "notListed": "Ứng dụng này không có trong VeChain App Hub, vì vậy chỉ tiếp tục nếu bạn tin tưởng trang web này."
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Máy chủ whitelabel cho các luồng kết nối và giao dịch xuyên ứng dụng của Privy.",
+        "routes": "Các tuyến",
+        "connectDesc": "xử lý các yêu cầu kết nối",
+        "transactDesc": "xử lý các yêu cầu giao dịch / ký",
+        "footer": "Trang này không được người dùng mở trực tiếp."
+    }
+}

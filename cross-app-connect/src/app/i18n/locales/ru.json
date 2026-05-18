@@ -1,1 +1,253 @@
-{}
+{
+    "common": {
+        "button": {
+            "back": "Назад",
+            "cancel": "Отмена",
+            "continue": "Продолжить",
+            "continueAnyway": "Всё равно продолжить"
+        },
+        "amount": {
+            "unlimited": "Без ограничений"
+        },
+        "tokens": "токенов",
+        "yes": "Да",
+        "no": "Нет",
+        "empty": "(пусто)"
+    },
+    "vote": {
+        "for": "ЗА",
+        "against": "ПРОТИВ",
+        "abstain": "ВОЗДЕРЖАЛСЯ"
+    },
+    "header": {
+        "title": {
+            "default": "Войдите в свой кошелёк"
+        }
+    },
+    "identity": {
+        "creatingAccount": "Создаём ваш аккаунт VeChain…",
+        "signedIn": "Вы вошли"
+    },
+    "addressTag": {
+        "verifiedContract": "Проверенный контракт VeChain",
+        "unverifiedContract": "Непроверенный контракт — продолжайте только если доверяете ему"
+    },
+    "requester": {
+        "localDev": "Сайт локальной разработки"
+    },
+    "domains": {
+        "label": {
+            "avatar": "аватар",
+            "description": "описание",
+            "email": "email",
+            "website": "сайт",
+            "twitter": "Twitter",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "запись {{key}}"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "Отправить {{amount}} VET",
+            "token": "Отправить {{amount}} {{symbol}}"
+        },
+        "approve": {
+            "unlimited": "Разрешить неограниченное расходование {{symbol}}",
+            "upTo": "Разрешить расходование до {{amount}} {{symbol}}"
+        },
+        "unknown": {
+            "runOn": "Вызвать {{fn}} на контракте",
+            "interact": "Взаимодействовать с контрактом"
+        },
+        "domain": {
+            "removePrimary": "Удалить ваш основной домен VeChain",
+            "setPrimary": "Сделать {{name}} вашим основным доменом VeChain",
+            "pointToYou": "Направить ваш домен VeChain на ваш аккаунт",
+            "updateAddress": "Обновить адрес вашего домена VeChain",
+            "newTarget": "Новая цель: {{addr}}",
+            "removeRecord": "Удалить {{label}}",
+            "setRecordTo": "Установить {{label}} на {{value}}",
+            "updateRecord": "Обновить {{label}}",
+            "claim": "Зарегистрировать {{subdomain}}.veworld.vet"
+        },
+        "governance": {
+            "voteOnProposal": "Проголосовать {{vote}} по предложению VeBetterDAO",
+            "reason": "Причина: {{reason}}",
+            "allocateSingle": "Голосование в раунде распределения VeBetterDAO",
+            "allocateMany": "Распределить голос между {{count}} приложениями в этом раунде",
+            "endorse": "Поддержать приложение VeBetterDAO",
+            "unendorse": "Отозвать поддержку приложения VeBetterDAO"
+        },
+        "token": {
+            "convertToVot3": "Конвертировать {{amount}} B3TR → VOT3 (блокировка для голосования)",
+            "convertToB3tr": "Конвертировать {{amount}} VOT3 → B3TR (разблокировка)",
+            "pullFrom": "Перевести токены с адреса",
+            "recipientDetail": "Получатель: {{to}}"
+        },
+        "rewards": {
+            "voter": "Получить награды голосующего VeBetterDAO (цикл {{cycle}})",
+            "allocation": "Получить награды распределения за раунд {{round}}"
+        },
+        "swap": {
+            "onDex": "Обменять токены на {{dex}}"
+        },
+        "nft": {
+            "send": "Отправить NFT",
+            "transfer": "Перевести NFT",
+            "sendEditions": "Отправить {{count}} копий NFT",
+            "sendBatch": "Отправить {{count}} NFT одной транзакцией",
+            "approveAll": "Разрешить этому сайту управлять вашими NFT",
+            "revokeAll": "Отозвать разрешение на управление NFT",
+            "toDetail": "Кому: {{to}}",
+            "operatorDetail": "Оператор: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "Действие заблокировано",
+            "confirmAction": "Подтвердите действие",
+            "confirmTokenTransfer": "Подтвердите перевод токена",
+            "confirmTokenTransfers": "Подтвердите переводы токенов",
+            "confirmTokenApproval": "Подтвердите разрешение на токен",
+            "confirmTokenApprovals": "Подтвердите разрешения на токены",
+            "confirmContractCall": "Подтвердите вызов контракта",
+            "confirmTokenSwap": "Подтвердите обмен токенов",
+            "confirmDomainUpdate": "Подтвердите изменение домена",
+            "confirmVeBetterDaoVote": "Подтвердите голос в VeBetterDAO",
+            "confirmRewardsClaim": "Подтвердите получение наград",
+            "confirmNftTransfer": "Подтвердите перевод NFT",
+            "confirmNftActions": "Подтвердите действия с NFT",
+            "confirmTokenAction": "Подтвердите действие с токеном",
+            "confirmStakeUpdate": "Подтвердите изменение стейка",
+            "confirmNActions": "Подтвердите {{count}} действий",
+            "noRequest": "Нет запроса на транзакцию",
+            "reviewing": "Проверка транзакции",
+            "signIn": "Войдите, чтобы продолжить",
+            "couldNotLoad": "Не удалось загрузить запрос",
+            "signMessage": "Подписать сообщение",
+            "signData": "Подписать данные"
+        },
+        "subtitle": {
+            "sendVet": "{{amount}} VET → {{recipient}}",
+            "sendToken": "{{amount}} {{symbol}} → {{recipient}}",
+            "approveFor": "{{amount}} {{symbol}} для {{spender}}",
+            "swapVia": "{{amount}} {{symbol}} через {{dex}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "через {{dex}}",
+            "switchingTo": "Переключение на {{domain}}",
+            "clearingPrimary": "Очистка основного домена",
+            "voteOnProposal": "{{vote}} по предложению",
+            "allocatingAcross": "Распределение между {{count}} приложениями",
+            "endorsingApp": "Поддержка приложения",
+            "fromCycle": "Из цикла {{cycle}}",
+            "fromRound": "Из раунда {{round}}",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "Действий: {{count}}, непроверенных: {{unverified}}",
+            "reviewMessage": "Проверьте сообщение, которое это приложение хочет подписать.",
+            "reviewData": "Проверьте данные, которые это приложение хочет подписать.",
+            "signInWaiting": "Запрос на подпись ожидает. Войдите, чтобы просмотреть его."
+        },
+        "button": {
+            "confirm": "Подтвердить",
+            "confirmAnyway": "Всё равно подтвердить",
+            "confirmAsDanger": "Я понимаю, подтвердить",
+            "signing": "Подписание…",
+            "sign": "Подписать"
+        },
+        "section": {
+            "actionsToApprove": "Действия для подтверждения"
+        },
+        "alert": {
+            "unverifiedStep": "Мы не смогли проверить каждый шаг — продолжайте, только если доверяете этому приложению.",
+            "unlimitedApprove": "Это приложение запрашивает неограниченный доступ к одному из ваших токенов — убедитесь, что вы ему доверяете."
+        },
+        "inspect": {
+            "prompt": "Нужны технические детали?",
+            "show": "Подробнее",
+            "hide": "Скрыть",
+            "showCalldata": "Показать сырую calldata",
+            "hideCalldata": "Скрыть сырую calldata"
+        },
+        "detail": {
+            "yourAccount": "Ваш аккаунт",
+            "resolving": "загрузка…",
+            "network": "Сеть",
+            "type": "Тип",
+            "clauseSingular": "Клауза",
+            "clausePlural": "Клаузы ({{count}})",
+            "clauseLabel": "Клауза {{index}} из {{total}} · кому",
+            "value": "Значение",
+            "domain": "Домен",
+            "rawData": "Сырые данные",
+            "rawHex": "Сырой hex",
+            "function": "Функция: {{signature}}",
+            "selector": "Selector: {{selector}}",
+            "message": "Сообщение",
+            "emptyMessage": "(пустое сообщение)",
+            "authorizedCall": "Авторизованный вызов",
+            "authorizedBatchCall": "Авторизованный пакетный вызов",
+            "to": "Кому",
+            "spender": "Тратящий",
+            "operator": "Оператор"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "Локальный Thor Solo"
+        },
+        "noRequestBody": "Эта страница обрабатывает межсайтовые запросы транзакций от других dApp на VeChain. Её нельзя открыть напрямую — запрашивающее приложение откроет её с нужными параметрами."
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "Не удалось загрузить запрос",
+            "logIn": "Войдите в свой кошелёк",
+            "connectTo": "Подключиться к {{app}}",
+            "confirmConnection": "Подтвердите подключение"
+        },
+        "subtitle": {
+            "grantAccessTo": "Войдите, чтобы предоставить доступ",
+            "notBefore": "Вы ещё не подключались здесь",
+            "connecting": "Подключение…"
+        },
+        "button": {
+            "connecting": "Подключение…",
+            "useAnotherAccount": "Использовать другой аккаунт"
+        },
+        "copy": {
+            "notYou": "Не вы?",
+            "noRequestBody": "Эта страница обрабатывает межсайтовые запросы подключения от других dApp на VeChain. Её нельзя открыть напрямую — запрашивающее приложение откроет её с нужными параметрами."
+        },
+        "phone": {
+            "placeholder": "+7 916 123 45 67",
+            "codeHint": "Укажите код страны, например +7 для России, +44 для Великобритании.",
+            "sendCode": "Отправить код",
+            "sending": "Отправка…",
+            "codeSent": "Мы отправили 6-значный код на {{phone}}.",
+            "verify": "Подтвердить",
+            "verifying": "Проверка…"
+        },
+        "farcaster": {
+            "comingSoon": "Вход через Farcaster появится скоро. Он использует Sign In With Farcaster (SIWF), который требует сканирования в Warpcast и пока не подключён здесь. Пожалуйста, выберите другой вариант."
+        },
+        "provider": {
+            "continueWith": "Продолжить через {{provider}}",
+            "continueWithPhone": "Продолжить по телефону",
+            "continueWithFarcaster": "Продолжить через Farcaster",
+            "lastUsed": "Последний вход",
+            "moreOptions": "+ ещё {{count}} вариантов"
+        },
+        "alert": {
+            "notListed": "Это приложение не указано в VeChain App Hub — продолжайте, только если доверяете сайту."
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Whitelabel-хост для процессов подключения и транзакций Privy cross-app.",
+        "routes": "Маршруты",
+        "connectDesc": "обрабатывает запросы подключения",
+        "transactDesc": "обрабатывает запросы транзакций / подписи",
+        "footer": "Пользователи не открывают эту страницу напрямую."
+    }
+}

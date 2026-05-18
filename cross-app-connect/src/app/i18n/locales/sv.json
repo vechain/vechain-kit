@@ -1,1 +1,253 @@
-{}
+{
+    "common": {
+        "button": {
+            "back": "Tillbaka",
+            "cancel": "Avbryt",
+            "continue": "Fortsätt",
+            "continueAnyway": "Fortsätt ändå"
+        },
+        "amount": {
+            "unlimited": "Obegränsat"
+        },
+        "tokens": "tokens",
+        "yes": "Ja",
+        "no": "Nej",
+        "empty": "(tomt)"
+    },
+    "vote": {
+        "for": "FÖR",
+        "against": "EMOT",
+        "abstain": "AVSTÅR"
+    },
+    "header": {
+        "title": {
+            "default": "Logga in på din plånbok"
+        }
+    },
+    "identity": {
+        "creatingAccount": "Skapar ditt VeChain-konto…",
+        "signedIn": "Inloggad"
+    },
+    "addressTag": {
+        "verifiedContract": "Verifierat VeChain-kontrakt",
+        "unverifiedContract": "Overifierat kontrakt — fortsätt bara om du litar på det"
+    },
+    "requester": {
+        "localDev": "Lokal utvecklingssida"
+    },
+    "domains": {
+        "label": {
+            "avatar": "avatar",
+            "description": "beskrivning",
+            "email": "e-post",
+            "website": "webbplats",
+            "twitter": "Twitter",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "{{key}}-post"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "Skicka {{amount}} VET",
+            "token": "Skicka {{amount}} {{symbol}}"
+        },
+        "approve": {
+            "unlimited": "Tillåt obegränsad användning av {{symbol}}",
+            "upTo": "Tillåt användning upp till {{amount}} {{symbol}}"
+        },
+        "unknown": {
+            "runOn": "Kör {{fn}} på ett kontrakt",
+            "interact": "Interagera med ett kontrakt"
+        },
+        "domain": {
+            "removePrimary": "Ta bort din primära VeChain-domän",
+            "setPrimary": "Sätt {{name}} som din primära VeChain-domän",
+            "pointToYou": "Peka din VeChain-domän till ditt konto",
+            "updateAddress": "Uppdatera adressen för din VeChain-domän",
+            "newTarget": "Nytt mål: {{addr}}",
+            "removeRecord": "Ta bort {{label}}",
+            "setRecordTo": "Sätt {{label}} till {{value}}",
+            "updateRecord": "Uppdatera {{label}}",
+            "claim": "Hämta {{subdomain}}.veworld.vet"
+        },
+        "governance": {
+            "voteOnProposal": "Rösta {{vote}} på ett VeBetterDAO-förslag",
+            "reason": "Anledning: {{reason}}",
+            "allocateSingle": "Rösta i den här VeBetterDAO-allokeringsrundan",
+            "allocateMany": "Fördela din röst mellan {{count}} appar denna runda",
+            "endorse": "Stöd en VeBetterDAO-app",
+            "unendorse": "Dra tillbaka ditt stöd från en VeBetterDAO-app"
+        },
+        "token": {
+            "convertToVot3": "Konvertera {{amount}} B3TR → VOT3 (lås för att rösta)",
+            "convertToB3tr": "Konvertera {{amount}} VOT3 → B3TR (lås upp)",
+            "pullFrom": "Hämta tokens från en adress",
+            "recipientDetail": "Mottagare: {{to}}"
+        },
+        "rewards": {
+            "voter": "Hämta VeBetterDAO-röstbelöningar (cykel {{cycle}})",
+            "allocation": "Hämta allokeringsbelöningar för runda {{round}}"
+        },
+        "swap": {
+            "onDex": "Byt tokens på {{dex}}"
+        },
+        "nft": {
+            "send": "Skicka en NFT",
+            "transfer": "Överför en NFT",
+            "sendEditions": "Skicka {{count}} kopior av en NFT",
+            "sendBatch": "Skicka {{count}} NFTs i en transaktion",
+            "approveAll": "Tillåt den här sidan att hantera dina NFTs",
+            "revokeAll": "Återkalla NFT-hanteringsbehörigheten",
+            "toDetail": "Till: {{to}}",
+            "operatorDetail": "Operatör: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "Åtgärd blockerad",
+            "confirmAction": "Bekräfta åtgärd",
+            "confirmTokenTransfer": "Bekräfta tokenöverföring",
+            "confirmTokenTransfers": "Bekräfta tokenöverföringar",
+            "confirmTokenApproval": "Bekräfta tokengodkännande",
+            "confirmTokenApprovals": "Bekräfta tokengodkännanden",
+            "confirmContractCall": "Bekräfta kontraktsanrop",
+            "confirmTokenSwap": "Bekräfta tokenbyte",
+            "confirmDomainUpdate": "Bekräfta domänuppdatering",
+            "confirmVeBetterDaoVote": "Bekräfta VeBetterDAO-röst",
+            "confirmRewardsClaim": "Bekräfta belöningsuttag",
+            "confirmNftTransfer": "Bekräfta NFT-överföring",
+            "confirmNftActions": "Bekräfta NFT-åtgärder",
+            "confirmTokenAction": "Bekräfta tokenåtgärd",
+            "confirmStakeUpdate": "Bekräfta stake-uppdatering",
+            "confirmNActions": "Bekräfta {{count}} åtgärder",
+            "noRequest": "Ingen transaktionsbegäran",
+            "reviewing": "Granskar transaktion",
+            "signIn": "Logga in för att fortsätta",
+            "couldNotLoad": "Kunde inte ladda begäran",
+            "signMessage": "Signera ett meddelande",
+            "signData": "Signera data"
+        },
+        "subtitle": {
+            "sendVet": "{{amount}} VET till {{recipient}}",
+            "sendToken": "{{amount}} {{symbol}} till {{recipient}}",
+            "approveFor": "{{amount}} {{symbol}} för {{spender}}",
+            "swapVia": "{{amount}} {{symbol}} via {{dex}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "via {{dex}}",
+            "switchingTo": "Byter till {{domain}}",
+            "clearingPrimary": "Rensar din primära",
+            "voteOnProposal": "{{vote}} förslag",
+            "allocatingAcross": "Fördelar mellan {{count}} appar",
+            "endorsingApp": "Stöder en app",
+            "fromCycle": "Från cykel {{cycle}}",
+            "fromRound": "Från runda {{round}}",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} åtgärder, {{unverified}} overifierade",
+            "reviewMessage": "Granska meddelandet som den här appen vill att du signerar.",
+            "reviewData": "Granska datan som den här appen vill att du signerar.",
+            "signInWaiting": "En signeringsbegäran väntar. Logga in för att granska den."
+        },
+        "button": {
+            "confirm": "Bekräfta",
+            "confirmAnyway": "Bekräfta ändå",
+            "confirmAsDanger": "Jag förstår, bekräfta",
+            "signing": "Signerar…",
+            "sign": "Signera"
+        },
+        "section": {
+            "actionsToApprove": "Åtgärder att godkänna"
+        },
+        "alert": {
+            "unverifiedStep": "Vi kunde inte dubbelkolla varje steg — fortsätt bara om du litar på den här appen.",
+            "unlimitedApprove": "Den här appen begär obegränsad åtkomst till en av dina tokens — se till att du litar på den."
+        },
+        "inspect": {
+            "prompt": "Vill du se de tekniska detaljerna?",
+            "show": "Inspektera",
+            "hide": "Dölj",
+            "showCalldata": "Visa rå calldata",
+            "hideCalldata": "Dölj rå calldata"
+        },
+        "detail": {
+            "yourAccount": "Ditt konto",
+            "resolving": "löser…",
+            "network": "Nätverk",
+            "type": "Typ",
+            "clauseSingular": "Klausul",
+            "clausePlural": "Klausuler ({{count}})",
+            "clauseLabel": "Klausul {{index}} av {{total}} · till",
+            "value": "Värde",
+            "domain": "Domän",
+            "rawData": "Rådata",
+            "rawHex": "Rå hex",
+            "function": "Funktion: {{signature}}",
+            "selector": "Selector: {{selector}}",
+            "message": "Meddelande",
+            "emptyMessage": "(tomt meddelande)",
+            "authorizedCall": "Auktoriserat anrop",
+            "authorizedBatchCall": "Auktoriserat batch-anrop",
+            "to": "Till",
+            "spender": "Spenderare",
+            "operator": "Operatör"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "Lokal Thor Solo"
+        },
+        "noRequestBody": "Den här sidan hanterar transaktionsbegäranden mellan appar från andra VeChain-dApps. Den kan inte öppnas direkt — den begärande appen öppnar den med de parametrar som behövs."
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "Kunde inte ladda begäran",
+            "logIn": "Logga in på din plånbok",
+            "connectTo": "Anslut till {{app}}",
+            "confirmConnection": "Bekräfta anslutning"
+        },
+        "subtitle": {
+            "grantAccessTo": "Logga in för att ge åtkomst till",
+            "notBefore": "Du har inte anslutit här tidigare",
+            "connecting": "Ansluter…"
+        },
+        "button": {
+            "connecting": "Ansluter…",
+            "useAnotherAccount": "Använd ett annat konto"
+        },
+        "copy": {
+            "notYou": "Inte du?",
+            "noRequestBody": "Den här sidan hanterar anslutningsbegäranden mellan appar från andra VeChain-dApps. Den kan inte öppnas direkt — den begärande appen öppnar den med de parametrar som behövs."
+        },
+        "phone": {
+            "placeholder": "+46 70 123 45 67",
+            "codeHint": "Inkludera landskoden, t.ex. +46 för Sverige, +44 för Storbritannien.",
+            "sendCode": "Skicka kod",
+            "sending": "Skickar…",
+            "codeSent": "Vi skickade en 6-siffrig kod till {{phone}}.",
+            "verify": "Verifiera",
+            "verifying": "Verifierar…"
+        },
+        "farcaster": {
+            "comingSoon": "Inloggning via Farcaster kommer snart. Den använder Sign In With Farcaster (SIWF), som kräver en Warpcast-skanning och är inte aktiverad här ännu. Välj ett annat alternativ för tillfället."
+        },
+        "provider": {
+            "continueWith": "Fortsätt med {{provider}}",
+            "continueWithPhone": "Fortsätt med telefon",
+            "continueWithFarcaster": "Fortsätt med Farcaster",
+            "lastUsed": "Senast använd",
+            "moreOptions": "+ {{count}} fler alternativ"
+        },
+        "alert": {
+            "notListed": "Den här appen är inte listad i VeChain App Hub — fortsätt bara om du litar på sidan."
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Whitelabel-värd för Privy cross-app anslutnings- och transaktionsflöden.",
+        "routes": "Rutter",
+        "connectDesc": "hanterar anslutningsbegäranden",
+        "transactDesc": "hanterar transaktions- / signeringsbegäranden",
+        "footer": "Den här sidan öppnas inte direkt av användare."
+    }
+}

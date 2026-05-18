@@ -1,1 +1,253 @@
-{}
+{
+    "common": {
+        "button": {
+            "back": "Zurück",
+            "cancel": "Abbrechen",
+            "continue": "Weiter",
+            "continueAnyway": "Trotzdem fortfahren"
+        },
+        "amount": {
+            "unlimited": "Unbegrenzt"
+        },
+        "tokens": "Tokens",
+        "yes": "Ja",
+        "no": "Nein",
+        "empty": "(leer)"
+    },
+    "vote": {
+        "for": "DAFÜR",
+        "against": "DAGEGEN",
+        "abstain": "ENTHALTUNG"
+    },
+    "header": {
+        "title": {
+            "default": "In dein Wallet einloggen"
+        }
+    },
+    "identity": {
+        "creatingAccount": "Dein VeChain-Konto wird erstellt…",
+        "signedIn": "Angemeldet"
+    },
+    "addressTag": {
+        "verifiedContract": "Verifizierter VeChain-Vertrag",
+        "unverifiedContract": "Nicht verifizierter Vertrag — vergewissere dich, dass du ihm vertraust, bevor du fortfährst"
+    },
+    "requester": {
+        "localDev": "Lokale Entwicklungsseite"
+    },
+    "domains": {
+        "label": {
+            "avatar": "Avatar",
+            "description": "Beschreibung",
+            "email": "E-Mail",
+            "website": "Website",
+            "twitter": "Twitter-Handle",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "{{key}}-Eintrag"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "{{amount}} VET senden",
+            "token": "{{amount}} {{symbol}} senden"
+        },
+        "approve": {
+            "unlimited": "Unbegrenzte {{symbol}}-Ausgaben erlauben",
+            "upTo": "Ausgaben bis zu {{amount}} {{symbol}} erlauben"
+        },
+        "unknown": {
+            "runOn": "{{fn}} auf einem Vertrag ausführen",
+            "interact": "Mit einem Vertrag interagieren"
+        },
+        "domain": {
+            "removePrimary": "Deine primäre VeChain-Domain entfernen",
+            "setPrimary": "{{name}} als deine primäre VeChain-Domain festlegen",
+            "pointToYou": "Deine VeChain-Domain auf dein Konto verweisen",
+            "updateAddress": "Adresse deiner VeChain-Domain aktualisieren",
+            "newTarget": "Neues Ziel: {{addr}}",
+            "removeRecord": "{{label}} entfernen",
+            "setRecordTo": "{{label}} auf {{value}} setzen",
+            "updateRecord": "{{label}} aktualisieren",
+            "claim": "{{subdomain}}.veworld.vet beanspruchen"
+        },
+        "governance": {
+            "voteOnProposal": "{{vote}} bei einem VeBetterDAO-Vorschlag stimmen",
+            "reason": "Grund: {{reason}}",
+            "allocateSingle": "In dieser VeBetterDAO-Zuweisungsrunde abstimmen",
+            "allocateMany": "Deine Stimme in dieser Runde auf {{count}} Apps verteilen",
+            "endorse": "Eine VeBetterDAO-App unterstützen",
+            "unendorse": "Deine Unterstützung für eine VeBetterDAO-App zurückziehen"
+        },
+        "token": {
+            "convertToVot3": "{{amount}} B3TR → VOT3 umwandeln (zum Abstimmen sperren)",
+            "convertToB3tr": "{{amount}} VOT3 → B3TR umwandeln (entsperren)",
+            "pullFrom": "Tokens von einer Adresse abziehen",
+            "recipientDetail": "Empfänger: {{to}}"
+        },
+        "rewards": {
+            "voter": "VeBetterDAO-Wählerbelohnungen einfordern (Zyklus {{cycle}})",
+            "allocation": "Zuweisungsbelohnungen für Runde {{round}} einfordern"
+        },
+        "swap": {
+            "onDex": "Tokens auf {{dex}} swappen"
+        },
+        "nft": {
+            "send": "Ein NFT senden",
+            "transfer": "Ein NFT übertragen",
+            "sendEditions": "{{count}} Editionen eines NFTs senden",
+            "sendBatch": "{{count}} NFTs auf einmal senden",
+            "approveAll": "Dieser Seite erlauben, deine NFTs zu verwalten",
+            "revokeAll": "NFT-Verwaltungsberechtigung widerrufen",
+            "toDetail": "An: {{to}}",
+            "operatorDetail": "Operator: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "Aktion blockiert",
+            "confirmAction": "Aktion bestätigen",
+            "confirmTokenTransfer": "Token-Transfer bestätigen",
+            "confirmTokenTransfers": "Token-Transfers bestätigen",
+            "confirmTokenApproval": "Token-Freigabe bestätigen",
+            "confirmTokenApprovals": "Token-Freigaben bestätigen",
+            "confirmContractCall": "Vertragsaufruf bestätigen",
+            "confirmTokenSwap": "Token-Swap bestätigen",
+            "confirmDomainUpdate": "Domain-Aktualisierung bestätigen",
+            "confirmVeBetterDaoVote": "VeBetterDAO-Abstimmung bestätigen",
+            "confirmRewardsClaim": "Belohnungsanforderung bestätigen",
+            "confirmNftTransfer": "NFT-Übertragung bestätigen",
+            "confirmNftActions": "NFT-Aktionen bestätigen",
+            "confirmTokenAction": "Token-Aktion bestätigen",
+            "confirmStakeUpdate": "Stake-Aktualisierung bestätigen",
+            "confirmNActions": "{{count}} Aktionen bestätigen",
+            "noRequest": "Keine Transaktionsanfrage",
+            "reviewing": "Transaktion wird geprüft",
+            "signIn": "Anmelden, um fortzufahren",
+            "couldNotLoad": "Anfrage konnte nicht geladen werden",
+            "signMessage": "Eine Nachricht signieren",
+            "signData": "Daten signieren"
+        },
+        "subtitle": {
+            "sendVet": "{{amount}} VET an {{recipient}}",
+            "sendToken": "{{amount}} {{symbol}} an {{recipient}}",
+            "approveFor": "{{amount}} {{symbol}} für {{spender}}",
+            "swapVia": "{{amount}} {{symbol}} über {{dex}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "über {{dex}}",
+            "switchingTo": "Wechsle zu {{domain}}",
+            "clearingPrimary": "Primäre Domain wird entfernt",
+            "voteOnProposal": "Vorschlag {{vote}}",
+            "allocatingAcross": "Verteilung auf {{count}} Apps",
+            "endorsingApp": "Eine App wird unterstützt",
+            "fromCycle": "Aus Zyklus {{cycle}}",
+            "fromRound": "Aus Runde {{round}}",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} Aktionen, {{unverified}} unverifiziert",
+            "reviewMessage": "Prüfe die Nachricht, die diese App von dir signiert haben möchte.",
+            "reviewData": "Prüfe die Daten, die diese App von dir signiert haben möchte.",
+            "signInWaiting": "Eine Signaturanfrage wartet. Melde dich an, um sie zu prüfen."
+        },
+        "button": {
+            "confirm": "Bestätigen",
+            "confirmAnyway": "Trotzdem bestätigen",
+            "confirmAsDanger": "Verstanden, bestätigen",
+            "signing": "Signiere…",
+            "sign": "Signieren"
+        },
+        "section": {
+            "actionsToApprove": "Zu genehmigende Aktionen"
+        },
+        "alert": {
+            "unverifiedStep": "Wir konnten nicht jeden Schritt überprüfen, fahre also nur fort, wenn du dieser App vertraust.",
+            "unlimitedApprove": "Diese App fordert unbegrenzten Zugriff auf einen deiner Tokens an — vergewissere dich, dass du ihr vertraust."
+        },
+        "inspect": {
+            "prompt": "Möchtest du die technischen Details?",
+            "show": "Inspizieren",
+            "hide": "Ausblenden",
+            "showCalldata": "Rohe calldata anzeigen",
+            "hideCalldata": "Rohe calldata ausblenden"
+        },
+        "detail": {
+            "yourAccount": "Dein Konto",
+            "resolving": "wird aufgelöst…",
+            "network": "Netzwerk",
+            "type": "Typ",
+            "clauseSingular": "Clause",
+            "clausePlural": "Clauses ({{count}})",
+            "clauseLabel": "Clause {{index}} von {{total}} · an",
+            "value": "Wert",
+            "domain": "Domain",
+            "rawData": "Rohdaten",
+            "rawHex": "Roh-hex",
+            "function": "Funktion: {{signature}}",
+            "selector": "Selector: {{selector}}",
+            "message": "Nachricht",
+            "emptyMessage": "(leere Nachricht)",
+            "authorizedCall": "Autorisierter Aufruf",
+            "authorizedBatchCall": "Autorisierter Batch-Aufruf",
+            "to": "An",
+            "spender": "Ausgebender",
+            "operator": "Operator"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "Lokales Thor Solo"
+        },
+        "noRequestBody": "Diese Seite bearbeitet App-übergreifende Transaktionsanfragen anderer VeChain-dApps. Sie kann nicht direkt geöffnet werden — die anfragende App öffnet sie mit den nötigen Parametern."
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "Anfrage konnte nicht geladen werden",
+            "logIn": "In dein Wallet einloggen",
+            "connectTo": "Mit {{app}} verbinden",
+            "confirmConnection": "Verbindung bestätigen"
+        },
+        "subtitle": {
+            "grantAccessTo": "Melde dich an, um Zugriff zu gewähren auf",
+            "notBefore": "Du hast dich hier noch nicht verbunden",
+            "connecting": "Verbinde…"
+        },
+        "button": {
+            "connecting": "Verbinde…",
+            "useAnotherAccount": "Anderes Konto verwenden"
+        },
+        "copy": {
+            "notYou": "Nicht du?",
+            "noRequestBody": "Diese Seite bearbeitet App-übergreifende Verbindungsanfragen anderer VeChain-dApps. Sie kann nicht direkt geöffnet werden — die anfragende App öffnet sie mit den nötigen Parametern."
+        },
+        "phone": {
+            "placeholder": "+49 151 23456789",
+            "codeHint": "Ländervorwahl angeben, z. B. +49 für Deutschland, +43 für Österreich.",
+            "sendCode": "Code senden",
+            "sending": "Sende…",
+            "codeSent": "Wir haben einen 6-stelligen Code an {{phone}} gesendet.",
+            "verify": "Bestätigen",
+            "verifying": "Bestätige…"
+        },
+        "farcaster": {
+            "comingSoon": "Die Anmeldung mit Farcaster kommt bald. Sie nutzt Sign In With Farcaster (SIWF), wofür ein Warpcast-Scan nötig ist, der hier noch nicht angebunden ist. Bitte wähle vorerst eine andere Option."
+        },
+        "provider": {
+            "continueWith": "Mit {{provider}} fortfahren",
+            "continueWithPhone": "Mit Telefon fortfahren",
+            "continueWithFarcaster": "Mit Farcaster fortfahren",
+            "lastUsed": "Zuletzt verwendet",
+            "moreOptions": "+ {{count}} weitere Optionen"
+        },
+        "alert": {
+            "notListed": "Diese App ist nicht im VeChain App Hub gelistet, fahre also nur fort, wenn du der Seite vertraust."
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Whitelabel-Host für die App-übergreifenden Verbindungs- und Transaktionsflüsse von Privy.",
+        "routes": "Routen",
+        "connectDesc": "bearbeitet Verbindungsanfragen",
+        "transactDesc": "bearbeitet Transaktions- und Signatur-Anfragen",
+        "footer": "Diese Seite wird nicht direkt von Nutzern geöffnet."
+    }
+}

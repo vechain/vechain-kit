@@ -1,1 +1,253 @@
-{}
+{
+    "common": {
+        "button": {
+            "back": "Înapoi",
+            "cancel": "Anulează",
+            "continue": "Continuă",
+            "continueAnyway": "Continuă oricum"
+        },
+        "amount": {
+            "unlimited": "Nelimitat"
+        },
+        "tokens": "tokenuri",
+        "yes": "Da",
+        "no": "Nu",
+        "empty": "(gol)"
+    },
+    "vote": {
+        "for": "PENTRU",
+        "against": "ÎMPOTRIVĂ",
+        "abstain": "ABȚINERE"
+    },
+    "header": {
+        "title": {
+            "default": "Conectează-te la portofel"
+        }
+    },
+    "identity": {
+        "creatingAccount": "Îți creăm contul VeChain…",
+        "signedIn": "Autentificat"
+    },
+    "addressTag": {
+        "verifiedContract": "Contract VeChain verificat",
+        "unverifiedContract": "Contract neverificat — continuă doar dacă ai încredere în el"
+    },
+    "requester": {
+        "localDev": "Site de dezvoltare locală"
+    },
+    "domains": {
+        "label": {
+            "avatar": "avatar",
+            "description": "descriere",
+            "email": "email",
+            "website": "site",
+            "twitter": "Twitter",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "înregistrare {{key}}"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "Trimite {{amount}} VET",
+            "token": "Trimite {{amount}} {{symbol}}"
+        },
+        "approve": {
+            "unlimited": "Permite cheltuirea nelimitată de {{symbol}}",
+            "upTo": "Permite cheltuirea a până la {{amount}} {{symbol}}"
+        },
+        "unknown": {
+            "runOn": "Rulează {{fn}} pe un contract",
+            "interact": "Interacționează cu un contract"
+        },
+        "domain": {
+            "removePrimary": "Elimină domeniul VeChain principal",
+            "setPrimary": "Setează {{name}} ca domeniu VeChain principal",
+            "pointToYou": "Direcționează domeniul VeChain către contul tău",
+            "updateAddress": "Actualizează adresa domeniului VeChain",
+            "newTarget": "Țintă nouă: {{addr}}",
+            "removeRecord": "Elimină {{label}}",
+            "setRecordTo": "Setează {{label}} la {{value}}",
+            "updateRecord": "Actualizează {{label}}",
+            "claim": "Revendică {{subdomain}}.veworld.vet"
+        },
+        "governance": {
+            "voteOnProposal": "Votează {{vote}} la o propunere VeBetterDAO",
+            "reason": "Motiv: {{reason}}",
+            "allocateSingle": "Votează în această rundă de alocare VeBetterDAO",
+            "allocateMany": "Distribuie votul între {{count}} aplicații în această rundă",
+            "endorse": "Susține o aplicație VeBetterDAO",
+            "unendorse": "Retrage susținerea unei aplicații VeBetterDAO"
+        },
+        "token": {
+            "convertToVot3": "Convertește {{amount}} B3TR → VOT3 (blochează pentru vot)",
+            "convertToB3tr": "Convertește {{amount}} VOT3 → B3TR (deblochează)",
+            "pullFrom": "Retrage tokenuri de la o adresă",
+            "recipientDetail": "Destinatar: {{to}}"
+        },
+        "rewards": {
+            "voter": "Revendică recompensele de votant VeBetterDAO (ciclul {{cycle}})",
+            "allocation": "Revendică recompensele de alocare pentru runda {{round}}"
+        },
+        "swap": {
+            "onDex": "Schimbă tokenuri pe {{dex}}"
+        },
+        "nft": {
+            "send": "Trimite un NFT",
+            "transfer": "Transferă un NFT",
+            "sendEditions": "Trimite {{count}} ediții ale unui NFT",
+            "sendBatch": "Trimite {{count}} NFT-uri într-o singură tranzacție",
+            "approveAll": "Permite acestui site să-ți gestioneze NFT-urile",
+            "revokeAll": "Revocă permisiunea de gestionare a NFT-urilor",
+            "toDetail": "Către: {{to}}",
+            "operatorDetail": "Operator: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "Acțiune blocată",
+            "confirmAction": "Confirmă acțiunea",
+            "confirmTokenTransfer": "Confirmă transferul de token",
+            "confirmTokenTransfers": "Confirmă transferurile de tokenuri",
+            "confirmTokenApproval": "Confirmă aprobarea tokenului",
+            "confirmTokenApprovals": "Confirmă aprobările de tokenuri",
+            "confirmContractCall": "Confirmă apelul de contract",
+            "confirmTokenSwap": "Confirmă schimbul de tokenuri",
+            "confirmDomainUpdate": "Confirmă actualizarea domeniului",
+            "confirmVeBetterDaoVote": "Confirmă votul VeBetterDAO",
+            "confirmRewardsClaim": "Confirmă revendicarea recompenselor",
+            "confirmNftTransfer": "Confirmă transferul NFT",
+            "confirmNftActions": "Confirmă acțiunile NFT",
+            "confirmTokenAction": "Confirmă acțiunea pe token",
+            "confirmStakeUpdate": "Confirmă actualizarea stake-ului",
+            "confirmNActions": "Confirmă {{count}} acțiuni",
+            "noRequest": "Nicio cerere de tranzacție",
+            "reviewing": "Se verifică tranzacția",
+            "signIn": "Conectează-te pentru a continua",
+            "couldNotLoad": "Cererea nu a putut fi încărcată",
+            "signMessage": "Semnează un mesaj",
+            "signData": "Semnează date"
+        },
+        "subtitle": {
+            "sendVet": "{{amount}} VET către {{recipient}}",
+            "sendToken": "{{amount}} {{symbol}} către {{recipient}}",
+            "approveFor": "{{amount}} {{symbol}} pentru {{spender}}",
+            "swapVia": "{{amount}} {{symbol}} prin {{dex}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "prin {{dex}}",
+            "switchingTo": "Se trece la {{domain}}",
+            "clearingPrimary": "Se șterge domeniul principal",
+            "voteOnProposal": "{{vote}} propunerea",
+            "allocatingAcross": "Distribuire între {{count}} aplicații",
+            "endorsingApp": "Se susține o aplicație",
+            "fromCycle": "Din ciclul {{cycle}}",
+            "fromRound": "Din runda {{round}}",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} acțiuni, {{unverified}} neverificate",
+            "reviewMessage": "Verifică mesajul pe care această aplicație vrea să-l semnezi.",
+            "reviewData": "Verifică datele pe care această aplicație vrea să le semnezi.",
+            "signInWaiting": "O cerere de semnare așteaptă. Conectează-te pentru a o verifica."
+        },
+        "button": {
+            "confirm": "Confirmă",
+            "confirmAnyway": "Confirmă oricum",
+            "confirmAsDanger": "Înțeleg, confirmă",
+            "signing": "Se semnează…",
+            "sign": "Semnează"
+        },
+        "section": {
+            "actionsToApprove": "Acțiuni de aprobat"
+        },
+        "alert": {
+            "unverifiedStep": "Nu am putut verifica fiecare pas — continuă doar dacă ai încredere în această aplicație.",
+            "unlimitedApprove": "Această aplicație cere acces nelimitat la unul dintre tokenurile tale — asigură-te că ai încredere în ea."
+        },
+        "inspect": {
+            "prompt": "Vrei detaliile tehnice?",
+            "show": "Inspectează",
+            "hide": "Ascunde",
+            "showCalldata": "Arată calldata brut",
+            "hideCalldata": "Ascunde calldata brut"
+        },
+        "detail": {
+            "yourAccount": "Contul tău",
+            "resolving": "se rezolvă…",
+            "network": "Rețea",
+            "type": "Tip",
+            "clauseSingular": "Clauză",
+            "clausePlural": "Clauze ({{count}})",
+            "clauseLabel": "Clauza {{index}} din {{total}} · către",
+            "value": "Valoare",
+            "domain": "Domeniu",
+            "rawData": "Date brute",
+            "rawHex": "Hex brut",
+            "function": "Funcție: {{signature}}",
+            "selector": "Selector: {{selector}}",
+            "message": "Mesaj",
+            "emptyMessage": "(mesaj gol)",
+            "authorizedCall": "Apel autorizat",
+            "authorizedBatchCall": "Apel batch autorizat",
+            "to": "Către",
+            "spender": "Cheltuitor",
+            "operator": "Operator"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "Thor Solo local"
+        },
+        "noRequestBody": "Această pagină gestionează cereri de tranzacții cross-app de la alte dApp-uri VeChain. Nu poate fi deschisă direct — aplicația solicitantă o va deschide cu parametrii de care are nevoie."
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "Cererea nu a putut fi încărcată",
+            "logIn": "Conectează-te la portofel",
+            "connectTo": "Conectează-te la {{app}}",
+            "confirmConnection": "Confirmă conexiunea"
+        },
+        "subtitle": {
+            "grantAccessTo": "Autentifică-te pentru a acorda acces",
+            "notBefore": "Nu te-ai mai conectat aici",
+            "connecting": "Se conectează…"
+        },
+        "button": {
+            "connecting": "Se conectează…",
+            "useAnotherAccount": "Folosește alt cont"
+        },
+        "copy": {
+            "notYou": "Nu ești tu?",
+            "noRequestBody": "Această pagină gestionează cereri de conectare cross-app de la alte dApp-uri VeChain. Nu poate fi deschisă direct — aplicația solicitantă o va deschide cu parametrii de care are nevoie."
+        },
+        "phone": {
+            "placeholder": "+40 712 345 678",
+            "codeHint": "Include prefixul țării, de exemplu +40 pentru România, +44 pentru Marea Britanie.",
+            "sendCode": "Trimite codul",
+            "sending": "Se trimite…",
+            "codeSent": "Am trimis un cod din 6 cifre la {{phone}}.",
+            "verify": "Verifică",
+            "verifying": "Se verifică…"
+        },
+        "farcaster": {
+            "comingSoon": "Autentificarea Farcaster vine în curând. Folosește Sign In With Farcaster (SIWF), care necesită scanare în Warpcast și nu este încă activată aici. Te rugăm să alegi altă opțiune deocamdată."
+        },
+        "provider": {
+            "continueWith": "Continuă cu {{provider}}",
+            "continueWithPhone": "Continuă cu telefonul",
+            "continueWithFarcaster": "Continuă cu Farcaster",
+            "lastUsed": "Folosit ultima dată",
+            "moreOptions": "+ încă {{count}} opțiuni"
+        },
+        "alert": {
+            "notListed": "Această aplicație nu este listată în VeChain App Hub — continuă doar dacă ai încredere în site."
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Host whitelabel pentru fluxurile Privy cross-app de conectare și tranzacție.",
+        "routes": "Rute",
+        "connectDesc": "gestionează cererile de conectare",
+        "transactDesc": "gestionează cererile de tranzacție / semnare",
+        "footer": "Această pagină nu este deschisă direct de utilizatori."
+    }
+}

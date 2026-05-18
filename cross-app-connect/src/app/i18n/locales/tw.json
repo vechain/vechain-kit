@@ -1,1 +1,253 @@
-{}
+{
+    "common": {
+        "button": {
+            "back": "返回",
+            "cancel": "取消",
+            "continue": "繼續",
+            "continueAnyway": "仍然繼續"
+        },
+        "amount": {
+            "unlimited": "無限制"
+        },
+        "tokens": "代幣",
+        "yes": "是",
+        "no": "否",
+        "empty": "(空)"
+    },
+    "vote": {
+        "for": "贊成",
+        "against": "反對",
+        "abstain": "棄權"
+    },
+    "header": {
+        "title": {
+            "default": "登入您的錢包"
+        }
+    },
+    "identity": {
+        "creatingAccount": "正在建立您的 VeChain 帳號…",
+        "signedIn": "已登入"
+    },
+    "addressTag": {
+        "verifiedContract": "已驗證的 VeChain 合約",
+        "unverifiedContract": "未驗證的合約 — 請僅在信任的情況下繼續"
+    },
+    "requester": {
+        "localDev": "本機開發站點"
+    },
+    "domains": {
+        "label": {
+            "avatar": "頭像",
+            "description": "說明",
+            "email": "電子郵件",
+            "website": "網站",
+            "twitter": "Twitter 帳號",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "{{key}} 記錄"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "傳送 {{amount}} VET",
+            "token": "傳送 {{amount}} {{symbol}}"
+        },
+        "approve": {
+            "unlimited": "允許無限制使用 {{symbol}}",
+            "upTo": "允許使用至多 {{amount}} {{symbol}}"
+        },
+        "unknown": {
+            "runOn": "在合約上執行 {{fn}}",
+            "interact": "與合約互動"
+        },
+        "domain": {
+            "removePrimary": "移除您的主要 VeChain 網域",
+            "setPrimary": "將 {{name}} 設為您的主要 VeChain 網域",
+            "pointToYou": "將 VeChain 網域指向您的帳戶",
+            "updateAddress": "更新您的 VeChain 網域位址",
+            "newTarget": "新目標：{{addr}}",
+            "removeRecord": "移除 {{label}}",
+            "setRecordTo": "將 {{label}} 設為 {{value}}",
+            "updateRecord": "更新 {{label}}",
+            "claim": "領取 {{subdomain}}.veworld.vet"
+        },
+        "governance": {
+            "voteOnProposal": "對 VeBetterDAO 提案投 {{vote}} 票",
+            "reason": "原因：{{reason}}",
+            "allocateSingle": "於本輪 VeBetterDAO 分配中投票",
+            "allocateMany": "於本輪將您的票分配給 {{count}} 個應用程式",
+            "endorse": "推薦一個 VeBetterDAO 應用程式",
+            "unendorse": "撤回對某 VeBetterDAO 應用程式的推薦"
+        },
+        "token": {
+            "convertToVot3": "將 {{amount}} B3TR → VOT3 (鎖定以投票)",
+            "convertToB3tr": "將 {{amount}} VOT3 → B3TR (解鎖)",
+            "pullFrom": "自某個地址提取代幣",
+            "recipientDetail": "收款方：{{to}}"
+        },
+        "rewards": {
+            "voter": "領取 VeBetterDAO 投票者獎勵 (週期 {{cycle}})",
+            "allocation": "領取第 {{round}} 輪的分配獎勵"
+        },
+        "swap": {
+            "onDex": "在 {{dex}} 上兌換代幣"
+        },
+        "nft": {
+            "send": "傳送 NFT",
+            "transfer": "轉移 NFT",
+            "sendEditions": "傳送 {{count}} 份 NFT",
+            "sendBatch": "一次性傳送 {{count}} 個 NFT",
+            "approveAll": "允許此網站管理您的 NFT",
+            "revokeAll": "撤銷 NFT 管理權限",
+            "toDetail": "至：{{to}}",
+            "operatorDetail": "操作者：{{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "操作已封鎖",
+            "confirmAction": "確認操作",
+            "confirmTokenTransfer": "確認代幣轉帳",
+            "confirmTokenTransfers": "確認代幣轉帳",
+            "confirmTokenApproval": "確認代幣授權",
+            "confirmTokenApprovals": "確認代幣授權",
+            "confirmContractCall": "確認合約呼叫",
+            "confirmTokenSwap": "確認代幣兌換",
+            "confirmDomainUpdate": "確認網域更新",
+            "confirmVeBetterDaoVote": "確認 VeBetterDAO 投票",
+            "confirmRewardsClaim": "確認領取獎勵",
+            "confirmNftTransfer": "確認 NFT 轉移",
+            "confirmNftActions": "確認 NFT 操作",
+            "confirmTokenAction": "確認代幣操作",
+            "confirmStakeUpdate": "確認質押更新",
+            "confirmNActions": "確認 {{count}} 項操作",
+            "noRequest": "沒有交易請求",
+            "reviewing": "正在檢視交易",
+            "signIn": "登入以繼續",
+            "couldNotLoad": "無法載入請求",
+            "signMessage": "簽署一則訊息",
+            "signData": "簽署資料"
+        },
+        "subtitle": {
+            "sendVet": "向 {{recipient}} 傳送 {{amount}} VET",
+            "sendToken": "向 {{recipient}} 傳送 {{amount}} {{symbol}}",
+            "approveFor": "為 {{spender}} 授權 {{amount}} {{symbol}}",
+            "swapVia": "透過 {{dex}} 兌換 {{amount}} {{symbol}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "透過 {{dex}}",
+            "switchingTo": "正在切換至 {{domain}}",
+            "clearingPrimary": "正在清除主要網域",
+            "voteOnProposal": "{{vote}}該提案",
+            "allocatingAcross": "正在分配給 {{count}} 個應用程式",
+            "endorsingApp": "正在推薦應用程式",
+            "fromCycle": "來自週期 {{cycle}}",
+            "fromRound": "來自第 {{round}} 輪",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} 項操作，其中 {{unverified}} 項未驗證",
+            "reviewMessage": "請檢視此應用程式希望您簽署的訊息。",
+            "reviewData": "請檢視此應用程式希望您簽署的資料。",
+            "signInWaiting": "有一個簽署請求等待處理。請登入以檢視。"
+        },
+        "button": {
+            "confirm": "確認",
+            "confirmAnyway": "仍然確認",
+            "confirmAsDanger": "我已知悉，確認",
+            "signing": "簽署中…",
+            "sign": "簽署"
+        },
+        "section": {
+            "actionsToApprove": "待核准的操作"
+        },
+        "alert": {
+            "unverifiedStep": "我們無法逐步核對每個步驟，請僅在信任此應用程式時繼續。",
+            "unlimitedApprove": "此應用程式正在請求對您某個代幣的無限制存取 — 請確認您信任它。"
+        },
+        "inspect": {
+            "prompt": "需要技術細節嗎？",
+            "show": "檢視詳情",
+            "hide": "隱藏",
+            "showCalldata": "顯示原始 calldata",
+            "hideCalldata": "隱藏原始 calldata"
+        },
+        "detail": {
+            "yourAccount": "您的帳號",
+            "resolving": "解析中…",
+            "network": "網路",
+            "type": "類型",
+            "clauseSingular": "子句",
+            "clausePlural": "子句 ({{count}})",
+            "clauseLabel": "第 {{index}} / {{total}} 個子句 · 至",
+            "value": "金額",
+            "domain": "網域",
+            "rawData": "原始資料",
+            "rawHex": "原始 hex",
+            "function": "函式：{{signature}}",
+            "selector": "selector：{{selector}}",
+            "message": "訊息",
+            "emptyMessage": "(空訊息)",
+            "authorizedCall": "已授權的呼叫",
+            "authorizedBatchCall": "已授權的批次呼叫",
+            "to": "至",
+            "spender": "spender",
+            "operator": "操作者"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "本機 Thor Solo"
+        },
+        "noRequestBody": "此頁面處理其他 VeChain dApp 發起的跨應用交易請求。它無法被直接開啟 — 請求方應用程式會帶上所需參數開啟此頁面。"
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "無法載入請求",
+            "logIn": "登入您的錢包",
+            "connectTo": "連線至 {{app}}",
+            "confirmConnection": "確認連線"
+        },
+        "subtitle": {
+            "grantAccessTo": "登入以授予存取權限給：",
+            "notBefore": "您之前未於此處連線過",
+            "connecting": "連線中…"
+        },
+        "button": {
+            "connecting": "連線中…",
+            "useAnotherAccount": "使用其他帳號"
+        },
+        "copy": {
+            "notYou": "不是您？",
+            "noRequestBody": "此頁面處理其他 VeChain dApp 發起的跨應用連線請求。它無法被直接開啟 — 請求方應用程式會帶上所需參數開啟此頁面。"
+        },
+        "phone": {
+            "placeholder": "+886 912 345 678",
+            "codeHint": "請包含國碼，例如：臺灣為 +886，美國為 +1。",
+            "sendCode": "傳送驗證碼",
+            "sending": "傳送中…",
+            "codeSent": "我們已向 {{phone}} 傳送 6 位驗證碼。",
+            "verify": "驗證",
+            "verifying": "驗證中…"
+        },
+        "farcaster": {
+            "comingSoon": "Farcaster 登入即將推出。它使用 Sign In With Farcaster (SIWF)，需透過 Warpcast 掃碼，目前尚未串接完成。請暫時選擇其他方式。"
+        },
+        "provider": {
+            "continueWith": "使用 {{provider}} 繼續",
+            "continueWithPhone": "使用手機號繼續",
+            "continueWithFarcaster": "使用 Farcaster 繼續",
+            "lastUsed": "上次使用",
+            "moreOptions": "+ 另外 {{count}} 項"
+        },
+        "alert": {
+            "notListed": "此應用程式未列於 VeChain App Hub，請僅在信任此網站時繼續。"
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "用於 Privy 跨應用連線與交易流程的白標宿主。",
+        "routes": "路由",
+        "connectDesc": "處理連線請求",
+        "transactDesc": "處理交易 / 簽署請求",
+        "footer": "此頁面不會由使用者直接開啟。"
+    }
+}

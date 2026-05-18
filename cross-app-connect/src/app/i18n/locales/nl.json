@@ -1,1 +1,253 @@
-{}
+{
+    "common": {
+        "button": {
+            "back": "Terug",
+            "cancel": "Annuleren",
+            "continue": "Doorgaan",
+            "continueAnyway": "Toch doorgaan"
+        },
+        "amount": {
+            "unlimited": "Onbeperkt"
+        },
+        "tokens": "tokens",
+        "yes": "Ja",
+        "no": "Nee",
+        "empty": "(leeg)"
+    },
+    "vote": {
+        "for": "VOOR",
+        "against": "TEGEN",
+        "abstain": "ONTHOUDING"
+    },
+    "header": {
+        "title": {
+            "default": "Log in op je wallet"
+        }
+    },
+    "identity": {
+        "creatingAccount": "Je VeChain-account wordt aangemaakt…",
+        "signedIn": "Ingelogd"
+    },
+    "addressTag": {
+        "verifiedContract": "Geverifieerd VeChain-contract",
+        "unverifiedContract": "Niet-geverifieerd contract — zorg dat je het vertrouwt voordat je doorgaat"
+    },
+    "requester": {
+        "localDev": "Lokale ontwikkelsite"
+    },
+    "domains": {
+        "label": {
+            "avatar": "avatar",
+            "description": "beschrijving",
+            "email": "e-mail",
+            "website": "website",
+            "twitter": "Twitter-handle",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "{{key}}-record"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "{{amount}} VET versturen",
+            "token": "{{amount}} {{symbol}} versturen"
+        },
+        "approve": {
+            "unlimited": "Onbeperkt {{symbol}} uitgeven toestaan",
+            "upTo": "Tot {{amount}} {{symbol}} uitgeven toestaan"
+        },
+        "unknown": {
+            "runOn": "{{fn}} uitvoeren op een contract",
+            "interact": "Interactie met een contract"
+        },
+        "domain": {
+            "removePrimary": "Verwijder je primaire VeChain-domein",
+            "setPrimary": "Stel {{name}} in als je primaire VeChain-domein",
+            "pointToYou": "Laat je VeChain-domein naar je account verwijzen",
+            "updateAddress": "Werk het adres van je VeChain-domein bij",
+            "newTarget": "Nieuwe bestemming: {{addr}}",
+            "removeRecord": "Verwijder {{label}}",
+            "setRecordTo": "Zet {{label}} op {{value}}",
+            "updateRecord": "Werk {{label}} bij",
+            "claim": "Claim {{subdomain}}.veworld.vet"
+        },
+        "governance": {
+            "voteOnProposal": "Stem {{vote}} op een VeBetterDAO-voorstel",
+            "reason": "Reden: {{reason}}",
+            "allocateSingle": "Stem in deze VeBetterDAO-toewijzingsronde",
+            "allocateMany": "Verdeel je stem over {{count}} apps deze ronde",
+            "endorse": "Steun een VeBetterDAO-app",
+            "unendorse": "Trek je steun voor een VeBetterDAO-app in"
+        },
+        "token": {
+            "convertToVot3": "Converteer {{amount}} B3TR → VOT3 (vergrendelen om te stemmen)",
+            "convertToB3tr": "Converteer {{amount}} VOT3 → B3TR (ontgrendelen)",
+            "pullFrom": "Tokens van een adres halen",
+            "recipientDetail": "Ontvanger: {{to}}"
+        },
+        "rewards": {
+            "voter": "VeBetterDAO-stemmersbeloningen claimen (cyclus {{cycle}})",
+            "allocation": "Toewijzingsbeloningen voor ronde {{round}} claimen"
+        },
+        "swap": {
+            "onDex": "Tokens swappen op {{dex}}"
+        },
+        "nft": {
+            "send": "Een NFT versturen",
+            "transfer": "Een NFT overdragen",
+            "sendEditions": "{{count}} edities van een NFT versturen",
+            "sendBatch": "{{count}} NFTs in één keer versturen",
+            "approveAll": "Deze site toestaan je NFTs te beheren",
+            "revokeAll": "NFT-beheerrecht intrekken",
+            "toDetail": "Naar: {{to}}",
+            "operatorDetail": "Operator: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "Actie geblokkeerd",
+            "confirmAction": "Actie bevestigen",
+            "confirmTokenTransfer": "Tokenoverdracht bevestigen",
+            "confirmTokenTransfers": "Tokenoverdrachten bevestigen",
+            "confirmTokenApproval": "Tokengoedkeuring bevestigen",
+            "confirmTokenApprovals": "Tokengoedkeuringen bevestigen",
+            "confirmContractCall": "Contractoproep bevestigen",
+            "confirmTokenSwap": "Token-swap bevestigen",
+            "confirmDomainUpdate": "Domeinupdate bevestigen",
+            "confirmVeBetterDaoVote": "VeBetterDAO-stem bevestigen",
+            "confirmRewardsClaim": "Claim van beloningen bevestigen",
+            "confirmNftTransfer": "NFT-overdracht bevestigen",
+            "confirmNftActions": "NFT-acties bevestigen",
+            "confirmTokenAction": "Tokenactie bevestigen",
+            "confirmStakeUpdate": "Stake-update bevestigen",
+            "confirmNActions": "{{count}} acties bevestigen",
+            "noRequest": "Geen transactieverzoek",
+            "reviewing": "Transactie wordt bekeken",
+            "signIn": "Log in om door te gaan",
+            "couldNotLoad": "Verzoek kon niet worden geladen",
+            "signMessage": "Een bericht ondertekenen",
+            "signData": "Data ondertekenen"
+        },
+        "subtitle": {
+            "sendVet": "{{amount}} VET naar {{recipient}}",
+            "sendToken": "{{amount}} {{symbol}} naar {{recipient}}",
+            "approveFor": "{{amount}} {{symbol}} voor {{spender}}",
+            "swapVia": "{{amount}} {{symbol}} via {{dex}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "via {{dex}}",
+            "switchingTo": "Overschakelen naar {{domain}}",
+            "clearingPrimary": "Je primaire domein wordt gewist",
+            "voteOnProposal": "Voorstel {{vote}}",
+            "allocatingAcross": "Verdelen over {{count}} apps",
+            "endorsingApp": "Een app wordt gesteund",
+            "fromCycle": "Uit cyclus {{cycle}}",
+            "fromRound": "Uit ronde {{round}}",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} acties, {{unverified}} niet geverifieerd",
+            "reviewMessage": "Bekijk het bericht dat deze app je wil laten ondertekenen.",
+            "reviewData": "Bekijk de data die deze app je wil laten ondertekenen.",
+            "signInWaiting": "Er staat een ondertekeningsverzoek te wachten. Log in om het te bekijken."
+        },
+        "button": {
+            "confirm": "Bevestigen",
+            "confirmAnyway": "Toch bevestigen",
+            "confirmAsDanger": "Ik begrijp het, bevestigen",
+            "signing": "Bezig met ondertekenen…",
+            "sign": "Ondertekenen"
+        },
+        "section": {
+            "actionsToApprove": "Acties om goed te keuren"
+        },
+        "alert": {
+            "unverifiedStep": "We konden niet elke stap dubbelchecken, dus ga alleen door als je deze app vertrouwt.",
+            "unlimitedApprove": "Deze app vraagt onbeperkte toegang tot een van je tokens — zorg dat je hem vertrouwt."
+        },
+        "inspect": {
+            "prompt": "Wil je de technische details?",
+            "show": "Inspecteren",
+            "hide": "Verbergen",
+            "showCalldata": "Ruwe calldata tonen",
+            "hideCalldata": "Ruwe calldata verbergen"
+        },
+        "detail": {
+            "yourAccount": "Je account",
+            "resolving": "oplossen…",
+            "network": "Netwerk",
+            "type": "Type",
+            "clauseSingular": "Clause",
+            "clausePlural": "Clauses ({{count}})",
+            "clauseLabel": "Clause {{index}} van {{total}} · naar",
+            "value": "Waarde",
+            "domain": "Domein",
+            "rawData": "Ruwe data",
+            "rawHex": "Ruwe hex",
+            "function": "Functie: {{signature}}",
+            "selector": "Selector: {{selector}}",
+            "message": "Bericht",
+            "emptyMessage": "(leeg bericht)",
+            "authorizedCall": "Geautoriseerde call",
+            "authorizedBatchCall": "Geautoriseerde batch-call",
+            "to": "Naar",
+            "spender": "Uitgever",
+            "operator": "Operator"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "Lokale Thor Solo"
+        },
+        "noRequestBody": "Deze pagina behandelt cross-app transactieverzoeken van andere VeChain-dApps. Hij kan niet rechtstreeks worden geopend — de aanvragende app opent hem met de benodigde parameters."
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "Verzoek kon niet worden geladen",
+            "logIn": "Log in op je wallet",
+            "connectTo": "Verbinden met {{app}}",
+            "confirmConnection": "Verbinding bevestigen"
+        },
+        "subtitle": {
+            "grantAccessTo": "Log in om toegang te geven aan",
+            "notBefore": "Je hebt hier nog niet verbonden",
+            "connecting": "Verbinden…"
+        },
+        "button": {
+            "connecting": "Verbinden…",
+            "useAnotherAccount": "Ander account gebruiken"
+        },
+        "copy": {
+            "notYou": "Jij niet?",
+            "noRequestBody": "Deze pagina behandelt cross-app verbindingsverzoeken van andere VeChain-dApps. Hij kan niet rechtstreeks worden geopend — de aanvragende app opent hem met de benodigde parameters."
+        },
+        "phone": {
+            "placeholder": "+31 6 12345678",
+            "codeHint": "Vermeld de landcode, bijv. +31 voor Nederland, +32 voor België.",
+            "sendCode": "Code versturen",
+            "sending": "Versturen…",
+            "codeSent": "We hebben een 6-cijferige code naar {{phone}} gestuurd.",
+            "verify": "Verifiëren",
+            "verifying": "Verifiëren…"
+        },
+        "farcaster": {
+            "comingSoon": "Inloggen met Farcaster komt eraan. Het gebruikt Sign In With Farcaster (SIWF), waarvoor een Warpcast-scan nodig is en dat is hier nog niet aangesloten. Kies voorlopig een andere optie."
+        },
+        "provider": {
+            "continueWith": "Doorgaan met {{provider}}",
+            "continueWithPhone": "Doorgaan met telefoon",
+            "continueWithFarcaster": "Doorgaan met Farcaster",
+            "lastUsed": "Laatst gebruikt",
+            "moreOptions": "+ {{count}} meer opties"
+        },
+        "alert": {
+            "notListed": "Deze app staat niet in de VeChain App Hub, dus ga alleen door als je de site vertrouwt."
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Whitelabel-host voor Privy's cross-app verbindings- en transactiestromen.",
+        "routes": "Routes",
+        "connectDesc": "behandelt verbindingsverzoeken",
+        "transactDesc": "behandelt transactie- / ondertekeningsverzoeken",
+        "footer": "Deze pagina wordt niet rechtstreeks door gebruikers geopend."
+    }
+}
