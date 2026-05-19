@@ -53,6 +53,10 @@
             "native": "Send {{amount}} VET",
             "token": "Send {{amount}} {{symbol}}"
         },
+        "fee": {
+            "payTransactionFee": "Pay transaction fee",
+            "amount": "{{amount}} {{symbol}} to the gas payer"
+        },
         "approve": {
             "unlimited": "Allow unlimited {{symbol}} spending",
             "upTo": "Allow spending up to {{amount}} {{symbol}}"

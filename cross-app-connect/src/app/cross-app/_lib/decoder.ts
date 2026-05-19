@@ -113,6 +113,12 @@ export async function decodeClause(
     thor: ThorClient | null,
     network: NETWORK_TYPE,
     self?: string,
+    /** Lowercased address of the generic delegator's deposit account. When
+     *  set, clauses transferring VET / VTHO / B3TR / VOT3 to this address
+     *  are re-labelled as "Pay transaction fee" instead of an opaque
+     *  "Send X VET to 0x86…fa" — the user understands the clause exists
+     *  to fund the gas payer, not as a separate transfer. */
+    feeDepositAccount?: string,
 ): Promise<DecodedClause> {
     const data = (clause.data ?? '0x').toLowerCase();
     const value = (() => {
@@ -123,9 +129,25 @@ export async function decodeClause(
         }
     })();
 
+    const isFeeDeposit = (recipient: string): boolean =>
+        !!feeDepositAccount &&
+        recipient.toLowerCase() === feeDepositAccount;
+
     // 1. Native VET transfer
     if ((data === '0x' || data === '') && value > ZERO) {
         const amount = formatUnits(value, 18);
+        if (isFeeDeposit(clause.to)) {
+            return {
+                kind: 'known_action',
+                category: 'fee',
+                recipient: clause.to,
+                summary: t('action.fee.payTransactionFee'),
+                detail: t('action.fee.amount', {
+                    amount: trimAmount(amount),
+                    symbol: 'VET',
+                }),
+            };
+        }
         return {
             kind: 'native_transfer',
             recipient: clause.to,
@@ -157,6 +179,18 @@ export async function decodeClause(
                         bigint,
                     ];
                     const amount = formatUnits(raw, token.decimals);
+                    if (isFeeDeposit(recipient)) {
+                        return {
+                            kind: 'known_action',
+                            category: 'fee',
+                            recipient,
+                            summary: t('action.fee.payTransactionFee'),
+                            detail: t('action.fee.amount', {
+                                amount: trimAmount(amount),
+                                symbol: token.symbol,
+                            }),
+                        };
+                    }
                     return {
                         kind: 'token_transfer',
                         recipient,

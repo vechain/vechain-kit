@@ -29,7 +29,8 @@ export type KnownActionCategory =
     | 'nft'
     | 'token'
     | 'staking'
-    | 'swap';
+    | 'swap'
+    | 'fee';
 
 /**
  * Structured side-channel that travels alongside the localized summary so

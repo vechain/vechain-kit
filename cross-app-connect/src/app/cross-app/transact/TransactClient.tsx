@@ -28,6 +28,7 @@ import {
     type Risk,
 } from '../_lib/labels';
 import {
+    fetchGenericDelegatorDepositAccount,
     getChainId,
     getSmartAccountAddress,
     networkType,
@@ -387,9 +388,21 @@ export function TransactClient() {
         const selfAddress = smartAccount?.address;
         let cancelled = false;
         (async () => {
+            // Resolve the generic delegator's deposit account so transfers
+            // funding the gas payer get re-labelled as "Pay transaction fee".
+            // Cached after the first call; null if the delegator is
+            // unreachable (decoder gracefully falls back to the raw label).
+            const feeDepositAccount =
+                (await fetchGenericDelegatorDepositAccount()) ?? undefined;
             const results = await Promise.all(
                 parsed.clauses.map((c) =>
-                    decodeClause(c, thor, networkType, selfAddress),
+                    decodeClause(
+                        c,
+                        thor,
+                        networkType,
+                        selfAddress,
+                        feeDepositAccount,
+                    ),
                 ),
             );
             if (!cancelled) setDecoded(results);
