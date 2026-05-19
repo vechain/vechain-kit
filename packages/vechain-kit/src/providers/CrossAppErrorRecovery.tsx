@@ -25,15 +25,22 @@ export function CrossAppErrorRecovery() {
             if (
                 !event.data ||
                 typeof event.data !== 'object' ||
-                event.data.type !== 'vk:cross-app-no-connection'
+                (event.data as { type?: unknown }).type !==
+                    'vk:cross-app-no-connection'
             ) {
                 return;
             }
+            console.warn(
+                '[vechain-kit] cross-app connection is stale — disconnecting and reopening login',
+            );
             void (async () => {
                 try {
                     await disconnect();
-                } catch {
-                    /* disconnect best-effort; modal still opens */
+                } catch (e) {
+                    console.warn(
+                        '[vechain-kit] recovery disconnect failed',
+                        e,
+                    );
                 }
                 openConnectModal();
             })();

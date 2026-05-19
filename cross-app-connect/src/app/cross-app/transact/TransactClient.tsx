@@ -269,8 +269,16 @@ export function TransactClient() {
                     e,
                 );
                 const msg = errorMessage(e, '');
-                const isNoConnection = /no connection/i.test(msg);
-                if (isNoConnection && typeof window !== 'undefined') {
+                // All three SDK errors mean the same thing from the user's
+                // POV: the connection record this popup needs is missing or
+                // stale. "No connection found for requester" / "Connection
+                // has expired" / "User ID mismatch" all require the user to
+                // re-establish the connection from the kit-using app.
+                const isStaleConnection =
+                    /no connection|connection has expired|user id mismatch/i.test(
+                        msg,
+                    );
+                if (isStaleConnection && typeof window !== 'undefined') {
                     // Signal the parent (kit-using app) to clear its stale
                     // session and re-prompt login. The kit listens for this
                     // postMessage and routes the user through a fresh
@@ -280,13 +288,19 @@ export function TransactClient() {
                             { type: 'vk:cross-app-no-connection' },
                             '*',
                         );
-                    } catch {
-                        /* opener may be cross-origin-blocked; ignore */
+                        console.warn(
+                            '[transact] notified opener of stale connection',
+                        );
+                    } catch (postErr) {
+                        console.warn(
+                            '[transact] could not reach opener',
+                            postErr,
+                        );
                     }
                 }
                 if (!cancelled)
                     setParseError(
-                        isNoConnection
+                        isStaleConnection
                             ? { kind: 'connection_expired' }
                             : {
                                   kind: 'invalid',
