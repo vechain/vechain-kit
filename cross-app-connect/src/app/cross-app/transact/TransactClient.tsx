@@ -159,6 +159,22 @@ function connectionRequestFromTransactUrl():
  *  - setting `localStorage.setItem('vk-force-no-connection','1')` once
  *    from the host origin's devtools — flag persists until you clear it.
  */
+/**
+ * Pull a usable message out of whatever the caught value happens to be.
+ * SDK backends sometimes throw Errors with `message: ''`, sometimes plain
+ * objects, sometimes strings. Without this helper the alert renders blank
+ * and the user gets a dead-end screen with no idea what failed.
+ */
+function errorMessage(err: unknown, fallback: string): string {
+    if (err instanceof Error && err.message.trim()) return err.message;
+    if (typeof err === 'string' && err.trim()) return err;
+    if (err && typeof err === 'object') {
+        const m = (err as { message?: unknown }).message;
+        if (typeof m === 'string' && m.trim()) return m;
+    }
+    return fallback;
+}
+
 function isForcingNoConnection(): boolean {
     if (typeof window === 'undefined') return false;
     try {
@@ -299,10 +315,32 @@ export function TransactClient() {
                 // retry. Avoids falling back to Privy's modal.
                 const noConnection =
                     e instanceof Error && /no connection/i.test(e.message);
+                console.warn(
+                    '[transact] getVerifiedTransactionRequest failed',
+                    {
+                        error: e,
+                        noConnection,
+                        hasEmbedded: !!embedded?.address,
+                    },
+                );
                 if (noConnection && embedded?.address) {
                     try {
                         const connReq =
                             connectionRequestFromTransactUrl();
+                        console.info(
+                            '[transact] attempting inline acceptConnection',
+                            {
+                                hasConnReq: !!connReq,
+                                requesterPublicKeyPrefix:
+                                    connReq?.requesterPublicKey?.slice(
+                                        0,
+                                        12,
+                                    ),
+                                callbackUrl: connReq?.callbackUrl,
+                                address: embedded.address,
+                                userId: user.id,
+                            },
+                        );
                         if (!connReq) throw e;
                         const accessToken = await getAccessToken();
                         if (!accessToken)
@@ -315,6 +353,9 @@ export function TransactClient() {
                             userId: user.id,
                             connectionRequest: connReq,
                         });
+                        console.info(
+                            '[transact] acceptConnection succeeded, retrying fetch',
+                        );
                         const data =
                             await client.getVerifiedTransactionRequest({
                                 userId: user.id,
@@ -322,13 +363,17 @@ export function TransactClient() {
                         if (!cancelled) setVerified(data);
                         return;
                     } catch (retryErr) {
+                        console.error(
+                            '[transact] inline acceptConnection retry failed',
+                            retryErr,
+                        );
                         if (!cancelled)
                             setParseError({
                                 kind: 'invalid',
-                                message:
-                                    retryErr instanceof Error
-                                        ? retryErr.message
-                                        : t('transact.error.failedToRead'),
+                                message: errorMessage(
+                                    retryErr,
+                                    t('transact.error.failedToRead'),
+                                ),
                             });
                         return;
                     }
@@ -336,10 +381,10 @@ export function TransactClient() {
                 if (!cancelled)
                     setParseError({
                         kind: 'invalid',
-                        message:
-                            e instanceof Error
-                                ? e.message
-                                : t('transact.error.failedToRead'),
+                        message: errorMessage(
+                            e,
+                            t('transact.error.failedToRead'),
+                        ),
                     });
             }
         })();
@@ -602,12 +647,26 @@ export function TransactClient() {
     }
 
     if (parseError?.kind === 'invalid') {
+        // Two cards: the error alert + a way out. Without the close button
+        // the user is stuck — no spinner moves, nothing's clickable, and
+        // `window.close()` isn't reachable from anywhere on this screen.
+        // `onReject` falls back to plain `window.close()` when there's no
+        // verified request to send a reject postMessage to, which is
+        // exactly the state we're in here.
         return (
             <>
                 <VechainHeader title={t('transact.title.couldNotLoad')} />
                 <div className={`${styles.alert} ${styles.alertError}`}>
-                    {parseError.message}
+                    {parseError.message ||
+                        t('transact.error.failedToRead')}
                 </div>
+                <button
+                    type="button"
+                    className={styles.btnGhost}
+                    onClick={onReject}
+                >
+                    {t('common.button.cancel')}
+                </button>
             </>
         );
     }
