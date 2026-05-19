@@ -246,72 +246,32 @@ export function TransactClient() {
         if (typeof window !== 'undefined' && !window.location.search) return;
         let cancelled = false;
         (async () => {
-            console.log('[transact] fetching verified transaction request', {
-                hasOpener: Boolean(window.opener),
-                openerOrigin: (() => {
-                    try {
-                        return window.opener?.location?.origin ?? null;
-                    } catch {
-                        return '(cross-origin, opaque)';
-                    }
-                })(),
-            });
             try {
                 const data = await client.getVerifiedTransactionRequest({
                     userId: user.id,
                 });
                 if (!cancelled) setVerified(data);
             } catch (e) {
-                // "No connection found for requester" → the requester app
-                // encrypted this transact payload with the *old* connection's
-                // keys, but Privy has no matching server-side record (the
-                // connection expired, or this user/account never connected
-                // before). We can't recover inline: creating a fresh
-                // connection here would mint new keys that can't decrypt
-                // the existing payload (Web Crypto throws OperationError on
-                // the second fetch attempt — verified). The user has to
-                // re-establish the connection through the kit-using app's
-                // login flow, which re-keys both sides — the kit listens for
-                // a postMessage on this window's close and triggers an
-                // automatic logout + re-login to make the next attempt work.
-                console.warn(
-                    '[transact] getVerifiedTransactionRequest failed',
-                    e,
-                );
+                // "No connection found for requester" / "Connection has
+                // expired" / "User ID mismatch" → the requester app encrypted
+                // this payload with a connection record Privy no longer has
+                // for this user. We can't recover inline (a fresh connection
+                // would mint new keys that can't decrypt the existing
+                // payload). The kit-using app listens for our postMessage
+                // and routes the user through a fresh connect flow.
                 const msg = errorMessage(e, '');
-                console.log('[transact] parsed error message', {
-                    msg,
-                    matches: /no connection|connection has expired|user id mismatch/i.test(
-                        msg,
-                    ),
-                });
-                // All three SDK errors mean the same thing from the user's
-                // POV: the connection record this popup needs is missing or
-                // stale. "No connection found for requester" / "Connection
-                // has expired" / "User ID mismatch" all require the user to
-                // re-establish the connection from the kit-using app.
                 const isStaleConnection =
                     /no connection|connection has expired|user id mismatch/i.test(
                         msg,
                     );
                 if (isStaleConnection && typeof window !== 'undefined') {
-                    // Signal the parent (kit-using app) to clear its stale
-                    // session and re-prompt login. The kit listens for this
-                    // postMessage and routes the user through a fresh
-                    // connect flow on their next action.
                     try {
                         window.opener?.postMessage(
                             { type: 'vk:cross-app-no-connection' },
                             '*',
                         );
-                        console.warn(
-                            '[transact] notified opener of stale connection',
-                        );
-                    } catch (postErr) {
-                        console.warn(
-                            '[transact] could not reach opener',
-                            postErr,
-                        );
+                    } catch {
+                        /* opener cross-origin-blocked; ignore */
                     }
                 }
                 if (!cancelled)

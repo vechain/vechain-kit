@@ -26,52 +26,24 @@ export function CrossAppErrorRecovery() {
 
     const handlerRef = useRef<(event: MessageEvent) => void>(() => {});
     handlerRef.current = (event) => {
-        const data = event.data as
-            | { type?: unknown; target?: unknown }
-            | null;
-        const type = data?.type;
-        // Filter out the high-frequency noise: MetaMask injected-provider
-        // bridge (`{target: 'metamask-inpage', ...}`), React DevTools, etc.
-        const isNoise =
-            data?.target === 'metamask-inpage' ||
-            data?.target === 'metamask-contentscript' ||
-            (typeof type === 'string' &&
-                (type.startsWith('react-devtools') ||
-                    type.startsWith('webpackHot')));
-        if (!isNoise) {
-            console.log('[vechain-kit] message received', {
-                data: event.data,
-                origin: event.origin,
-            });
-        }
-        if (type !== 'vk:cross-app-no-connection') {
-            return;
-        }
-        console.warn(
-            '[vechain-kit] cross-app connection is stale — disconnecting and reopening login',
-        );
+        const type = (event.data as { type?: unknown } | null)?.type;
+        if (type !== 'vk:cross-app-no-connection') return;
         void (async () => {
             try {
                 await disconnect();
-            } catch (e) {
-                console.warn('[vechain-kit] recovery disconnect failed', e);
+            } catch {
+                /* disconnect best-effort; modal still opens */
             }
             openConnectModal();
         })();
     };
 
     useEffect(() => {
-        console.log('[vechain-kit] CrossAppErrorRecovery listener installed');
         function bridge(event: MessageEvent) {
             handlerRef.current(event);
         }
         window.addEventListener('message', bridge);
-        return () => {
-            console.log(
-                '[vechain-kit] CrossAppErrorRecovery listener removed',
-            );
-            window.removeEventListener('message', bridge);
-        };
+        return () => window.removeEventListener('message', bridge);
     }, []);
 
     return null;
