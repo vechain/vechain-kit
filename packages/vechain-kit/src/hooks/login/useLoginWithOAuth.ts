@@ -4,6 +4,9 @@ import {
     OAuthProviderType,
 } from '@privy-io/react-auth';
 import { useCallback } from 'react';
+import { useVeChainKitConfig } from '@/providers';
+import { useLoginWithVeChain } from './useLoginWithVeChain';
+import type { CrossAppLoginIntent } from '@/providers/PrivyCrossAppProvider';
 
 interface OAuthOptions {
     provider: OAuthProviderType;
@@ -12,8 +15,25 @@ interface OAuthOptions {
 // Module-level variable shared across all hook instances
 let hasCreatedWallet = false;
 
+// Providers enabled in VeChain's Privy app that the whitelabel
+// cross-app-connect host can handle via `useLoginWithOAuth`. Spotify /
+// Instagram / LinkedIn are NOT in this set because they are disabled in
+// the VeChain Privy dashboard; calling them would 4xx at the provider.
+// Farcaster and WhatsApp are enabled but use different login flows.
+const CROSS_APP_INTENT_PROVIDERS = new Set<OAuthProviderType>([
+    'google',
+    'apple',
+    'twitter',
+    'discord',
+    'github',
+    'tiktok',
+    'line',
+]);
+
 export const useLoginWithOAuth = () => {
+    const { privy } = useVeChainKitConfig();
     const { createWallet } = useCreateWallet();
+    const { login: loginViaCrossApp } = useLoginWithVeChain();
 
     // Memoize the onComplete callback to prevent recreation on every render
     const handleComplete = useCallback(
@@ -23,7 +43,7 @@ export const useLoginWithOAuth = () => {
             if (isNewUser && !hasCreatedWallet) {
                 // Set the flag BEFORE the async operation to prevent race conditions
                 hasCreatedWallet = true;
-                
+
                 try {
                     await createWallet();
                 } catch (error) {
@@ -42,11 +62,25 @@ export const useLoginWithOAuth = () => {
     });
 
     const initOAuth = async ({ provider }: OAuthOptions) => {
-        try {
-            await privyInitOAuth({ provider });
-        } catch (error) {
-            throw error;
+        // When the consumer dApp doesn't supply a `privy` prop, route
+        // supported OAuth providers through the VeChain whitelabel cross-app
+        // flow instead of Privy directly (whose dummy app id can't service
+        // a real OAuth handshake).
+        if (!privy) {
+            if (CROSS_APP_INTENT_PROVIDERS.has(provider)) {
+                await loginViaCrossApp({
+                    intent: provider as CrossAppLoginIntent,
+                });
+                return;
+            }
+            throw new Error(
+                `OAuth provider "${provider}" requires a Privy configuration. ` +
+                    `Supported without Privy via the VeChain whitelabel host: ` +
+                    `${[...CROSS_APP_INTENT_PROVIDERS].join(', ')}.`,
+            );
         }
+
+        await privyInitOAuth({ provider });
     };
 
     return { initOAuth };

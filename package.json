@@ -7,7 +7,8 @@
         "examples/*",
         "!examples/test-tailwind-vck",
         "packages/*",
-        "lambda"
+        "lambda",
+        "cross-app-connect"
     ],
     "keywords": [
         "vechain",
@@ -48,7 +49,9 @@
         "dev:homepage:build": "yarn workspace @vechain/vechain-kit build & yarn workspace vechain-kit-homepage build",
         "dev:next-template": "yarn workspace @vechain/vechain-kit watch & yarn workspace next-template dev",
         "dev:next-template:build": "yarn workspace @vechain/vechain-kit build & yarn workspace next-template build",
-        "dev:next-chakra-v3": "yarn workspace @vechain/vechain-kit watch & yarn workspace next-chakra-v3 dev"
+        "dev:next-chakra-v3": "yarn workspace @vechain/vechain-kit watch & yarn workspace next-chakra-v3 dev",
+        "dev:cross-app-connect": "yarn workspace @vechain/vechain-kit watch & yarn workspace cross-app-connect dev",
+        "dev:cross-app-connect:build": "yarn workspace @vechain/vechain-kit build & yarn workspace cross-app-connect build"
     },
     "husky": {
         "hooks": {
@@ -97,7 +100,7 @@
         "wrap-ansi": "7.0.0",
         "elliptic": "6.6.1",
         "es-toolkit": "1.39.4",
-        "next": "15.5.9",
+        "next": "16.2.3",
         "preact": "10.27.3",
         "h3": "1.15.5"
     }

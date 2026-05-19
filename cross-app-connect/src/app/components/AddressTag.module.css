@@ -1,0 +1,63 @@
+.row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.avatar {
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    object-fit: cover;
+    object-position: center;
+}
+
+.label {
+    font-weight: 500;
+    color: var(--text-strong);
+}
+
+.domainStack {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.domainName {
+    font-weight: 500;
+    color: var(--text-strong);
+    font-size: 14px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.addressLine {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text-subtle);
+    line-height: 1.1;
+    margin: 0;
+}
+
+.addressOnly {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.iconVerified {
+    width: 14px;
+    height: 14px;
+    color: var(--success);
+    flex-shrink: 0;
+}
+
+.iconWarn {
+    width: 14px;
+    height: 14px;
+    color: var(--warn);
+    flex-shrink: 0;
+}

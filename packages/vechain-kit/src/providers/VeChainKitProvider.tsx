@@ -48,9 +48,11 @@ import { ModalProvider } from './ModalProvider';
 import {
     VECHAIN_KIT_STORAGE_KEYS,
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
+    VECHAIN_PRIVY_APP_ID,
     getGenericDelegatorUrl,
 } from '@/utils/constants';
 import { Certificate, CertificateData } from '@vechain/sdk-core';
+import { CrossAppErrorRecovery } from './CrossAppErrorRecovery';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 
@@ -78,6 +80,13 @@ type LoginMethodOrder = {
               : PrivyDependentMethods);
     gridColumn?: number;
     allowedApps?: string[]; // Only used by ecosystem method, if it's not provided, it will use default apps
+    /**
+     * Mark this method as the recommended primary CTA — filled inverted
+     * surface + RecommendedDot. If no entry sets `isPrimary`, the kit falls
+     * back to highlighting the first visible method automatically. The
+     * `more` method is never primary (it's a footer link).
+     */
+    isPrimary?: boolean;
 };
 
 export type LegalDocumentOptions = {
@@ -337,19 +346,19 @@ const validateConfig = (
             : [{ method: 'veworld', gridColumn: 4 }];
     }
 
-    // Validate login methods if Privy is not configured
+    // Validate login methods if Privy is not configured.
+    // Most OAuth providers fall back to the VeChain whitelabel cross-app
+    // flow (via useLoginWithVeChain({ intent })) when no privy prop is set.
+    // Email and passkey have no cross-app fallback -- VeChain has email
+    // disabled in its Privy app, so cross-app-connect doesn't surface it
+    // either. `more` is allowed: the More sub-view gracefully degrades to
+    // whatever is available (dapp-kit wallets in `allowedWallets` that
+    // aren't on the main grid, plus a "Continue with VeChain" cross-app
+    // picker entry when `vechain` isn't on the main grid).
     if (validatedProps.loginMethods) {
         if (!validatedProps.privy) {
             const invalidMethods = validatedProps.loginMethods.filter(
-                (method) =>
-                    [
-                        'email',
-                        'google',
-                        'apple',
-                        'github',
-                        'passkey',
-                        'more',
-                    ].includes(method.method),
+                (method) => ['email', 'passkey'].includes(method.method),
             );
 
             if (invalidMethods.length > 0) {
@@ -500,9 +509,19 @@ export const VeChainKitProvider = (
 
     let privyAppId: string, privyClientId: string;
     if (!privy) {
-        // We set dummy values for the appId and clientId so that the PrivyProvider doesn't throw an error
-        privyAppId = 'clzdb5k0b02b9qvzjm6jpknsc';
-        privyClientId = 'client-WY2oy87y6KNrHFnpXuwVsiFMkwPZKTYpExtjvUQuMbCMF';
+        // No host-supplied Privy config -- fall back to VeChain's own
+        // Privy app so PrivyProvider mounts cleanly. The previous dummy
+        // (`clzdb5k0b02b9qvzjm6jpknsc`) only allowed a handful of origins,
+        // so any deploy outside that list 403'd /api/v1/sessions on
+        // mount and stalled the connect button forever. VeChain's real
+        // app (VECHAIN_PRIVY_APP_ID) has the full kit-ecosystem allow
+        // list and is the same app the whitelabel cross-app host serves,
+        // so the requester and host stay consistent. The cross-app
+        // OAuth fallback in useLoginWithOAuth is gated on the `privy`
+        // prop, not on which app id is mounted, so logging in via this
+        // path still routes through the whitelabel host.
+        privyAppId = VECHAIN_PRIVY_APP_ID;
+        privyClientId = '';
     } else {
         privyAppId = privy.appId;
         privyClientId = privy.clientId;
@@ -812,6 +831,7 @@ export const VeChainKitProvider = (
                                 }
                             >
                                 <ModalProvider>
+                                    <CrossAppErrorRecovery />
                                     <LegalDocumentsProvider>
                                         {children}
                                     </LegalDocumentsProvider>

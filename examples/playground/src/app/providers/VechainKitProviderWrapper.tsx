@@ -168,31 +168,32 @@ export function VechainKitProviderWrapper({ children }: Props) {
             theme={theme}
             language={kitLanguage}
             i18n={playgroundTranslations}
-            privy={{
-                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: [
-                    'google',
-                    'apple',
-                    'twitter',
-                    'github',
-                    'farcaster',
-                    // 'email',
-                    'discord',
-                    'tiktok',
-                    // 'rabby_wallet',
-                    // 'coinbase_wallet',
-                    // 'rainbow',
-                    // 'metamask',
-                ],
-                appearance: {
-                    loginMessage: 'Select a login method',
-                    logo: logo,
-                },
-                embeddedWallets: {
-                    createOnLogin: 'all-users',
-                },
-            }}
+            // privy={{
+            //     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+            //     clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+            //     loginMethods: [
+            //         'google',
+            //         'apple',
+            //         'twitter',
+            //         'github',
+            //         'farcaster',
+            //         // 'email',
+            //         'discord',
+            //         'tiktok',
+            //         // 'rabby_wallet',
+            //         // 'coinbase_wallet',
+            //         // 'rainbow',
+            //         // 'metamask',
+            //     ],
+            //     appearance: {
+            //         loginMessage: 'Select a login method',
+            //         logo: logo,
+            //     },
+            //     embeddedWallets: {
+            //         createOnLogin: 'all-users',
+            //     },
+            // }}
+
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect'],
                 walletConnectOptions: {
@@ -211,16 +212,17 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 },
             }}
             loginMethods={[
-                // { method: 'email', gridColumn: 4 },
-                // { method: 'google', gridColumn: 4 },
-                // { method: 'github', gridColumn: 4 },
-                // { method: 'vechain', gridColumn: 4 },
-                // { method: 'dappkit', gridColumn: 4 },
-                // { method: 'ecosystem', gridColumn: 4 },
                 { method: 'veworld', gridColumn: 4 },
                 { method: 'google', gridColumn: 4 },
                 { method: 'apple', gridColumn: 4 },
                 { method: 'more', gridColumn: 4 },
+                // { method: 'vechain', gridColumn: 4 },
+                // { method: 'github', gridColumn: 4 },
+                // { method: 'dappkit', gridColumn: 4 },
+                // { method: 'ecosystem', gridColumn: 4 },
+
+                // { method: 'google', gridColumn: 4 },
+                // { method: 'apple', gridColumn: 4 },
                 // { method: 'passkey', gridColumn: 4 },
                 // { method: 'more', gridColumn: 1 },
             ]}
@@ -236,6 +238,9 @@ export function VechainKitProviderWrapper({ children }: Props) {
             //     vot3ContractAddress:
             //         '0xf7a08af15cb3501feee53ebe11f4428a966fa459',
             // }}
+            feeDelegation={{
+                delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
+            }}
         >
             <LanguageSync>{children}</LanguageSync>
         </VeChainKitProvider>

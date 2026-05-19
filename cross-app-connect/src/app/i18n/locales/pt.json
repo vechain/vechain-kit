@@ -1,0 +1,282 @@
+{
+    "common": {
+        "button": {
+            "back": "Voltar",
+            "cancel": "Cancelar",
+            "continue": "Continuar",
+            "continueAnyway": "Continuar mesmo assim",
+            "close": "Fechar"
+        },
+        "amount": {
+            "unlimited": "Ilimitado"
+        },
+        "tokens": "tokens",
+        "yes": "Sim",
+        "no": "Não",
+        "empty": "(vazio)"
+    },
+    "vote": {
+        "for": "A FAVOR",
+        "against": "CONTRA",
+        "abstain": "ABSTENÇÃO"
+    },
+    "header": {
+        "title": {
+            "default": "Inicia sessão na tua wallet"
+        }
+    },
+    "identity": {
+        "creatingAccount": "A criar a tua conta VeChain…",
+        "signedIn": "Sessão iniciada"
+    },
+    "addressTag": {
+        "verifiedContract": "Contrato VeChain verificado",
+        "unverifiedContract": "Contrato não verificado — certifica-te de que confias nele antes de continuar"
+    },
+    "requester": {
+        "localDev": "Site de desenvolvimento local"
+    },
+    "domains": {
+        "label": {
+            "avatar": "avatar",
+            "description": "descrição",
+            "email": "email",
+            "website": "site",
+            "twitter": "utilizador do Twitter",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "registo {{key}}"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "Enviar {{amount}} VET",
+            "token": "Enviar {{amount}} {{symbol}}"
+        },
+        "approve": {
+            "unlimited": "Permitir gasto ilimitado de {{symbol}}",
+            "upTo": "Permitir gastar até {{amount}} {{symbol}}"
+        },
+        "unknown": {
+            "runOn": "Executar {{fn}} num contrato",
+            "interact": "Interagir com um contrato"
+        },
+        "domain": {
+            "removePrimary": "Remover o teu domínio VeChain principal",
+            "setPrimary": "Definir {{name}} como o teu domínio VeChain principal",
+            "pointToYou": "Apontar o teu domínio VeChain para a tua conta",
+            "updateAddress": "Atualizar o endereço do teu domínio VeChain",
+            "newTarget": "Novo destino: {{addr}}",
+            "removeRecord": "Remover {{label}}",
+            "setRecordTo": "Definir {{label}} para {{value}}",
+            "updateRecord": "Atualizar {{label}}",
+            "claim": "Reivindicar {{subdomain}}.veworld.vet"
+        },
+        "governance": {
+            "voteOnProposal": "Votar {{vote}} numa proposta do VeBetterDAO",
+            "reason": "Motivo: {{reason}}",
+            "allocateSingle": "Votar nesta ronda de alocação do VeBetterDAO",
+            "allocateMany": "Distribui o teu voto por {{count}} apps esta ronda",
+            "endorse": "Apoiar uma app do VeBetterDAO",
+            "unendorse": "Retirar o teu apoio a uma app do VeBetterDAO"
+        },
+        "token": {
+            "convertToVot3": "Converter {{amount}} B3TR → VOT3 (bloquear para votar)",
+            "convertToB3tr": "Converter {{amount}} VOT3 → B3TR (desbloquear)",
+            "pullFrom": "Retirar tokens de um endereço",
+            "recipientDetail": "Destinatário: {{to}}"
+        },
+        "rewards": {
+            "voter": "Reivindicar recompensas de votante do VeBetterDAO (ciclo {{cycle}})",
+            "allocation": "Reivindicar recompensas de alocação da ronda {{round}}"
+        },
+        "swap": {
+            "onDex": "Fazer swap de tokens em {{dex}}"
+        },
+        "nft": {
+            "send": "Enviar um NFT",
+            "transfer": "Transferir um NFT",
+            "sendEditions": "Enviar {{count}} edições de um NFT",
+            "sendBatch": "Enviar {{count}} NFTs de uma vez",
+            "approveAll": "Permitir que este site gira os teus NFTs",
+            "revokeAll": "Revogar permissão de gestão de NFTs",
+            "toDetail": "Para: {{to}}",
+            "operatorDetail": "Operador: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "Ação bloqueada",
+            "confirmAction": "Confirmar ação",
+            "confirmTokenTransfer": "Confirmar transferência de token",
+            "confirmTokenTransfers": "Confirmar transferências de tokens",
+            "confirmTokenApproval": "Confirmar aprovação de token",
+            "confirmTokenApprovals": "Confirmar aprovações de tokens",
+            "confirmContractCall": "Confirmar chamada ao contrato",
+            "confirmTokenSwap": "Confirmar swap de tokens",
+            "confirmDomainUpdate": "Confirmar atualização de domínio",
+            "confirmVeBetterDaoVote": "Confirmar voto no VeBetterDAO",
+            "confirmRewardsClaim": "Confirmar reivindicação de recompensas",
+            "confirmNftTransfer": "Confirmar transferência de NFT",
+            "confirmNftActions": "Confirmar ações de NFT",
+            "confirmTokenAction": "Confirmar ação de token",
+            "confirmStakeUpdate": "Confirmar atualização de stake",
+            "confirmNActions": "Confirmar {{count}} ações",
+            "noRequest": "Sem pedido de transação",
+            "reviewing": "A rever transação",
+            "signIn": "Inicia sessão para continuar",
+            "couldNotLoad": "Não foi possível carregar o pedido",
+            "signMessage": "Assinar uma mensagem",
+            "signData": "Assinar dados",
+            "welcomeBack": "Bem-vindo de volta, {{identity}}",
+            "connectionExpired": "Reconexão necessária"
+        },
+        "subtitle": {
+            "sendVet": "{{amount}} VET para {{recipient}}",
+            "sendToken": "{{amount}} {{symbol}} para {{recipient}}",
+            "approveFor": "{{amount}} {{symbol}} para {{spender}}",
+            "swapVia": "{{amount}} {{symbol}} via {{dex}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "via {{dex}}",
+            "switchingTo": "A mudar para {{domain}}",
+            "clearingPrimary": "A remover o teu domínio principal",
+            "voteOnProposal": "Proposta {{vote}}",
+            "allocatingAcross": "A distribuir por {{count}} apps",
+            "endorsingApp": "A apoiar uma app",
+            "fromCycle": "Do ciclo {{cycle}}",
+            "fromRound": "Da ronda {{round}}",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} ações, {{unverified}} por verificar",
+            "reviewMessage": "Revê a mensagem que esta app quer que assines.",
+            "reviewData": "Revê os dados que esta app quer que assines.",
+            "signInWaiting": "Há um pedido de assinatura à espera. Inicia sessão para o rever.",
+            "connectionExpired": "A sua sessão de ligação expirou"
+        },
+        "button": {
+            "confirm": "Confirmar",
+            "confirmAnyway": "Confirmar mesmo assim",
+            "confirmAsDanger": "Compreendo, confirmar",
+            "signing": "A assinar…",
+            "sign": "Assinar"
+        },
+        "section": {
+            "actionsToApprove": "Ações a aprovar"
+        },
+        "alert": {
+            "unverifiedStep": "Não conseguimos verificar cada passo, por isso só continua se confiares nesta app.",
+            "unlimitedApprove": "Esta app está a pedir acesso ilimitado a um dos teus tokens — certifica-te de que confias nela."
+        },
+        "inspect": {
+            "prompt": "Queres os detalhes técnicos?",
+            "show": "Inspecionar",
+            "hide": "Ocultar",
+            "showCalldata": "Mostrar calldata em bruto",
+            "hideCalldata": "Ocultar calldata em bruto"
+        },
+        "detail": {
+            "yourAccount": "A tua conta",
+            "resolving": "a resolver…",
+            "network": "Rede",
+            "type": "Tipo",
+            "clauseSingular": "Cláusula",
+            "clausePlural": "Cláusulas ({{count}})",
+            "clauseLabel": "Cláusula {{index}} de {{total}} · para",
+            "value": "Valor",
+            "domain": "Domínio",
+            "rawData": "Dados em bruto",
+            "rawHex": "Hex em bruto",
+            "function": "Função: {{signature}}",
+            "selector": "Selector: {{selector}}",
+            "message": "Mensagem",
+            "emptyMessage": "(mensagem vazia)",
+            "authorizedCall": "Chamada autorizada",
+            "authorizedBatchCall": "Chamada em lote autorizada",
+            "to": "Para",
+            "spender": "Gastador",
+            "operator": "Operador"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "Thor Solo local"
+        },
+        "noRequestBody": "Esta página trata de pedidos de transação cross-app de outras dApps VeChain. Não pode ser aberta diretamente — a app que faz o pedido abre-a com os parâmetros necessários.",
+        "block": {
+            "unsupportedMethod": "Método não suportado: {{method}}",
+            "chainIdMismatch": "Chain id não coincide",
+            "invalidChainId": "Chain id inválido no pedido",
+            "smartAccountMismatch": "Smart account não coincide: o pedido está a assinar para outra smart account."
+        },
+        "error": {
+            "failedToRead": "Não foi possível ler o pedido",
+            "failedToSign": "Não foi possível assinar o pedido"
+        },
+        "privyUi": {
+            "signMessage": "Assinar mensagem",
+            "signButton": "Assinar",
+            "approveVeChainTx": "Aprovar transação VeChain",
+            "signStructuredData": "Assinar dados estruturados"
+        },
+        "copy": {
+            "connectionExpiredBody": "Volte à aplicação que abriu esta janela e inicie sessão novamente — a sua carteira reconecta-se automaticamente e poderá tentar novamente a ação."
+        }
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "Não foi possível carregar o pedido",
+            "logIn": "Inicia sessão na tua wallet",
+            "connectTo": "Ligar a {{app}}",
+            "confirmConnection": "Confirmar ligação"
+        },
+        "subtitle": {
+            "grantAccessTo": "Inicia sessão para dar acesso a",
+            "notBefore": "Ainda não te ligaste aqui",
+            "connecting": "A ligar…"
+        },
+        "button": {
+            "connecting": "A ligar…",
+            "useAnotherAccount": "Usar outra conta"
+        },
+        "copy": {
+            "notYou": "Não és tu?",
+            "noRequestBody": "Esta página trata de pedidos de ligação cross-app de outras dApps VeChain. Não pode ser aberta diretamente — a app que faz o pedido abre-a com os parâmetros necessários."
+        },
+        "phone": {
+            "placeholder": "+351 912 345 678",
+            "codeHint": "Inclui o indicativo do país, por exemplo +351 para Portugal, +55 para o Brasil.",
+            "sendCode": "Enviar código",
+            "sending": "A enviar…",
+            "codeSent": "Enviámos um código de 6 dígitos para {{phone}}.",
+            "verify": "Verificar",
+            "verifying": "A verificar…"
+        },
+        "farcaster": {
+            "comingSoon": "O início de sessão com Farcaster está a chegar. Usa Sign In With Farcaster (SIWF), que precisa de um scan no Warpcast e ainda não está ligado aqui. Por agora, escolhe outra opção."
+        },
+        "provider": {
+            "continueWith": "Continuar com {{provider}}",
+            "continueWithPhone": "Continuar com telemóvel",
+            "continueWithFarcaster": "Continuar com Farcaster",
+            "lastUsed": "Usado pela última vez",
+            "moreOptions": "+ {{count}} mais opções"
+        },
+        "alert": {
+            "notListed": "Esta app não está listada no VeChain App Hub, por isso só continua se confiares no site."
+        },
+        "error": {
+            "failedToAccept": "Não foi possível aceitar a ligação",
+            "failedToSendCode": "Não foi possível enviar o código",
+            "failedToVerifyCode": "Não foi possível verificar o código",
+            "missingAccessToken": "Token de acesso em falta"
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Host whitelabel para os fluxos de ligação e transação cross-app do Privy.",
+        "routes": "Rotas",
+        "connectDesc": "trata pedidos de ligação",
+        "transactDesc": "trata pedidos de transação / assinatura",
+        "footer": "Esta página não é aberta diretamente pelos utilizadores."
+    }
+}

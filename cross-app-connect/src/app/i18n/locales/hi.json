@@ -1,0 +1,282 @@
+{
+    "common": {
+        "button": {
+            "back": "वापस",
+            "cancel": "रद्द करें",
+            "continue": "जारी रखें",
+            "continueAnyway": "फिर भी जारी रखें",
+            "close": "बंद करें"
+        },
+        "amount": {
+            "unlimited": "असीमित"
+        },
+        "tokens": "टोकन",
+        "yes": "हाँ",
+        "no": "नहीं",
+        "empty": "(खाली)"
+    },
+    "vote": {
+        "for": "पक्ष में",
+        "against": "विपक्ष में",
+        "abstain": "अनुपस्थित"
+    },
+    "header": {
+        "title": {
+            "default": "अपने वॉलेट में लॉग इन करें"
+        }
+    },
+    "identity": {
+        "creatingAccount": "आपका VeChain अकाउंट बनाया जा रहा है…",
+        "signedIn": "साइन इन किया गया"
+    },
+    "addressTag": {
+        "verifiedContract": "सत्यापित VeChain कॉन्ट्रैक्ट",
+        "unverifiedContract": "असत्यापित कॉन्ट्रैक्ट — जारी रखने से पहले सुनिश्चित करें कि आप इस पर भरोसा करते हैं"
+    },
+    "requester": {
+        "localDev": "लोकल डेवलपमेंट साइट"
+    },
+    "domains": {
+        "label": {
+            "avatar": "अवतार",
+            "description": "विवरण",
+            "email": "ईमेल",
+            "website": "वेबसाइट",
+            "twitter": "Twitter हैंडल",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "{{key}} रिकॉर्ड"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "{{amount}} VET भेजें",
+            "token": "{{amount}} {{symbol}} भेजें"
+        },
+        "approve": {
+            "unlimited": "{{symbol}} खर्च करने की असीमित अनुमति दें",
+            "upTo": "{{amount}} {{symbol}} तक खर्च करने की अनुमति दें"
+        },
+        "unknown": {
+            "runOn": "किसी कॉन्ट्रैक्ट पर {{fn}} चलाएँ",
+            "interact": "किसी कॉन्ट्रैक्ट से इंटरैक्ट करें"
+        },
+        "domain": {
+            "removePrimary": "अपना प्राथमिक VeChain डोमेन हटाएँ",
+            "setPrimary": "{{name}} को अपना प्राथमिक VeChain डोमेन बनाएँ",
+            "pointToYou": "अपने VeChain डोमेन को अपने अकाउंट पर पॉइंट करें",
+            "updateAddress": "अपना VeChain डोमेन पता अपडेट करें",
+            "newTarget": "नया टारगेट: {{addr}}",
+            "removeRecord": "{{label}} हटाएँ",
+            "setRecordTo": "{{label}} को {{value}} पर सेट करें",
+            "updateRecord": "{{label}} अपडेट करें",
+            "claim": "{{subdomain}}.veworld.vet क्लेम करें"
+        },
+        "governance": {
+            "voteOnProposal": "VeBetterDAO प्रस्ताव पर {{vote}} वोट करें",
+            "reason": "कारण: {{reason}}",
+            "allocateSingle": "इस VeBetterDAO आवंटन राउंड में वोट करें",
+            "allocateMany": "इस राउंड में {{count}} ऐप्स में अपना वोट आवंटित करें",
+            "endorse": "किसी VeBetterDAO ऐप का समर्थन करें",
+            "unendorse": "किसी VeBetterDAO ऐप से अपना समर्थन वापस लें"
+        },
+        "token": {
+            "convertToVot3": "{{amount}} B3TR → VOT3 कन्वर्ट करें (वोट के लिए लॉक करें)",
+            "convertToB3tr": "{{amount}} VOT3 → B3TR कन्वर्ट करें (अनलॉक)",
+            "pullFrom": "किसी पते से टोकन खींचें",
+            "recipientDetail": "प्राप्तकर्ता: {{to}}"
+        },
+        "rewards": {
+            "voter": "VeBetterDAO वोटर रिवॉर्ड क्लेम करें (साइकल {{cycle}})",
+            "allocation": "राउंड {{round}} के आवंटन रिवॉर्ड क्लेम करें"
+        },
+        "swap": {
+            "onDex": "{{dex}} पर टोकन स्वैप करें"
+        },
+        "nft": {
+            "send": "एक NFT भेजें",
+            "transfer": "एक NFT ट्रांसफर करें",
+            "sendEditions": "एक NFT के {{count}} एडिशन भेजें",
+            "sendBatch": "{{count}} NFT एक साथ भेजें",
+            "approveAll": "इस साइट को अपने NFT मैनेज करने की अनुमति दें",
+            "revokeAll": "NFT मैनेजमेंट की अनुमति रद्द करें",
+            "toDetail": "को: {{to}}",
+            "operatorDetail": "ऑपरेटर: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "कार्रवाई ब्लॉक की गई",
+            "confirmAction": "कार्रवाई की पुष्टि करें",
+            "confirmTokenTransfer": "टोकन ट्रांसफर की पुष्टि करें",
+            "confirmTokenTransfers": "टोकन ट्रांसफर्स की पुष्टि करें",
+            "confirmTokenApproval": "टोकन अप्रूवल की पुष्टि करें",
+            "confirmTokenApprovals": "टोकन अप्रूवल्स की पुष्टि करें",
+            "confirmContractCall": "कॉन्ट्रैक्ट कॉल की पुष्टि करें",
+            "confirmTokenSwap": "टोकन स्वैप की पुष्टि करें",
+            "confirmDomainUpdate": "डोमेन अपडेट की पुष्टि करें",
+            "confirmVeBetterDaoVote": "VeBetterDAO वोट की पुष्टि करें",
+            "confirmRewardsClaim": "रिवॉर्ड क्लेम की पुष्टि करें",
+            "confirmNftTransfer": "NFT ट्रांसफर की पुष्टि करें",
+            "confirmNftActions": "NFT कार्रवाइयों की पुष्टि करें",
+            "confirmTokenAction": "टोकन कार्रवाई की पुष्टि करें",
+            "confirmStakeUpdate": "स्टेक अपडेट की पुष्टि करें",
+            "confirmNActions": "{{count}} कार्रवाइयों की पुष्टि करें",
+            "noRequest": "कोई ट्रांज़ैक्शन अनुरोध नहीं",
+            "reviewing": "ट्रांज़ैक्शन की समीक्षा हो रही है",
+            "signIn": "जारी रखने के लिए साइन इन करें",
+            "couldNotLoad": "अनुरोध लोड नहीं हो सका",
+            "signMessage": "एक संदेश साइन करें",
+            "signData": "डेटा साइन करें",
+            "welcomeBack": "वापस आने पर स्वागत है, {{identity}}",
+            "connectionExpired": "पुनः कनेक्शन आवश्यक"
+        },
+        "subtitle": {
+            "sendVet": "{{amount}} VET को {{recipient}}",
+            "sendToken": "{{amount}} {{symbol}} को {{recipient}}",
+            "approveFor": "{{spender}} के लिए {{amount}} {{symbol}}",
+            "swapVia": "{{dex}} के ज़रिए {{amount}} {{symbol}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "{{dex}} के ज़रिए",
+            "switchingTo": "{{domain}} पर स्विच हो रहा है",
+            "clearingPrimary": "आपका प्राथमिक डोमेन हटाया जा रहा है",
+            "voteOnProposal": "प्रस्ताव {{vote}}",
+            "allocatingAcross": "{{count}} ऐप्स में आवंटन हो रहा है",
+            "endorsingApp": "एक ऐप का समर्थन किया जा रहा है",
+            "fromCycle": "साइकल {{cycle}} से",
+            "fromRound": "राउंड {{round}} से",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} कार्रवाइयाँ, {{unverified}} असत्यापित",
+            "reviewMessage": "उस संदेश की समीक्षा करें जिसे यह ऐप आपसे साइन कराना चाहता है।",
+            "reviewData": "उस डेटा की समीक्षा करें जिसे यह ऐप आपसे साइन कराना चाहता है।",
+            "signInWaiting": "एक साइनिंग अनुरोध इंतज़ार में है। समीक्षा के लिए साइन इन करें।",
+            "connectionExpired": "आपका कनेक्शन सत्र समाप्त हो गया है"
+        },
+        "button": {
+            "confirm": "पुष्टि करें",
+            "confirmAnyway": "फिर भी पुष्टि करें",
+            "confirmAsDanger": "मैं समझता हूँ, पुष्टि करें",
+            "signing": "साइन हो रहा है…",
+            "sign": "साइन करें"
+        },
+        "section": {
+            "actionsToApprove": "अनुमोदित करने योग्य कार्रवाइयाँ"
+        },
+        "alert": {
+            "unverifiedStep": "हम हर स्टेप को दोबारा जाँच नहीं सके, इसलिए केवल तभी जारी रखें जब आप इस ऐप पर भरोसा करते हों।",
+            "unlimitedApprove": "यह ऐप आपके किसी एक टोकन तक असीमित पहुँच माँग रहा है — सुनिश्चित करें कि आप इस पर भरोसा करते हैं।"
+        },
+        "inspect": {
+            "prompt": "तकनीकी जानकारी चाहिए?",
+            "show": "जाँचें",
+            "hide": "छिपाएँ",
+            "showCalldata": "रॉ calldata दिखाएँ",
+            "hideCalldata": "रॉ calldata छिपाएँ"
+        },
+        "detail": {
+            "yourAccount": "आपका अकाउंट",
+            "resolving": "रिज़ॉल्व हो रहा है…",
+            "network": "नेटवर्क",
+            "type": "प्रकार",
+            "clauseSingular": "क्लॉज़",
+            "clausePlural": "क्लॉज़ ({{count}})",
+            "clauseLabel": "क्लॉज़ {{index}} / {{total}} · को",
+            "value": "मूल्य",
+            "domain": "डोमेन",
+            "rawData": "रॉ डेटा",
+            "rawHex": "रॉ hex",
+            "function": "फ़ंक्शन: {{signature}}",
+            "selector": "selector: {{selector}}",
+            "message": "संदेश",
+            "emptyMessage": "(खाली संदेश)",
+            "authorizedCall": "अधिकृत कॉल",
+            "authorizedBatchCall": "अधिकृत बैच कॉल",
+            "to": "को",
+            "spender": "खर्चकर्ता",
+            "operator": "ऑपरेटर"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "लोकल Thor Solo"
+        },
+        "noRequestBody": "यह पेज अन्य VeChain dApps से क्रॉस-ऐप ट्रांज़ैक्शन अनुरोधों को संभालता है। इसे सीधे नहीं खोला जा सकता — अनुरोध करने वाला ऐप इसे ज़रूरी पैरामीटर के साथ खोलेगा।",
+        "block": {
+            "unsupportedMethod": "असमर्थित मेथड: {{method}}",
+            "chainIdMismatch": "Chain id मेल नहीं खाता",
+            "invalidChainId": "अनुरोध में अमान्य Chain id",
+            "smartAccountMismatch": "Smart account मेल नहीं खाता: यह अनुरोध किसी अन्य smart account के लिए साइन कर रहा है।"
+        },
+        "error": {
+            "failedToRead": "अनुरोध पढ़ने में विफल",
+            "failedToSign": "अनुरोध साइन करने में विफल"
+        },
+        "privyUi": {
+            "signMessage": "संदेश साइन करें",
+            "signButton": "साइन करें",
+            "approveVeChainTx": "VeChain लेन-देन स्वीकृत करें",
+            "signStructuredData": "संरचित डेटा साइन करें"
+        },
+        "copy": {
+            "connectionExpiredBody": "इस विंडो को खोलने वाले ऐप पर लौटें और फिर से लॉगिन करें — आपका वॉलेट स्वचालित रूप से पुनः कनेक्ट हो जाएगा और आप कार्रवाई पुनः कर सकते हैं।"
+        }
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "अनुरोध लोड नहीं हो सका",
+            "logIn": "अपने वॉलेट में लॉग इन करें",
+            "connectTo": "{{app}} से कनेक्ट करें",
+            "confirmConnection": "कनेक्शन की पुष्टि करें"
+        },
+        "subtitle": {
+            "grantAccessTo": "एक्सेस देने के लिए साइन इन करें",
+            "notBefore": "आपने यहाँ पहले कभी कनेक्ट नहीं किया है",
+            "connecting": "कनेक्ट हो रहा है…"
+        },
+        "button": {
+            "connecting": "कनेक्ट हो रहा है…",
+            "useAnotherAccount": "दूसरा अकाउंट इस्तेमाल करें"
+        },
+        "copy": {
+            "notYou": "आप नहीं हैं?",
+            "noRequestBody": "यह पेज अन्य VeChain dApps से क्रॉस-ऐप कनेक्शन अनुरोधों को संभालता है। इसे सीधे नहीं खोला जा सकता — अनुरोध करने वाला ऐप इसे ज़रूरी पैरामीटर के साथ खोलेगा।"
+        },
+        "phone": {
+            "placeholder": "+91 98765 43210",
+            "codeHint": "देश का कोड शामिल करें, जैसे भारत के लिए +91, अमेरिका के लिए +1।",
+            "sendCode": "कोड भेजें",
+            "sending": "भेजा जा रहा है…",
+            "codeSent": "हमने {{phone}} पर 6 अंकों का कोड भेजा है।",
+            "verify": "सत्यापित करें",
+            "verifying": "सत्यापित हो रहा है…"
+        },
+        "farcaster": {
+            "comingSoon": "Farcaster साइन-इन जल्द आ रहा है। यह Sign In With Farcaster (SIWF) का इस्तेमाल करता है, जिसके लिए Warpcast स्कैन ज़रूरी है और यहाँ अभी जुड़ा नहीं है। फ़िलहाल कोई दूसरा विकल्प चुनें।"
+        },
+        "provider": {
+            "continueWith": "{{provider}} के साथ जारी रखें",
+            "continueWithPhone": "फ़ोन के साथ जारी रखें",
+            "continueWithFarcaster": "Farcaster के साथ जारी रखें",
+            "lastUsed": "हाल में इस्तेमाल किया",
+            "moreOptions": "+ {{count}} और विकल्प"
+        },
+        "alert": {
+            "notListed": "यह ऐप VeChain App Hub में सूचीबद्ध नहीं है, इसलिए केवल तभी जारी रखें जब आप इस साइट पर भरोसा करते हों।"
+        },
+        "error": {
+            "failedToAccept": "कनेक्शन स्वीकार करने में विफल",
+            "failedToSendCode": "कोड भेजने में विफल",
+            "failedToVerifyCode": "कोड सत्यापित करने में विफल",
+            "missingAccessToken": "एक्सेस टोकन गायब है"
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Privy क्रॉस-ऐप कनेक्शन और ट्रांज़ैक्शन फ़्लो के लिए व्हाइटलेबल होस्ट।",
+        "routes": "रूट्स",
+        "connectDesc": "कनेक्शन अनुरोधों को संभालता है",
+        "transactDesc": "ट्रांज़ैक्शन / साइनिंग अनुरोधों को संभालता है",
+        "footer": "इस पेज को उपयोगकर्ता सीधे नहीं खोलते।"
+    }
+}

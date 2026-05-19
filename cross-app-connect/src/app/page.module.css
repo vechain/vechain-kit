@@ -1,0 +1,42 @@
+.shell {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 48px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.heading {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-strong);
+    margin: 0 0 8px;
+}
+
+.list {
+    list-style: disc;
+    padding-left: 20px;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+}
+
+.code {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    background: var(--bg-card);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    color: var(--text-strong);
+}
+
+.footer {
+    font-size: 14px;
+    color: var(--text-subtle);
+    text-align: center;
+    margin: 0;
+}

@@ -1,0 +1,282 @@
+{
+    "common": {
+        "button": {
+            "back": "戻る",
+            "cancel": "キャンセル",
+            "continue": "続行",
+            "continueAnyway": "それでも続行",
+            "close": "閉じる"
+        },
+        "amount": {
+            "unlimited": "無制限"
+        },
+        "tokens": "トークン",
+        "yes": "はい",
+        "no": "いいえ",
+        "empty": "(空)"
+    },
+    "vote": {
+        "for": "賛成",
+        "against": "反対",
+        "abstain": "棄権"
+    },
+    "header": {
+        "title": {
+            "default": "ウォレットにログイン"
+        }
+    },
+    "identity": {
+        "creatingAccount": "VeChain アカウントを作成しています…",
+        "signedIn": "サインイン済み"
+    },
+    "addressTag": {
+        "verifiedContract": "認証済み VeChain コントラクト",
+        "unverifiedContract": "未認証のコントラクトです — 信頼できる場合のみ続行してください"
+    },
+    "requester": {
+        "localDev": "ローカル開発サイト"
+    },
+    "domains": {
+        "label": {
+            "avatar": "アバター",
+            "description": "説明",
+            "email": "メール",
+            "website": "ウェブサイト",
+            "twitter": "Twitter ハンドル",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "{{key}} レコード"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "{{amount}} VET を送信",
+            "token": "{{amount}} {{symbol}} を送信"
+        },
+        "approve": {
+            "unlimited": "{{symbol}} の無制限利用を許可",
+            "upTo": "{{amount}} {{symbol}} までの利用を許可"
+        },
+        "unknown": {
+            "runOn": "コントラクトで {{fn}} を実行",
+            "interact": "コントラクトとやり取り"
+        },
+        "domain": {
+            "removePrimary": "プライマリ VeChain ドメインを解除",
+            "setPrimary": "{{name}} をプライマリ VeChain ドメインに設定",
+            "pointToYou": "VeChain ドメインをあなたのアカウントに紐付け",
+            "updateAddress": "VeChain ドメインのアドレスを更新",
+            "newTarget": "新しいターゲット: {{addr}}",
+            "removeRecord": "{{label}} を削除",
+            "setRecordTo": "{{label}} を {{value}} に設定",
+            "updateRecord": "{{label}} を更新",
+            "claim": "{{subdomain}}.veworld.vet を取得"
+        },
+        "governance": {
+            "voteOnProposal": "VeBetterDAO 提案に {{vote}} で投票",
+            "reason": "理由: {{reason}}",
+            "allocateSingle": "この VeBetterDAO 配分ラウンドで投票",
+            "allocateMany": "今ラウンド {{count}} 個のアプリに配分投票",
+            "endorse": "VeBetterDAO アプリを推薦",
+            "unendorse": "VeBetterDAO アプリの推薦を取り下げ"
+        },
+        "token": {
+            "convertToVot3": "{{amount}} B3TR → VOT3 に変換 (投票用にロック)",
+            "convertToB3tr": "{{amount}} VOT3 → B3TR に変換 (ロック解除)",
+            "pullFrom": "あるアドレスからトークンを引き出し",
+            "recipientDetail": "受取人: {{to}}"
+        },
+        "rewards": {
+            "voter": "VeBetterDAO 投票者報酬を請求 (サイクル {{cycle}})",
+            "allocation": "ラウンド {{round}} の配分報酬を請求"
+        },
+        "swap": {
+            "onDex": "{{dex}} でトークンをスワップ"
+        },
+        "nft": {
+            "send": "NFT を送信",
+            "transfer": "NFT を転送",
+            "sendEditions": "NFT を {{count}} 個送信",
+            "sendBatch": "{{count}} 個の NFT をまとめて送信",
+            "approveAll": "このサイトに NFT の管理を許可",
+            "revokeAll": "NFT 管理権限を取り消し",
+            "toDetail": "宛先: {{to}}",
+            "operatorDetail": "オペレーター: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "アクションがブロックされました",
+            "confirmAction": "アクションを確認",
+            "confirmTokenTransfer": "トークン送信を確認",
+            "confirmTokenTransfers": "トークン送信を確認",
+            "confirmTokenApproval": "トークン承認を確認",
+            "confirmTokenApprovals": "トークン承認を確認",
+            "confirmContractCall": "コントラクト呼び出しを確認",
+            "confirmTokenSwap": "トークンスワップを確認",
+            "confirmDomainUpdate": "ドメイン更新を確認",
+            "confirmVeBetterDaoVote": "VeBetterDAO 投票を確認",
+            "confirmRewardsClaim": "報酬の請求を確認",
+            "confirmNftTransfer": "NFT 転送を確認",
+            "confirmNftActions": "NFT アクションを確認",
+            "confirmTokenAction": "トークンアクションを確認",
+            "confirmStakeUpdate": "ステーク更新を確認",
+            "confirmNActions": "{{count}} 件のアクションを確認",
+            "noRequest": "トランザクションリクエストがありません",
+            "reviewing": "トランザクションを確認中",
+            "signIn": "続行するにはサインイン",
+            "couldNotLoad": "リクエストを読み込めませんでした",
+            "signMessage": "メッセージに署名",
+            "signData": "データに署名",
+            "welcomeBack": "おかえりなさい、{{identity}}",
+            "connectionExpired": "再接続が必要です"
+        },
+        "subtitle": {
+            "sendVet": "{{recipient}} に {{amount}} VET",
+            "sendToken": "{{recipient}} に {{amount}} {{symbol}}",
+            "approveFor": "{{spender}} に {{amount}} {{symbol}}",
+            "swapVia": "{{dex}} 経由で {{amount}} {{symbol}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "{{dex}} 経由",
+            "switchingTo": "{{domain}} に切り替え中",
+            "clearingPrimary": "プライマリを解除中",
+            "voteOnProposal": "提案に {{vote}}",
+            "allocatingAcross": "{{count}} 個のアプリに配分中",
+            "endorsingApp": "アプリを推薦中",
+            "fromCycle": "サイクル {{cycle}} から",
+            "fromRound": "ラウンド {{round}} から",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} 件のアクション、うち {{unverified}} 件が未認証",
+            "reviewMessage": "このアプリが署名を求めているメッセージを確認してください。",
+            "reviewData": "このアプリが署名を求めているデータを確認してください。",
+            "signInWaiting": "署名リクエストが待機中です。サインインして確認してください。",
+            "connectionExpired": "接続セッションの有効期限が切れました"
+        },
+        "button": {
+            "confirm": "確認",
+            "confirmAnyway": "それでも確認",
+            "confirmAsDanger": "理解しました、確認します",
+            "signing": "署名中…",
+            "sign": "署名"
+        },
+        "section": {
+            "actionsToApprove": "承認するアクション"
+        },
+        "alert": {
+            "unverifiedStep": "すべてのステップを検証できませんでした。このアプリを信頼できる場合のみ続行してください。",
+            "unlimitedApprove": "このアプリはあなたのトークンへの無制限アクセスを要求しています — 信頼できることを確認してください。"
+        },
+        "inspect": {
+            "prompt": "技術的な詳細を確認しますか？",
+            "show": "詳細を表示",
+            "hide": "閉じる",
+            "showCalldata": "生の calldata を表示",
+            "hideCalldata": "生の calldata を非表示"
+        },
+        "detail": {
+            "yourAccount": "あなたのアカウント",
+            "resolving": "解決中…",
+            "network": "ネットワーク",
+            "type": "種類",
+            "clauseSingular": "クローズ",
+            "clausePlural": "クローズ ({{count}})",
+            "clauseLabel": "クローズ {{index}} / {{total}} · 宛先",
+            "value": "値",
+            "domain": "ドメイン",
+            "rawData": "生データ",
+            "rawHex": "生 hex",
+            "function": "関数: {{signature}}",
+            "selector": "selector: {{selector}}",
+            "message": "メッセージ",
+            "emptyMessage": "(空のメッセージ)",
+            "authorizedCall": "認可された呼び出し",
+            "authorizedBatchCall": "認可されたバッチ呼び出し",
+            "to": "宛先",
+            "spender": "spender",
+            "operator": "オペレーター"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "ローカル Thor Solo"
+        },
+        "noRequestBody": "このページは他の VeChain dApp からのクロスアプリトランザクションリクエストを処理します。直接開くことはできません — 必要なパラメーターを付けて、リクエスト元のアプリが開きます。",
+        "block": {
+            "unsupportedMethod": "サポートされていないメソッド: {{method}}",
+            "chainIdMismatch": "Chain id が一致しません",
+            "invalidChainId": "リクエスト内の Chain id が無効です",
+            "smartAccountMismatch": "Smart account が一致しません。リクエストは別の Smart account に対して署名しようとしています。"
+        },
+        "error": {
+            "failedToRead": "リクエストを読み込めませんでした",
+            "failedToSign": "リクエストに署名できませんでした"
+        },
+        "privyUi": {
+            "signMessage": "メッセージに署名",
+            "signButton": "署名",
+            "approveVeChainTx": "VeChain トランザクションを承認",
+            "signStructuredData": "構造化データに署名"
+        },
+        "copy": {
+            "connectionExpiredBody": "このウィンドウを開いたアプリに戻って再度ログインしてください。ウォレットは自動的に再接続され、操作を再試行できます。"
+        }
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "リクエストを読み込めませんでした",
+            "logIn": "ウォレットにログイン",
+            "connectTo": "{{app}} に接続",
+            "confirmConnection": "接続を確認"
+        },
+        "subtitle": {
+            "grantAccessTo": "サインインしてアクセスを許可:",
+            "notBefore": "ここに接続したことはありません",
+            "connecting": "接続中…"
+        },
+        "button": {
+            "connecting": "接続中…",
+            "useAnotherAccount": "別のアカウントを使用"
+        },
+        "copy": {
+            "notYou": "あなたではない？",
+            "noRequestBody": "このページは他の VeChain dApp からのクロスアプリ接続リクエストを処理します。直接開くことはできません — 必要なパラメーターを付けて、リクエスト元のアプリが開きます。"
+        },
+        "phone": {
+            "placeholder": "+81 90 1234 5678",
+            "codeHint": "国番号を含めてください。例: 日本は +81、米国は +1。",
+            "sendCode": "コードを送信",
+            "sending": "送信中…",
+            "codeSent": "{{phone}} に 6 桁のコードを送信しました。",
+            "verify": "確認",
+            "verifying": "確認中…"
+        },
+        "farcaster": {
+            "comingSoon": "Farcaster サインインは近日対応予定です。Sign In With Farcaster (SIWF) を使用し、Warpcast でのスキャンが必要ですが、まだ統合されていません。現時点では他のオプションをお選びください。"
+        },
+        "provider": {
+            "continueWith": "{{provider}} で続行",
+            "continueWithPhone": "電話番号で続行",
+            "continueWithFarcaster": "Farcaster で続行",
+            "lastUsed": "前回使用",
+            "moreOptions": "+ 他 {{count}} 件のオプション"
+        },
+        "alert": {
+            "notListed": "このアプリは VeChain App Hub に登録されていません。サイトを信頼できる場合のみ続行してください。"
+        },
+        "error": {
+            "failedToAccept": "接続を受け入れられませんでした",
+            "failedToSendCode": "コードを送信できませんでした",
+            "failedToVerifyCode": "コードを検証できませんでした",
+            "missingAccessToken": "アクセストークンがありません"
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Privy のクロスアプリ接続およびトランザクションフロー用のホワイトレーベルホストです。",
+        "routes": "ルート",
+        "connectDesc": "接続リクエストを処理",
+        "transactDesc": "トランザクション／署名リクエストを処理",
+        "footer": "このページはユーザーが直接開くものではありません。"
+    }
+}

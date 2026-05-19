@@ -1,0 +1,282 @@
+{
+    "common": {
+        "button": {
+            "back": "Geri",
+            "cancel": "İptal",
+            "continue": "Devam",
+            "continueAnyway": "Yine de devam et",
+            "close": "Kapat"
+        },
+        "amount": {
+            "unlimited": "Sınırsız"
+        },
+        "tokens": "token",
+        "yes": "Evet",
+        "no": "Hayır",
+        "empty": "(boş)"
+    },
+    "vote": {
+        "for": "KABUL",
+        "against": "RET",
+        "abstain": "ÇEKİMSER"
+    },
+    "header": {
+        "title": {
+            "default": "Cüzdanına giriş yap"
+        }
+    },
+    "identity": {
+        "creatingAccount": "VeChain hesabın oluşturuluyor…",
+        "signedIn": "Giriş yapıldı"
+    },
+    "addressTag": {
+        "verifiedContract": "Doğrulanmış VeChain kontratı",
+        "unverifiedContract": "Doğrulanmamış kontrat — yalnızca güveniyorsan devam et"
+    },
+    "requester": {
+        "localDev": "Yerel geliştirme sitesi"
+    },
+    "domains": {
+        "label": {
+            "avatar": "avatar",
+            "description": "açıklama",
+            "email": "e-posta",
+            "website": "web sitesi",
+            "twitter": "Twitter",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "{{key}} kaydı"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "{{amount}} VET gönder",
+            "token": "{{amount}} {{symbol}} gönder"
+        },
+        "approve": {
+            "unlimited": "{{symbol}} için sınırsız harcamaya izin ver",
+            "upTo": "{{amount}} {{symbol}} kadar harcamaya izin ver"
+        },
+        "unknown": {
+            "runOn": "Kontrat üzerinde {{fn}} çalıştır",
+            "interact": "Bir kontratla etkileşim kur"
+        },
+        "domain": {
+            "removePrimary": "Birincil VeChain domainini kaldır",
+            "setPrimary": "{{name}}'i birincil VeChain domainin yap",
+            "pointToYou": "VeChain domainini hesabına yönlendir",
+            "updateAddress": "VeChain domain adresini güncelle",
+            "newTarget": "Yeni hedef: {{addr}}",
+            "removeRecord": "{{label}} kaldır",
+            "setRecordTo": "{{label}} değerini {{value}} olarak ayarla",
+            "updateRecord": "{{label}} güncelle",
+            "claim": "{{subdomain}}.veworld.vet'i talep et"
+        },
+        "governance": {
+            "voteOnProposal": "VeBetterDAO önerisinde {{vote}} oyu kullan",
+            "reason": "Gerekçe: {{reason}}",
+            "allocateSingle": "Bu VeBetterDAO dağıtım turunda oy ver",
+            "allocateMany": "Bu turda oyunu {{count}} uygulama arasında dağıt",
+            "endorse": "Bir VeBetterDAO uygulamasını destekle",
+            "unendorse": "Bir VeBetterDAO uygulamasından desteğini geri çek"
+        },
+        "token": {
+            "convertToVot3": "{{amount}} B3TR → VOT3 dönüştür (oy için kilitle)",
+            "convertToB3tr": "{{amount}} VOT3 → B3TR dönüştür (kilidi aç)",
+            "pullFrom": "Bir adresten token çek",
+            "recipientDetail": "Alıcı: {{to}}"
+        },
+        "rewards": {
+            "voter": "VeBetterDAO oy ödüllerini al (döngü {{cycle}})",
+            "allocation": "Tur {{round}} için dağıtım ödüllerini al"
+        },
+        "swap": {
+            "onDex": "{{dex}} üzerinde token takas et"
+        },
+        "nft": {
+            "send": "NFT gönder",
+            "transfer": "NFT transfer et",
+            "sendEditions": "Bir NFT'nin {{count}} kopyasını gönder",
+            "sendBatch": "Tek seferde {{count}} NFT gönder",
+            "approveAll": "Bu sitenin NFT'lerini yönetmesine izin ver",
+            "revokeAll": "NFT yönetim iznini geri çek",
+            "toDetail": "Alıcı: {{to}}",
+            "operatorDetail": "Operatör: {{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "İşlem engellendi",
+            "confirmAction": "İşlemi onayla",
+            "confirmTokenTransfer": "Token transferini onayla",
+            "confirmTokenTransfers": "Token transferlerini onayla",
+            "confirmTokenApproval": "Token onayını onayla",
+            "confirmTokenApprovals": "Token onaylarını onayla",
+            "confirmContractCall": "Kontrat çağrısını onayla",
+            "confirmTokenSwap": "Token takasını onayla",
+            "confirmDomainUpdate": "Domain güncellemesini onayla",
+            "confirmVeBetterDaoVote": "VeBetterDAO oyunu onayla",
+            "confirmRewardsClaim": "Ödül talebini onayla",
+            "confirmNftTransfer": "NFT transferini onayla",
+            "confirmNftActions": "NFT işlemlerini onayla",
+            "confirmTokenAction": "Token işlemini onayla",
+            "confirmStakeUpdate": "Stake güncellemesini onayla",
+            "confirmNActions": "{{count}} işlemi onayla",
+            "noRequest": "İşlem isteği yok",
+            "reviewing": "İşlem inceleniyor",
+            "signIn": "Devam etmek için giriş yap",
+            "couldNotLoad": "İstek yüklenemedi",
+            "signMessage": "Bir mesaj imzala",
+            "signData": "Veri imzala",
+            "welcomeBack": "Tekrar hoş geldin, {{identity}}",
+            "connectionExpired": "Yeniden bağlantı gerekli"
+        },
+        "subtitle": {
+            "sendVet": "{{recipient}} adresine {{amount}} VET",
+            "sendToken": "{{recipient}} adresine {{amount}} {{symbol}}",
+            "approveFor": "{{spender}} için {{amount}} {{symbol}}",
+            "swapVia": "{{dex}} üzerinden {{amount}} {{symbol}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "{{dex}} üzerinden",
+            "switchingTo": "{{domain}} olarak değiştiriliyor",
+            "clearingPrimary": "Birincil domain temizleniyor",
+            "voteOnProposal": "Öneriye {{vote}}",
+            "allocatingAcross": "{{count}} uygulamaya dağıtılıyor",
+            "endorsingApp": "Bir uygulama destekleniyor",
+            "fromCycle": "Döngü {{cycle}}'den",
+            "fromRound": "Tur {{round}}'den",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} işlem, {{unverified}} doğrulanmamış",
+            "reviewMessage": "Bu uygulamanın imzalamanı istediği mesajı incele.",
+            "reviewData": "Bu uygulamanın imzalamanı istediği veriyi incele.",
+            "signInWaiting": "Bir imzalama isteği bekliyor. İncelemek için giriş yap.",
+            "connectionExpired": "Bağlantı oturumunuzun süresi doldu"
+        },
+        "button": {
+            "confirm": "Onayla",
+            "confirmAnyway": "Yine de onayla",
+            "confirmAsDanger": "Anladım, onayla",
+            "signing": "İmzalanıyor…",
+            "sign": "İmzala"
+        },
+        "section": {
+            "actionsToApprove": "Onaylanacak işlemler"
+        },
+        "alert": {
+            "unverifiedStep": "Her adımı doğrulayamadık — yalnızca bu uygulamaya güveniyorsan devam et.",
+            "unlimitedApprove": "Bu uygulama tokenlerinden birine sınırsız erişim istiyor — uygulamaya güvendiğinden emin ol."
+        },
+        "inspect": {
+            "prompt": "Teknik ayrıntıları görmek ister misin?",
+            "show": "İncele",
+            "hide": "Gizle",
+            "showCalldata": "Ham calldata'yı göster",
+            "hideCalldata": "Ham calldata'yı gizle"
+        },
+        "detail": {
+            "yourAccount": "Hesabın",
+            "resolving": "çözümleniyor…",
+            "network": "Ağ",
+            "type": "Tip",
+            "clauseSingular": "Madde",
+            "clausePlural": "Maddeler ({{count}})",
+            "clauseLabel": "Madde {{index}} / {{total}} · alıcı",
+            "value": "Değer",
+            "domain": "Domain",
+            "rawData": "Ham veri",
+            "rawHex": "Ham hex",
+            "function": "Fonksiyon: {{signature}}",
+            "selector": "Selector: {{selector}}",
+            "message": "Mesaj",
+            "emptyMessage": "(boş mesaj)",
+            "authorizedCall": "Yetkili çağrı",
+            "authorizedBatchCall": "Yetkili toplu çağrı",
+            "to": "Alıcı",
+            "spender": "Harcayan",
+            "operator": "Operatör"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "Yerel Thor Solo"
+        },
+        "noRequestBody": "Bu sayfa, diğer VeChain dApp'lerinden gelen uygulamalar arası işlem isteklerini yönetir. Doğrudan açılamaz — isteği yapan uygulama gerekli parametrelerle açacaktır.",
+        "block": {
+            "unsupportedMethod": "Desteklenmeyen yöntem: {{method}}",
+            "chainIdMismatch": "Chain id eşleşmiyor",
+            "invalidChainId": "İstekteki Chain id geçersiz",
+            "smartAccountMismatch": "Smart account eşleşmiyor: istek başka bir smart account için imzalanıyor."
+        },
+        "error": {
+            "failedToRead": "İstek okunamadı",
+            "failedToSign": "İstek imzalanamadı"
+        },
+        "privyUi": {
+            "signMessage": "Mesajı imzala",
+            "signButton": "İmzala",
+            "approveVeChainTx": "VeChain işlemini onayla",
+            "signStructuredData": "Yapılandırılmış veriyi imzala"
+        },
+        "copy": {
+            "connectionExpiredBody": "Bu pencereyi açan uygulamaya geri dönün ve tekrar giriş yapın — cüzdanınız otomatik olarak yeniden bağlanacak ve işlemi tekrar deneyebileceksiniz."
+        }
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "İstek yüklenemedi",
+            "logIn": "Cüzdanına giriş yap",
+            "connectTo": "{{app}} uygulamasına bağlan",
+            "confirmConnection": "Bağlantıyı onayla"
+        },
+        "subtitle": {
+            "grantAccessTo": "Erişim vermek için giriş yap",
+            "notBefore": "Buraya daha önce bağlanmadın",
+            "connecting": "Bağlanıyor…"
+        },
+        "button": {
+            "connecting": "Bağlanıyor…",
+            "useAnotherAccount": "Başka bir hesap kullan"
+        },
+        "copy": {
+            "notYou": "Sen değil misin?",
+            "noRequestBody": "Bu sayfa, diğer VeChain dApp'lerinden gelen uygulamalar arası bağlantı isteklerini yönetir. Doğrudan açılamaz — isteği yapan uygulama gerekli parametrelerle açacaktır."
+        },
+        "phone": {
+            "placeholder": "+90 533 123 45 67",
+            "codeHint": "Ülke kodunu da ekle, örneğin Türkiye için +90, Birleşik Krallık için +44.",
+            "sendCode": "Kod gönder",
+            "sending": "Gönderiliyor…",
+            "codeSent": "{{phone}} numarasına 6 haneli bir kod gönderdik.",
+            "verify": "Doğrula",
+            "verifying": "Doğrulanıyor…"
+        },
+        "farcaster": {
+            "comingSoon": "Farcaster ile giriş yakında geliyor. Sign In With Farcaster (SIWF) kullanır, bu da Warpcast taraması gerektirir ve henüz burada hazır değil. Şimdilik lütfen başka bir seçenek seç."
+        },
+        "provider": {
+            "continueWith": "{{provider}} ile devam et",
+            "continueWithPhone": "Telefon ile devam et",
+            "continueWithFarcaster": "Farcaster ile devam et",
+            "lastUsed": "Son kullanılan",
+            "moreOptions": "+ {{count}} seçenek daha"
+        },
+        "alert": {
+            "notListed": "Bu uygulama VeChain App Hub'da listelenmemiş — yalnızca siteye güveniyorsan devam et."
+        },
+        "error": {
+            "failedToAccept": "Bağlantı kabul edilemedi",
+            "failedToSendCode": "Kod gönderilemedi",
+            "failedToVerifyCode": "Kod doğrulanamadı",
+            "missingAccessToken": "Erişim belirteci eksik"
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "Privy uygulamalar arası bağlantı ve işlem akışları için whitelabel host.",
+        "routes": "Rotalar",
+        "connectDesc": "bağlantı isteklerini yönetir",
+        "transactDesc": "işlem / imzalama isteklerini yönetir",
+        "footer": "Bu sayfa kullanıcılar tarafından doğrudan açılmaz."
+    }
+}

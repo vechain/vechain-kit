@@ -15,11 +15,17 @@ import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/Ema
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 
+/**
+ * Inline email input + OTP modal flow. Requires a host-supplied privy
+ * prop because VeChain's own Privy app has email disabled, so the
+ * whitelabel cross-app host can't accept email-based logins. When
+ * the consumer dApp has no privy, useLoginModalContent hides this
+ * button entirely.
+ */
 export const EmailLoginButton = () => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
 
-    // Email login
     const [email, setEmail] = useState('');
 
     const { sendCode, state: emailState } = useLoginWithEmail({});
@@ -28,7 +34,6 @@ export const EmailLoginButton = () => {
 
     const handleSendCode = async () => {
         await sendCode({ email });
-        // onClose();
         emailCodeVerificationModal.onOpen();
     };
 
@@ -96,3 +101,4 @@ export const EmailLoginButton = () => {
         </>
     );
 };
+

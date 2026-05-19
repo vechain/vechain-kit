@@ -219,7 +219,22 @@ export const BaseBottomSheet = ({
                         2. The handle can be sticky relative to this scrollable container
                         3. The backdrop filter effect works consistently with StickyHeaderContainer
                     */}
-                    <Box ref={scrollableContainerRef} flex="1" overflowY="auto">
+                    <Box
+                        ref={scrollableContainerRef}
+                        flex="1"
+                        overflowY="auto"
+                        // Keep interactive content (the bottom-most CTA in
+                        // particular) above iOS's home-indicator zone, where
+                        // an edge swipe would otherwise invoke the system
+                        // gesture (Siri / app switcher) instead of hitting
+                        // our button. `max(...)` keeps the baseline padding
+                        // on devices that report 0 for the inset (Android,
+                        // older iOS, desktop).
+                        sx={{
+                            paddingBottom:
+                                'max(env(safe-area-inset-bottom), 16px)',
+                        }}
+                    >
                         {/* 
                             Sticky handle area that gets backdrop filter when content scrolls.
                             Positioned first so it stays at the top when scrolling.

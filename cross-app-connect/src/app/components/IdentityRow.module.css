@@ -1,0 +1,103 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: var(--bg-card-elevated);
+    border: 1px solid var(--border-default);
+}
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    background: var(--login-btn-hover-bg);
+    object-fit: cover;
+    object-position: center;
+}
+
+.avatarPlaceholder {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    background: var(--login-btn-hover-bg);
+    flex-shrink: 0;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.name {
+    font-weight: 600;
+    color: var(--text-strong);
+    line-height: 1.2;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.badges {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.badge {
+    width: 14px;
+    height: 14px;
+}
+
+.wallet {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text-subtle);
+    line-height: 1.2;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.placeholder {
+    font-size: 12px;
+    color: var(--text-subtle);
+    margin: 0;
+}
+
+.skeleton {
+    background: var(--login-btn-hover-bg);
+    border-radius: var(--radius-sm);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonAvatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+}
+
+.skeletonWallet {
+    height: 14px;
+    width: 60%;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}

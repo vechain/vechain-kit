@@ -1,0 +1,282 @@
+{
+    "common": {
+        "button": {
+            "back": "返回",
+            "cancel": "取消",
+            "continue": "继续",
+            "continueAnyway": "仍然继续",
+            "close": "关闭"
+        },
+        "amount": {
+            "unlimited": "无限制"
+        },
+        "tokens": "代币",
+        "yes": "是",
+        "no": "否",
+        "empty": "(空)"
+    },
+    "vote": {
+        "for": "赞成",
+        "against": "反对",
+        "abstain": "弃权"
+    },
+    "header": {
+        "title": {
+            "default": "登录到您的钱包"
+        }
+    },
+    "identity": {
+        "creatingAccount": "正在创建您的 VeChain 账户…",
+        "signedIn": "已登录"
+    },
+    "addressTag": {
+        "verifiedContract": "已验证的 VeChain 合约",
+        "unverifiedContract": "未验证的合约 — 请仅在信任的情况下继续"
+    },
+    "requester": {
+        "localDev": "本地开发站点"
+    },
+    "domains": {
+        "label": {
+            "avatar": "头像",
+            "description": "描述",
+            "email": "邮箱",
+            "website": "网站",
+            "twitter": "Twitter 账号",
+            "github": "GitHub",
+            "telegram": "Telegram",
+            "fallback": "{{key}} 记录"
+        }
+    },
+    "action": {
+        "transfer": {
+            "native": "发送 {{amount}} VET",
+            "token": "发送 {{amount}} {{symbol}}"
+        },
+        "approve": {
+            "unlimited": "允许无限制使用 {{symbol}}",
+            "upTo": "允许使用至多 {{amount}} {{symbol}}"
+        },
+        "unknown": {
+            "runOn": "在合约上执行 {{fn}}",
+            "interact": "与合约交互"
+        },
+        "domain": {
+            "removePrimary": "移除您的主 VeChain 域名",
+            "setPrimary": "将 {{name}} 设为您的主 VeChain 域名",
+            "pointToYou": "将 VeChain 域名指向您的账户",
+            "updateAddress": "更新您的 VeChain 域名地址",
+            "newTarget": "新目标：{{addr}}",
+            "removeRecord": "移除 {{label}}",
+            "setRecordTo": "将 {{label}} 设为 {{value}}",
+            "updateRecord": "更新 {{label}}",
+            "claim": "认领 {{subdomain}}.veworld.vet"
+        },
+        "governance": {
+            "voteOnProposal": "对 VeBetterDAO 提案投 {{vote}} 票",
+            "reason": "理由：{{reason}}",
+            "allocateSingle": "在本轮 VeBetterDAO 分配中投票",
+            "allocateMany": "在本轮中将您的投票分配给 {{count}} 个应用",
+            "endorse": "推荐一个 VeBetterDAO 应用",
+            "unendorse": "撤回对某 VeBetterDAO 应用的推荐"
+        },
+        "token": {
+            "convertToVot3": "将 {{amount}} B3TR → VOT3 (锁定以投票)",
+            "convertToB3tr": "将 {{amount}} VOT3 → B3TR (解锁)",
+            "pullFrom": "从一个地址提取代币",
+            "recipientDetail": "收款方：{{to}}"
+        },
+        "rewards": {
+            "voter": "领取 VeBetterDAO 投票者奖励 (周期 {{cycle}})",
+            "allocation": "领取第 {{round}} 轮的分配奖励"
+        },
+        "swap": {
+            "onDex": "在 {{dex}} 上兑换代币"
+        },
+        "nft": {
+            "send": "发送 NFT",
+            "transfer": "转移 NFT",
+            "sendEditions": "发送 {{count}} 份 NFT",
+            "sendBatch": "一次性发送 {{count}} 个 NFT",
+            "approveAll": "允许此网站管理您的 NFT",
+            "revokeAll": "撤销 NFT 管理权限",
+            "toDetail": "至：{{to}}",
+            "operatorDetail": "操作者：{{operator}}"
+        }
+    },
+    "transact": {
+        "title": {
+            "actionBlocked": "操作已阻止",
+            "confirmAction": "确认操作",
+            "confirmTokenTransfer": "确认代币转账",
+            "confirmTokenTransfers": "确认代币转账",
+            "confirmTokenApproval": "确认代币授权",
+            "confirmTokenApprovals": "确认代币授权",
+            "confirmContractCall": "确认合约调用",
+            "confirmTokenSwap": "确认代币兑换",
+            "confirmDomainUpdate": "确认域名更新",
+            "confirmVeBetterDaoVote": "确认 VeBetterDAO 投票",
+            "confirmRewardsClaim": "确认领取奖励",
+            "confirmNftTransfer": "确认 NFT 转移",
+            "confirmNftActions": "确认 NFT 操作",
+            "confirmTokenAction": "确认代币操作",
+            "confirmStakeUpdate": "确认质押更新",
+            "confirmNActions": "确认 {{count}} 项操作",
+            "noRequest": "没有交易请求",
+            "reviewing": "正在审核交易",
+            "signIn": "登录以继续",
+            "couldNotLoad": "无法加载请求",
+            "signMessage": "签署一条消息",
+            "signData": "签署数据",
+            "welcomeBack": "欢迎回来，{{identity}}",
+            "connectionExpired": "需要重新连接"
+        },
+        "subtitle": {
+            "sendVet": "向 {{recipient}} 发送 {{amount}} VET",
+            "sendToken": "向 {{recipient}} 发送 {{amount}} {{symbol}}",
+            "approveFor": "为 {{spender}} 授权 {{amount}} {{symbol}}",
+            "swapVia": "通过 {{dex}} 兑换 {{amount}} {{symbol}}",
+            "swapAmount": "{{amount}} {{symbol}}",
+            "swapViaOnly": "通过 {{dex}}",
+            "switchingTo": "正在切换到 {{domain}}",
+            "clearingPrimary": "正在清除主域名",
+            "voteOnProposal": "{{vote}}该提案",
+            "allocatingAcross": "正在分配给 {{count}} 个应用",
+            "endorsingApp": "正在推荐应用",
+            "fromCycle": "来自周期 {{cycle}}",
+            "fromRound": "来自第 {{round}} 轮",
+            "conversion": "{{amount}} {{from}} → {{to}}",
+            "actionsWithUnverified": "{{count}} 项操作，其中 {{unverified}} 项未验证",
+            "reviewMessage": "请查看此应用希望您签署的消息。",
+            "reviewData": "请查看此应用希望您签署的数据。",
+            "signInWaiting": "有一个签名请求等待处理。登录以查看。",
+            "connectionExpired": "您的连接会话已过期"
+        },
+        "button": {
+            "confirm": "确认",
+            "confirmAnyway": "仍然确认",
+            "confirmAsDanger": "我已知晓，确认",
+            "signing": "签署中…",
+            "sign": "签署"
+        },
+        "section": {
+            "actionsToApprove": "待批准的操作"
+        },
+        "alert": {
+            "unverifiedStep": "我们无法核验每一步操作，请仅在信任此应用时继续。",
+            "unlimitedApprove": "此应用正在请求对您某个代币的无限制访问 — 请确认您信任它。"
+        },
+        "inspect": {
+            "prompt": "需要技术细节吗？",
+            "show": "查看详情",
+            "hide": "隐藏",
+            "showCalldata": "显示原始 calldata",
+            "hideCalldata": "隐藏原始 calldata"
+        },
+        "detail": {
+            "yourAccount": "您的账户",
+            "resolving": "解析中…",
+            "network": "网络",
+            "type": "类型",
+            "clauseSingular": "子句",
+            "clausePlural": "子句 ({{count}})",
+            "clauseLabel": "第 {{index}} / {{total}} 个子句 · 至",
+            "value": "金额",
+            "domain": "域名",
+            "rawData": "原始数据",
+            "rawHex": "原始 hex",
+            "function": "函数：{{signature}}",
+            "selector": "selector：{{selector}}",
+            "message": "消息",
+            "emptyMessage": "(空消息)",
+            "authorizedCall": "已授权的调用",
+            "authorizedBatchCall": "已授权的批量调用",
+            "to": "至",
+            "spender": "spender",
+            "operator": "操作者"
+        },
+        "network": {
+            "mainnet": "VeChain Mainnet",
+            "testnet": "VeChain Testnet",
+            "solo": "本地 Thor Solo"
+        },
+        "noRequestBody": "此页面处理其他 VeChain dApp 发起的跨应用交易请求。它无法被直接打开 — 请求方应用会带上所需参数打开此页面。",
+        "block": {
+            "unsupportedMethod": "不支持的方法：{{method}}",
+            "chainIdMismatch": "Chain id 不匹配",
+            "invalidChainId": "请求中的 Chain id 无效",
+            "smartAccountMismatch": "Smart account 不匹配：该请求正在为另一个 smart account 签名。"
+        },
+        "error": {
+            "failedToRead": "无法读取请求",
+            "failedToSign": "无法签名请求"
+        },
+        "privyUi": {
+            "signMessage": "签名消息",
+            "signButton": "签名",
+            "approveVeChainTx": "批准 VeChain 交易",
+            "signStructuredData": "签名结构化数据"
+        },
+        "copy": {
+            "connectionExpiredBody": "请返回打开此窗口的应用并重新登录——您的钱包将自动重新连接,您可以重试该操作。"
+        }
+    },
+    "connect": {
+        "title": {
+            "default": "VeChain Cross-App Connect",
+            "couldNotLoad": "无法加载请求",
+            "logIn": "登录到您的钱包",
+            "connectTo": "连接到 {{app}}",
+            "confirmConnection": "确认连接"
+        },
+        "subtitle": {
+            "grantAccessTo": "登录以授予访问权限给：",
+            "notBefore": "您之前未在此处连接过",
+            "connecting": "连接中…"
+        },
+        "button": {
+            "connecting": "连接中…",
+            "useAnotherAccount": "使用其他账户"
+        },
+        "copy": {
+            "notYou": "不是您？",
+            "noRequestBody": "此页面处理其他 VeChain dApp 发起的跨应用连接请求。它无法被直接打开 — 请求方应用会带上所需参数打开此页面。"
+        },
+        "phone": {
+            "placeholder": "+86 138 0013 8000",
+            "codeHint": "请包含国家区号，例如：中国为 +86，美国为 +1。",
+            "sendCode": "发送验证码",
+            "sending": "发送中…",
+            "codeSent": "我们已向 {{phone}} 发送了 6 位验证码。",
+            "verify": "验证",
+            "verifying": "验证中…"
+        },
+        "farcaster": {
+            "comingSoon": "Farcaster 登录即将推出。它使用 Sign In With Farcaster (SIWF)，需要通过 Warpcast 扫码，目前尚未接入。请暂时选择其他方式。"
+        },
+        "provider": {
+            "continueWith": "使用 {{provider}} 继续",
+            "continueWithPhone": "使用手机号继续",
+            "continueWithFarcaster": "使用 Farcaster 继续",
+            "lastUsed": "上次使用",
+            "moreOptions": "+ 另外 {{count}} 项"
+        },
+        "alert": {
+            "notListed": "此应用未在 VeChain App Hub 中列出，请仅在信任此站点时继续。"
+        },
+        "error": {
+            "failedToAccept": "无法接受连接",
+            "failedToSendCode": "无法发送验证码",
+            "failedToVerifyCode": "无法验证验证码",
+            "missingAccessToken": "缺少访问令牌"
+        }
+    },
+    "landing": {
+        "title": "VeChain Cross-App Connect",
+        "subtitle": "用于 Privy 跨应用连接与交易流程的白标宿主。",
+        "routes": "路由",
+        "connectDesc": "处理连接请求",
+        "transactDesc": "处理交易 / 签名请求",
+        "footer": "此页面不由用户直接打开。"
+    }
+}

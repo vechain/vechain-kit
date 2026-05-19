@@ -19,3 +19,4 @@ export * from './PriceChangeBadge';
 export * from './AddressOrDomainLabel';
 export * from './CopyIconButton';
 export * from './PriceChart';
+export * from './StatusScreen';

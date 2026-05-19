@@ -121,12 +121,21 @@ export const SendNftSummaryContent = ({
 
     const handleSuccess = React.useCallback(
         (txId: string) => {
+            const recipientLabel =
+                resolvedDomain || resolvedAddress || toAddressOrDomain;
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
                     setCurrentContent,
                     txId,
-                    title: t('Transaction successful'),
+                    title: t('NFT sent'),
+                    description: t(
+                        '{{nft}} is now in {{recipient}}’s wallet.',
+                        {
+                            nft: displayName,
+                            recipient: recipientLabel,
+                        },
+                    ),
                     onDone: () => {
                         if (isolatedView) {
                             closeAccountModal();
@@ -138,7 +147,16 @@ export const SendNftSummaryContent = ({
                 },
             });
         },
-        [setCurrentContent, t, isolatedView, closeAccountModal],
+        [
+            setCurrentContent,
+            t,
+            isolatedView,
+            closeAccountModal,
+            displayName,
+            resolvedDomain,
+            resolvedAddress,
+            toAddressOrDomain,
+        ],
     );
 
     const [hasShownSuccess, setHasShownSuccess] = React.useState(false);

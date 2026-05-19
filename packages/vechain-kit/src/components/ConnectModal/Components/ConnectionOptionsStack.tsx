@@ -49,10 +49,52 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
         isOfficialVeChainApp,
     } = useLoginModalContent();
 
+    // Determine which method renders as the recommended primary CTA
+    // (filled-inverted surface + RecommendedDot). Two sources, in order:
+    //   1. Explicit: any entry with `isPrimary: true` (excluding `more`,
+    //      which is a footer link, not a button).
+    //   2. Implicit fallback: the first visible method in the array, so an
+    //      opt-out dev who doesn't think about emphasis still gets a
+    //      sensible default.
+    const isMethodVisible = (method: string): boolean => {
+        switch (method) {
+            case 'email':
+                return showEmailLogin;
+            case 'google':
+                return showGoogleLogin;
+            case 'apple':
+                return showAppleLogin;
+            case 'github':
+                return showGithubLogin;
+            case 'passkey':
+                return showPasskey;
+            case 'vechain':
+                return showVeChainLogin;
+            case 'dappkit':
+                return showDappKit;
+            case 'veworld':
+                return showVeWorld;
+            case 'sync2':
+                return showSync2;
+            case 'wallet-connect':
+                return showWalletConnect;
+            default:
+                return false;
+        }
+    };
+    const explicitPrimary = loginMethods?.find(
+        (m) => m.isPrimary && m.method !== 'more' && isMethodVisible(m.method),
+    )?.method;
+    const implicitPrimary = loginMethods?.find(({ method }) =>
+        isMethodVisible(method),
+    )?.method;
+    const primaryMethod = explicitPrimary ?? implicitPrimary;
+
     const renderMethod = (
         method: string,
         gridColumn: number | undefined,
     ): React.ReactNode => {
+        const isPrimary = method === primaryMethod;
         switch (method) {
             case 'email':
                 return showEmailLogin && <EmailLoginButton key="email" />;
@@ -63,6 +105,7 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
                             key="google"
                             isDark={isDark}
                             gridColumn={gridColumn}
+                            isPrimary={isPrimary}
                         />
                     )
                 );
@@ -73,6 +116,7 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
                             key="apple"
                             isDark={isDark}
                             gridColumn={gridColumn}
+                            isPrimary={isPrimary}
                         />
                     )
                 );
@@ -83,6 +127,7 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
                             key="github"
                             isDark={isDark}
                             gridColumn={gridColumn}
+                            isPrimary={isPrimary}
                         />
                     )
                 );
@@ -133,6 +178,7 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
                             isDark={isDark}
                             gridColumn={gridColumn ?? 4}
                             setCurrentContent={setCurrentContent}
+                            isPrimary={isPrimary}
                         />
                     )
                 );

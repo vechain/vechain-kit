@@ -3,13 +3,21 @@ import { LuGithub } from 'react-icons/lu';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '@/hooks';
+import { RecommendedDot } from './RecommendedDot';
+import { primaryButtonStyle } from './primaryButtonStyle';
 
 type Props = {
     isDark: boolean;
     gridColumn?: number;
+    /** When true, render as the recommended primary CTA. See VeWorldButton. */
+    isPrimary?: boolean;
 };
 
-export const LoginWithGithubButton = ({ isDark, gridColumn }: Props) => {
+export const LoginWithGithubButton = ({
+    isDark,
+    gridColumn,
+    isPrimary = false,
+}: Props) => {
     const { t } = useTranslation();
     const { initOAuth } = useLoginWithOAuth();
 
@@ -24,6 +32,8 @@ export const LoginWithGithubButton = ({ isDark, gridColumn }: Props) => {
                 }}
                 icon={LuGithub}
                 text={t('Continue with Github')}
+                rightIcon={isPrimary ? <RecommendedDot /> : undefined}
+                style={isPrimary ? primaryButtonStyle(isDark) : undefined}
             />
         </GridItem>
     );

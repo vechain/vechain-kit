@@ -112,15 +112,17 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
     };
 
     if (!privy) {
-        // External apps (no self hosted privy)
+        // External apps (no self hosted privy). Most OAuth methods fall
+        // back to the VeChain whitelabel cross-app flow via
+        // useLoginWithVeChain({ intent }). Email and passkey have no
+        // fallback (VeChain has email disabled in its Privy app), so they
+        // stay hidden. `more` still renders -- the sub-view gracefully
+        // degrades to whatever's available (dapp-kit wallet overflow +
+        // the "Continue with VeChain" cross-app picker entry).
         return {
             ...baseConfig,
-            showGoogleLogin: false,
-            showAppleLogin: false,
             showEmailLogin: false,
             showPasskey: false,
-            showMoreLogin: false,
-            showGithubLogin: false,
         };
     }
 

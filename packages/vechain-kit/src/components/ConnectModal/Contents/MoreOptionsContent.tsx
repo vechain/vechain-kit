@@ -36,13 +36,14 @@ import {
     useFetchAppInfo,
     useLoginWithOAuth,
     useLoginWithPasskey,
+    useLoginWithVeChain,
     usePrivy,
     useConnectWithDappKitSource,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { isRejectionError } from '@/utils/stringUtils';
-import { VeWorldLogoLight } from '@/assets';
+import { VeWorldLogoDark, VeWorldLogoLight } from '@/assets';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useDisclosure } from '@chakra-ui/react';
@@ -213,6 +214,7 @@ export const MoreOptionsContent = ({
     const { loginWithPasskey } = useLoginWithPasskey();
     const { setConnectionCache } = useCrossAppConnectionCache();
     const { login: loginWithCrossApp } = usePrivyCrossAppSdk();
+    const { login: loginWithVeChain } = useLoginWithVeChain();
 
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
@@ -261,8 +263,49 @@ export const MoreOptionsContent = ({
             hasNonNativePrivyMethod);
 
     const ecosystemApps = Object.values(appsInfo || {});
+    // Ecosystem apps are gated on `privyEcosystemAppIDS` being configured,
+    // not on `!!privy` — the cross-app SDK doesn't need the consuming dApp
+    // to own a Privy account, and the apps' name/logo come from Privy's
+    // public app-info endpoint, so this works fine in the no-Privy case
+    // too.
     const showEcosystemSection =
-        !!privy && (isEcosystemAppsLoading || ecosystemApps.length > 0);
+        (privyEcosystemAppIDS?.length ?? 0) > 0 &&
+        (isEcosystemAppsLoading || ecosystemApps.length > 0);
+
+    // The "Continue with VeChain" cross-app picker. Works without a `privy`
+    // prop because it routes through the whitelabel popup (VECHAIN_PRIVY_APP_ID).
+    // Surface it in the More sub-view whenever the dev didn't pin `vechain`
+    // to the main grid — without Privy + without this row, an opt-out dapp
+    // that ships {google, apple, more} would leave the user with no path to
+    // the broader VeChain picker.
+    const showVeChainHere = !onMainGrid('vechain');
+
+    const handleLoginWithVeChain = async () => {
+        setCurrentContent({
+            type: 'loading',
+            props: {
+                title: t('Connecting to VeChain'),
+                loadingText: t(
+                    'Please approve the request in the connection request window...',
+                ),
+                onTryAgain: handleLoginWithVeChain,
+            },
+        });
+        try {
+            await loginWithVeChain();
+        } catch (error) {
+            setCurrentContent({
+                type: 'error',
+                props: {
+                    error:
+                        error instanceof Error
+                            ? error.message
+                            : t('Failed to connect with VeChain'),
+                    onTryAgain: handleLoginWithVeChain,
+                },
+            });
+        }
+    };
 
     const handleLoginWithPasskey = async () => {
         setCurrentContent({
@@ -404,11 +447,21 @@ export const MoreOptionsContent = ({
                                         source={'veworld'}
                                         label={t('Continue with VeWorld')}
                                         customIcon={
-                                            <VeWorldLogoLight
-                                                w={'20px'}
-                                                h={'20px'}
-                                                color={brandInverseFg}
-                                            />
+                                            // Logos have hardcoded fill —
+                                            // `color` prop has no effect.
+                                            // Pick the variant that contrasts
+                                            // with the icon-tile background.
+                                            isDark ? (
+                                                <VeWorldLogoDark
+                                                    w={'20px'}
+                                                    h={'20px'}
+                                                />
+                                            ) : (
+                                                <VeWorldLogoLight
+                                                    w={'20px'}
+                                                    h={'20px'}
+                                                />
+                                            )
                                         }
                                         iconBg={brandInverseBg}
                                         setCurrentContent={setCurrentContent}
@@ -436,6 +489,23 @@ export const MoreOptionsContent = ({
                                         setCurrentContent={setCurrentContent}
                                     />
                                 )}
+                            </VStack>
+                        </Box>
+                    )}
+
+                    {showVeChainHere && (
+                        <Box>
+                            <SectionLabel>
+                                {t('View more socials')}
+                            </SectionLabel>
+                            <VStack spacing={1} w={'full'} align={'stretch'}>
+                                <ProviderRow
+                                    icon={LuEllipsis}
+                                    label={t('View more')}
+                                    onClick={handleLoginWithVeChain}
+                                    iconBg={secondaryBg}
+                                    iconColor={textPrimary}
+                                />
                             </VStack>
                         </Box>
                     )}
@@ -635,7 +705,8 @@ export const MoreOptionsContent = ({
                         </Box>
                     )}
 
-                    {!showWalletsSection &&
+                    {!showVeChainHere &&
+                        !showWalletsSection &&
                         !showSocialsSection &&
                         !showEcosystemSection && (
                             <Text

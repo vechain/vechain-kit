@@ -3,14 +3,22 @@ import { FcGoogle } from 'react-icons/fc';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '@/hooks';
+import { RecommendedDot } from './RecommendedDot';
+import { primaryButtonStyle } from './primaryButtonStyle';
 
 type Props = {
     isDark: boolean;
     gridColumn?: number;
+    /** When true, render as the recommended primary CTA. See VeWorldButton. */
+    isPrimary?: boolean;
 };
 
-/** Secondary outline button — theme-driven stroke + row hover. */
-export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
+/** Secondary outline button by default; recommended primary when `isPrimary`. */
+export const LoginWithGoogleButton = ({
+    isDark,
+    gridColumn,
+    isPrimary = false,
+}: Props) => {
     const { t } = useTranslation();
     const { initOAuth } = useLoginWithOAuth();
 
@@ -19,6 +27,18 @@ export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
         'vechain-kit-border-hover',
         'vechain-kit-button-secondary-bg',
     ]);
+
+    const style = isPrimary
+        ? primaryButtonStyle(isDark)
+        : {
+              bg: 'transparent',
+              border: `1px solid ${stroke}`,
+              _hover: {
+                  bg: hoverBg,
+                  borderColor: strokeStrong,
+                  opacity: 1,
+              },
+          };
 
     return (
         <GridItem colSpan={gridColumn ?? 4} w={'full'}>
@@ -30,15 +50,8 @@ export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
                 icon={FcGoogle}
                 iconWidth={'24px'}
                 text={t('Continue with Google')}
-                style={{
-                    bg: 'transparent',
-                    border: `1px solid ${stroke}`,
-                    _hover: {
-                        bg: hoverBg,
-                        borderColor: strokeStrong,
-                        opacity: 1,
-                    },
-                }}
+                rightIcon={isPrimary ? <RecommendedDot /> : undefined}
+                style={style}
             />
         </GridItem>
     );

@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { toPrivyWalletConnector } from '@privy-io/cross-app-connect/rainbow-kit';
+import { createPrivyCrossAppClient } from '@privy-io/cross-app-connect';
 import {
     useConnect,
     useDisconnect,
@@ -20,6 +21,56 @@ import {
     VECHAIN_MAINNET_NODE_BASE_URL,
     VECHAINSTATS_BASE_URL,
 } from '@/constants';
+
+/**
+ * Login methods that requester apps can pre-select on the whitelabel
+ * cross-app-connect host. When passed, the host skips its provider picker
+ * and jumps straight into the matching flow.
+ *
+ * Matches the providers enabled in VeChain's Privy dashboard. Email is
+ * intentionally excluded -- VeChain has email disabled, so the host
+ * doesn't surface it. Farcaster is included but currently shows a
+ * "coming soon" placeholder on the host (SIWF flow not yet wired).
+ */
+export type CrossAppLoginIntent =
+    | 'google'
+    | 'apple'
+    | 'twitter'
+    | 'discord'
+    | 'github'
+    | 'tiktok'
+    | 'line'
+    | 'phone'
+    | 'farcaster';
+
+export type LoginWithCrossAppOptions = {
+    /** Pre-select a login method on the provider's connect page. */
+    intent?: CrossAppLoginIntent;
+};
+
+// Stale-connection errors bubble up from the cross-app popup via Privy's
+// PRIVY_CROSS_APP_ACTION_ERROR channel: error.message contains the raw
+// SDK string. Recover by notifying the recovery listener so it can
+// disconnect + reopen the connect modal — same path the popup uses when
+// it can post directly to the opener. Going through a self-window event
+// means we don't need a separate hook reference here (this provider
+// sits above ModalProvider and can't call useModal directly).
+const STALE_CONNECTION_PATTERN =
+    /no connection|connection has expired|user id mismatch/i;
+
+const appendIntent = (url: string, intent: CrossAppLoginIntent) => {
+    const parsed = new URL(url);
+    parsed.searchParams.set('intent', intent);
+    return parsed.toString();
+};
+
+const resolveProviderConnectUrl = async (appID: string) => {
+    const client = createPrivyCrossAppClient({
+        providerAppId: appID,
+        chains: [vechain],
+    });
+    return client.getProviderConnectUrl();
+};
 
 export const vechain = defineChain({
     id: '1176455790972829965191905223412607679856028701100105089447013101863' as unknown as number,
@@ -115,22 +166,44 @@ export const usePrivyCrossAppSdk = () => {
     }, [disconnectAsync, isConnected]);
 
     const login = useCallback(
-        async (appID: string) => {
+        async (appID: string, options?: LoginWithCrossAppOptions) => {
             try {
                 setIsConnecting(true);
                 setConnectionError(null);
 
-                const connector = connectors.find(
-                    (c) => c.id === (appID || VECHAIN_PRIVY_APP_ID),
-                );
+                const resolvedAppId = appID || VECHAIN_PRIVY_APP_ID;
 
+                if (options?.intent) {
+                    // Resolve the registered whitelabel connect URL via the
+                    // Privy backend and append intent. This avoids hardcoding
+                    // the whitelabel domain in the kit.
+                    const baseUrl = await resolveProviderConnectUrl(
+                        resolvedAppId,
+                    );
+                    const overrideConnectUrl = appendIntent(
+                        baseUrl,
+                        options.intent,
+                    );
+                    const customConnector = toPrivyWalletConnector({
+                        id: resolvedAppId,
+                        name:
+                            resolvedAppId === VECHAIN_PRIVY_APP_ID
+                                ? 'VeChain'
+                                : '',
+                        iconUrl: '',
+                        overrideConnectUrl,
+                    });
+                    return await connectAsync({ connector: customConnector });
+                }
+
+                const connector = connectors.find(
+                    (c) => c.id === resolvedAppId,
+                );
                 if (!connector) {
                     throw new Error('Connector not found');
                 }
 
-                const result = await connectAsync({ connector });
-
-                return result;
+                return await connectAsync({ connector });
             } catch (error) {
                 setConnectionError(error as Error);
                 throw error;
@@ -141,12 +214,21 @@ export const usePrivyCrossAppSdk = () => {
         [connectAsync, connectors],
     );
 
-    // Keep the other methods unchanged
     const signMessage = useCallback(
         async (message: string) => {
             try {
                 return await signMessageAsync({ message });
             } catch (error) {
+                if (
+                    error instanceof Error &&
+                    STALE_CONNECTION_PATTERN.test(error.message) &&
+                    typeof window !== 'undefined'
+                ) {
+                    window.postMessage(
+                        { type: 'vk:cross-app-no-connection' },
+                        window.location.origin,
+                    );
+                }
                 throw handlePopupError({
                     error,
                     mobileBrowserPopupMessage:
@@ -165,6 +247,16 @@ export const usePrivyCrossAppSdk = () => {
             try {
                 return await signTypedDataAsync(data);
             } catch (error) {
+                if (
+                    error instanceof Error &&
+                    STALE_CONNECTION_PATTERN.test(error.message) &&
+                    typeof window !== 'undefined'
+                ) {
+                    window.postMessage(
+                        { type: 'vk:cross-app-no-connection' },
+                        window.location.origin,
+                    );
+                }
                 const errorType = handlePopupError({
                     error,
                     mobileBrowserPopupMessage:

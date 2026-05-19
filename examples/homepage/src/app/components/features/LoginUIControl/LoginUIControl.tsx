@@ -1,6 +1,14 @@
 'use client';
 
-import { VStack, Text, Box, Grid, Button, Icon } from '@chakra-ui/react';
+import {
+    VStack,
+    Text,
+    Box,
+    Grid,
+    Button,
+    Icon,
+    SimpleGrid,
+} from '@chakra-ui/react';
 import {
     WalletButton,
     useConnectModal,
@@ -8,7 +16,38 @@ import {
     useLoginWithOAuth,
 } from '@vechain/vechain-kit';
 import { FcGoogle } from 'react-icons/fc';
-import { LuGithub } from 'react-icons/lu';
+import {
+    FaApple,
+    FaDiscord,
+    FaGithub,
+    FaLine,
+    FaTiktok,
+} from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import type { IconType } from 'react-icons';
+
+// OAuth providers enabled in VeChain's Privy dashboard. Farcaster and
+// WhatsApp are also enabled but use non-OAuth login flows.
+const OAUTH_PROVIDERS: ReadonlyArray<{
+    id:
+        | 'google'
+        | 'apple'
+        | 'twitter'
+        | 'discord'
+        | 'github'
+        | 'tiktok'
+        | 'line';
+    label: string;
+    icon: IconType;
+}> = [
+    { id: 'google', label: 'Google', icon: FcGoogle },
+    { id: 'apple', label: 'Apple', icon: FaApple },
+    { id: 'twitter', label: 'X', icon: FaXTwitter },
+    { id: 'discord', label: 'Discord', icon: FaDiscord },
+    { id: 'github', label: 'GitHub', icon: FaGithub },
+    { id: 'tiktok', label: 'TikTok', icon: FaTiktok },
+    { id: 'line', label: 'LINE', icon: FaLine },
+];
 
 export const LoginUIControl = () => {
     const { open } = useConnectModal();
@@ -166,85 +205,36 @@ export const LoginUIControl = () => {
                 bg="whiteAlpha.50"
             >
                 <Text fontWeight="bold">OAuth Login Examples</Text>
-                <Grid
-                    templateColumns={{
-                        base: '1fr',
-                        md: 'repeat(2, 1fr)',
-                    }}
-                    gap={8}
+                <SimpleGrid
+                    columns={{ base: 1, sm: 2, md: 3 }}
+                    spacing={3}
                     w="full"
-                    justifyContent="space-between"
                 >
-                    {/* Google OAuth Button */}
-                    <VStack alignItems="flex-start" spacing={2}>
-                        <Box w={'fit-content'}>
-                            <Button
-                                onClick={() =>
-                                    initOAuth({ provider: 'google' })
-                                }
-                                leftIcon={<Icon as={FcGoogle} boxSize="20px" />}
-                                colorScheme="gray"
-                                variant="outline"
-                                size="md"
-                                _hover={{
-                                    bg: 'whiteAlpha.200',
-                                    borderColor: 'gray.400',
-                                }}
-                            >
-                                Login with Google
-                            </Button>
-                        </Box>
-                        <Text
-                            fontSize="sm"
-                            fontWeight="medium"
-                            color="blue.300"
-                            bg="whiteAlpha.100"
-                            px={3}
-                            py={1}
-                            borderRadius="full"
+                    {OAUTH_PROVIDERS.map((p) => (
+                        <Button
+                            key={p.id}
+                            onClick={() => initOAuth({ provider: p.id })}
+                            leftIcon={<Icon as={p.icon} boxSize="20px" />}
+                            colorScheme="gray"
+                            variant="outline"
+                            size="md"
+                            justifyContent="flex-start"
+                            _hover={{
+                                bg: 'whiteAlpha.200',
+                                borderColor: 'gray.400',
+                            }}
                         >
-                            OAuth: Google
-                        </Text>
-                    </VStack>
-
-                    {/* GitHub OAuth Button */}
-                    <VStack alignItems="flex-start" spacing={2}>
-                        <Box w={'fit-content'}>
-                            <Button
-                                onClick={() =>
-                                    initOAuth({ provider: 'github' })
-                                }
-                                leftIcon={<Icon as={LuGithub} boxSize="20px" />}
-                                colorScheme="gray"
-                                variant="outline"
-                                size="md"
-                                _hover={{
-                                    bg: 'whiteAlpha.200',
-                                    borderColor: 'gray.400',
-                                }}
-                            >
-                                Login with GitHub
-                            </Button>
-                        </Box>
-                        <Text
-                            fontSize="sm"
-                            fontWeight="medium"
-                            color="blue.300"
-                            bg="whiteAlpha.100"
-                            px={3}
-                            py={1}
-                            borderRadius="full"
-                        >
-                            OAuth: GitHub
-                        </Text>
-                    </VStack>
-                </Grid>
+                            {p.label}
+                        </Button>
+                    ))}
+                </SimpleGrid>
 
                 <Text fontSize="sm" fontWeight="medium" color="blue.300">
-                    Note: These buttons use the useLoginWithOAuth hook to
-                    initiate OAuth authentication flows with social providers.
-                    Make sure the providers are configured in your Privy
-                    dashboard.
+                    Note: These buttons use the useLoginWithOAuth hook. With a
+                    privy prop on VeChainKitProvider, OAuth runs through your
+                    own Privy app. Without it, the hook automatically routes
+                    through the VeChain whitelabel cross-app host &mdash; so
+                    these buttons work for any consumer dApp out of the box.
                 </Text>
             </VStack>
         </VStack>

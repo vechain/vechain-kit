@@ -490,5 +490,15 @@
   "Trait": "Trait",
   "Send NFT": "Send NFT",
   "{{count}} item": "{{count}} item",
-  "{{count}} items": "{{count}} items"
+  "{{count}} items": "{{count}} items",
+  "Continue with Email": "Continue with Email",
+  "View more socials": "View more socials",
+  "View more": "View more",
+  "Operation successful": "Operation successful",
+  "Your action has been completed and recorded on-chain.": "Your action has been completed and recorded on-chain.",
+  "We couldn't complete this action. Please try again.": "We couldn't complete this action. Please try again.",
+  "Tokens sent": "Tokens sent",
+  "{{amount}} {{symbol}} is on its way to {{recipient}}.": "{{amount}} {{symbol}} is on its way to {{recipient}}.",
+  "NFT sent": "NFT sent",
+  "{{nft}} is now in {{recipient}}’s wallet.": "{{nft}} is now in {{recipient}}’s wallet."
 }

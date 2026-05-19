@@ -1,0 +1,83 @@
+name: Cross-App Connect — Deploy to Pages
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - 'cross-app-connect/**'
+            - 'packages/vechain-kit/**'
+            - 'yarn.lock'
+            - '.github/workflows/cross-app-connect-deploy.yaml'
+    workflow_dispatch:
+
+concurrency:
+    # Pages permits one in-flight deploy. Queue rather than cancel so a hot
+    # fix doesn't get wiped by a follow-up merge mid-deploy.
+    group: pages
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+    build:
+        name: Build static site
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - name: Checkout
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: Setup Node
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Install
+              run: yarn && yarn install:all
+
+            - name: Build (cross-app-connect)
+              run: yarn workspace cross-app-connect build
+              env:
+                  NEXT_PUBLIC_PRIVY_APP_ID: ${{ vars.NEXT_PUBLIC_PRIVY_APP_ID }}
+                  NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ vars.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
+                  NEXT_PUBLIC_PRIVY_DOMAIN: ${{ vars.NEXT_PUBLIC_PRIVY_DOMAIN }}
+                  # Empty when a custom domain is set up in repo Settings →
+                  # Pages. Override to `/vechain-kit` (or whatever the repo
+                  # name is) if you want to test at the default
+                  # `<org>.github.io/<repo>/` URL before the CNAME points here.
+                  NEXT_PUBLIC_BASE_PATH: ${{ vars.NEXT_PUBLIC_BASE_PATH }}
+
+            - name: Disable Jekyll on Pages
+              # GitHub Pages otherwise strips paths starting with `_` (e.g.
+              # `_next/`), which kills every JS/CSS chunk Next.js emits.
+              run: touch cross-app-connect/dist/.nojekyll
+
+            - name: Configure Pages
+              uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+              with:
+                  path: cross-app-connect/dist
+
+    deploy:
+        name: Deploy to GitHub Pages
+        needs: build
+        runs-on: ubuntu-latest
+        # Pages-specific permissions scoped to this job only — zizmor flags
+        # them as too broad at the workflow level since the build job
+        # doesn't need to write anything.
+        permissions:
+            pages: write
+            id-token: write
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - name: Deploy
+              id: deployment
+              uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

@@ -1,0 +1,345 @@
+.shell {
+    max-width: 24rem;
+    margin: 0 auto;
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 16px;
+}
+
+.cardBody {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cardBodyTight {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--border-button);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.fallbackText {
+    color: var(--text-muted);
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    line-height: 1.3;
+    border-left: 3px solid;
+}
+
+.alertError {
+    background: rgba(239, 68, 68, 0.08);
+    border-left-color: var(--danger);
+    color: var(--text-strong);
+}
+
+.alertWarn {
+    background: rgba(245, 158, 11, 0.08);
+    border-left-color: var(--warn);
+    color: var(--text-strong);
+}
+
+.alertIcon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.btnBrand {
+    background: var(--primary-btn-bg);
+    color: var(--primary-btn-color);
+    border: none;
+    border-radius: var(--radius-full);
+    height: 60px;
+    padding: 0 16px;
+    font-weight: 500;
+    font-size: 15px;
+    width: 100%;
+    transition: opacity 0.2s;
+}
+
+.btnBrand:hover:not(:disabled) {
+    opacity: 0.85;
+}
+
+.btnBrand:disabled {
+    opacity: 0.5;
+}
+
+.btnRow {
+    background: var(--login-btn-bg);
+    color: var(--login-btn-color);
+    border: 1px solid var(--border-button);
+    border-radius: var(--radius-lg);
+    height: 52px;
+    padding: 0 18px;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.btnRow:hover:not(:disabled) {
+    background: var(--login-btn-hover-bg);
+}
+
+.btnRow:active {
+    transform: scale(0.99);
+}
+
+.btnRow:disabled {
+    opacity: 0.5;
+}
+
+.rowLabel {
+    flex: 1;
+}
+
+.rowIcon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+}
+
+.recentDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    flex-shrink: 0;
+}
+
+.btnGhost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-button);
+    border-radius: var(--radius-full);
+    height: 48px;
+    padding: 0 24px;
+    font-weight: 500;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.btnGhost:hover:not(:disabled) {
+    background: var(--login-btn-hover-bg);
+    color: var(--text-strong);
+}
+
+.btnGhost:disabled {
+    opacity: 0.4;
+}
+
+.btnSm {
+    height: 40px;
+    font-size: 14px;
+}
+
+.linkBtn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.linkBtn:hover {
+    color: var(--text-strong);
+    text-decoration: underline;
+}
+
+.linkCenter {
+    text-align: center;
+    padding-top: 4px;
+}
+
+.inputRow {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-button);
+    border-radius: var(--radius-md);
+    color: var(--text-strong);
+    font-size: 16px;
+    font-family: var(--font-body);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.inputRow::placeholder {
+    color: var(--text-subtle);
+}
+
+.inputRow:focus-visible {
+    border-color: var(--accent);
+}
+
+.muted {
+    font-size: 12px;
+    color: var(--text-subtle);
+    margin: 0;
+}
+
+.mutedBody {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.strong {
+    color: var(--text-strong);
+}
+
+.identityRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: var(--bg-card-elevated);
+    border: 1px solid var(--border-default);
+}
+
+.identityAvatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    background: var(--login-btn-hover-bg);
+}
+
+.identityAvatarPlaceholder {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    background: var(--login-btn-hover-bg);
+    flex-shrink: 0;
+}
+
+.identityBody {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.identityHead {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.identityName {
+    font-weight: 600;
+    color: var(--text-strong);
+    line-height: 1.2;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.identityBadges {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.identityBadge {
+    width: 14px;
+    height: 14px;
+}
+
+.identityWallet {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text-subtle);
+    line-height: 1.2;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.skeleton {
+    background: var(--login-btn-hover-bg);
+    border-radius: var(--radius-sm);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonAvatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+}
+
+.skeletonWallet {
+    height: 14px;
+    width: 60%;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+
+.notYouRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding-top: 4px;
+}
+
+.pinRow {
+    display: flex;
+    justify-content: center;
+}
