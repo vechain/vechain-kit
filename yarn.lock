@@ -11232,8 +11232,8 @@ __metadata:
     eslint-config-next: "npm:14.1.4"
     i18next: "npm:^23.16.8"
     next: "npm:~16.2.3"
-    react: "npm:^18"
-    react-dom: "npm:^18"
+    react: "npm:^18.2.0"
+    react-dom: "npm:^18.2.0"
     react-i18next: "npm:^15.4.0"
     react-icons: "npm:^5.4.0"
     typescript: "npm:5.3.3"
@@ -17214,7 +17214,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^18":
+"react-dom@npm:^18, react-dom@npm:^18.2.0":
   version: 18.3.1
   resolution: "react-dom@npm:18.3.1"
   dependencies:
