@@ -48,6 +48,16 @@ export type LoginWithCrossAppOptions = {
     intent?: CrossAppLoginIntent;
 };
 
+// Stale-connection errors bubble up from the cross-app popup via Privy's
+// PRIVY_CROSS_APP_ACTION_ERROR channel: error.message contains the raw
+// SDK string. Recover by notifying the recovery listener so it can
+// disconnect + reopen the connect modal — same path the popup uses when
+// it can post directly to the opener. Going through a self-window event
+// means we don't need a separate hook reference here (this provider
+// sits above ModalProvider and can't call useModal directly).
+const STALE_CONNECTION_PATTERN =
+    /no connection|connection has expired|user id mismatch/i;
+
 const appendIntent = (url: string, intent: CrossAppLoginIntent) => {
     const parsed = new URL(url);
     parsed.searchParams.set('intent', intent);
@@ -204,12 +214,21 @@ export const usePrivyCrossAppSdk = () => {
         [connectAsync, connectors],
     );
 
-    // Keep the other methods unchanged
     const signMessage = useCallback(
         async (message: string) => {
             try {
                 return await signMessageAsync({ message });
             } catch (error) {
+                if (
+                    error instanceof Error &&
+                    STALE_CONNECTION_PATTERN.test(error.message) &&
+                    typeof window !== 'undefined'
+                ) {
+                    window.postMessage(
+                        { type: 'vk:cross-app-no-connection' },
+                        window.location.origin,
+                    );
+                }
                 throw handlePopupError({
                     error,
                     mobileBrowserPopupMessage:
@@ -228,6 +247,16 @@ export const usePrivyCrossAppSdk = () => {
             try {
                 return await signTypedDataAsync(data);
             } catch (error) {
+                if (
+                    error instanceof Error &&
+                    STALE_CONNECTION_PATTERN.test(error.message) &&
+                    typeof window !== 'undefined'
+                ) {
+                    window.postMessage(
+                        { type: 'vk:cross-app-no-connection' },
+                        window.location.origin,
+                    );
+                }
                 const errorType = handlePopupError({
                     error,
                     mobileBrowserPopupMessage:

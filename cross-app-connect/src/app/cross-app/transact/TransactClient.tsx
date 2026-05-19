@@ -514,6 +514,31 @@ export function TransactClient() {
     ]);
 
     const onReject = useCallback(async () => {
+        // Stale-connection close path: there's no `verified` (decrypt
+        // failed), so we have no callbackUrl to do a proper rejectRequest.
+        // Instead, post a PRIVY_CROSS_APP_ACTION_ERROR with our marker
+        // directly to the opener. Privy's SDK on the kit-using app side
+        // listens for this type, rejects the pending sign promise with our
+        // error string, and auto-closes this window. The kit then sees
+        // "vk:cross-app-no-connection" in the rejection and runs the
+        // disconnect + reopen-modal recovery — much more reliable than a
+        // custom postMessage that requires our own listener to be live.
+        if (parseError?.kind === 'connection_expired') {
+            try {
+                window.opener?.postMessage(
+                    {
+                        type: 'PRIVY_CROSS_APP_ACTION_ERROR',
+                        error: 'vk:cross-app-no-connection',
+                        errorCode: 4002,
+                    },
+                    '*',
+                );
+            } catch {
+                /* opener gone; fall back to plain close */
+            }
+            window.close();
+            return;
+        }
         if (!verified) {
             window.close();
             return;
@@ -528,7 +553,7 @@ export function TransactClient() {
         } finally {
             window.close();
         }
-    }, [client, verified, getAccessToken]);
+    }, [client, verified, getAccessToken, parseError]);
 
     if (parseError?.kind === 'no_params') {
         return (

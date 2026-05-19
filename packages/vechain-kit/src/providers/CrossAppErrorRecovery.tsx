@@ -27,10 +27,10 @@ export function CrossAppErrorRecovery() {
     const handlerRef = useRef<(event: MessageEvent) => void>(() => {});
     handlerRef.current = (event) => {
         const type = (event.data as { type?: unknown } | null)?.type;
-        console.log(
-            '[vechain-kit] message received',
-            { type, origin: event.origin },
-        );
+        console.log('[vechain-kit] message received', {
+            data: event.data,
+            origin: event.origin,
+        });
         if (type !== 'vk:cross-app-no-connection') {
             return;
         }
