@@ -246,6 +246,16 @@ export function TransactClient() {
         if (typeof window !== 'undefined' && !window.location.search) return;
         let cancelled = false;
         (async () => {
+            console.log('[transact] fetching verified transaction request', {
+                hasOpener: Boolean(window.opener),
+                openerOrigin: (() => {
+                    try {
+                        return window.opener?.location?.origin ?? null;
+                    } catch {
+                        return '(cross-origin, opaque)';
+                    }
+                })(),
+            });
             try {
                 const data = await client.getVerifiedTransactionRequest({
                     userId: user.id,
@@ -269,6 +279,12 @@ export function TransactClient() {
                     e,
                 );
                 const msg = errorMessage(e, '');
+                console.log('[transact] parsed error message', {
+                    msg,
+                    matches: /no connection|connection has expired|user id mismatch/i.test(
+                        msg,
+                    ),
+                });
                 // All three SDK errors mean the same thing from the user's
                 // POV: the connection record this popup needs is missing or
                 // stale. "No connection found for requester" / "Connection
