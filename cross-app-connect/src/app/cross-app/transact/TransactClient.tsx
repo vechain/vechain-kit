@@ -124,42 +124,6 @@ function decodePersonalSignMessage(raw: string): string {
 }
 
 /**
- * Reconstruct a `CrossAppConnectionRequest` from the transact popup's URL
- * params. The Privy SDK builds the transact URL with `requester_public_key`
- * and `requester_origin` — exactly the two fields that
- * `acceptConnection({ connectionRequest })` requires. Used as a fallback
- * when `getVerifiedTransactionRequest` fails with "No connection found":
- * we create the missing connection record inline and retry.
- */
-function connectionRequestFromTransactUrl():
-    | { requesterPublicKey: string; callbackUrl: string }
-    | null {
-    if (typeof window === 'undefined') return null;
-    try {
-        const params = new URL(window.location.href).searchParams;
-        const requesterPublicKey = params.get('requester_public_key');
-        const callbackUrl = params.get('requester_origin');
-        if (!requesterPublicKey || !callbackUrl) return null;
-        return { requesterPublicKey, callbackUrl };
-    } catch {
-        return null;
-    }
-}
-
-/**
- * Dev-only escape hatch to force the "No connection found for requester"
- * code path. The real condition needs a server-side state on Privy that's
- * hard to reproduce locally (connection expired or never created on this
- * provider app), so without this flag the auto-`acceptConnection` retry
- * branch is impossible to exercise.
- *
- * Activate by either:
- *  - appending `?forceNoConnection=1` to the popup URL (awkward because
- *    Privy SDK builds it), OR
- *  - setting `localStorage.setItem('vk-force-no-connection','1')` once
- *    from the host origin's devtools — flag persists until you clear it.
- */
-/**
  * Pull a usable message out of whatever the caught value happens to be.
  * SDK backends sometimes throw Errors with `message: ''`, sometimes plain
  * objects, sometimes strings. Without this helper the alert renders blank
@@ -173,20 +137,6 @@ function errorMessage(err: unknown, fallback: string): string {
         if (typeof m === 'string' && m.trim()) return m;
     }
     return fallback;
-}
-
-function isForcingNoConnection(): boolean {
-    if (typeof window === 'undefined') return false;
-    try {
-        const params = new URL(window.location.href).searchParams;
-        if (params.get('forceNoConnection') === '1') return true;
-        if (window.localStorage.getItem('vk-force-no-connection') === '1') {
-            return true;
-        }
-    } catch {
-        /* ignore */
-    }
-    return false;
 }
 
 function parseClauses(typedData: SmartAccountTypedData): Clause[] {
@@ -294,90 +244,25 @@ export function TransactClient() {
         let cancelled = false;
         (async () => {
             try {
-                if (isForcingNoConnection()) {
-                    throw new Error(
-                        'No connection found for requester (forced via dev flag)',
-                    );
-                }
                 const data = await client.getVerifiedTransactionRequest({
                     userId: user.id,
                 });
                 if (!cancelled) setVerified(data);
             } catch (e) {
-                // "No connection found for requester" means the user has a
-                // valid Privy session but no recorded connection to *this*
-                // requester app yet — the case where they're transacting
-                // before ever doing a connect popup. The cross-app SDK
-                // accepts a `CrossAppConnectionRequest = { requesterPublicKey,
-                // callbackUrl }` that we can reconstruct from the transact
-                // URL params: `requester_public_key` and `requester_origin`
-                // already carry both. Create the connection inline, then
-                // retry. Avoids falling back to Privy's modal.
-                const noConnection =
-                    e instanceof Error && /no connection/i.test(e.message);
+                // "No connection found for requester" → the requester app
+                // encrypted this transact payload with the *old* connection's
+                // keys, but Privy has no matching server-side record (the
+                // connection expired, or this user/account never connected
+                // before). We can't recover inline: creating a fresh
+                // connection here would mint new keys that can't decrypt
+                // the existing payload (Web Crypto throws OperationError on
+                // the second fetch attempt — verified). The user has to
+                // re-establish the connection through the kit-using app's
+                // login flow, which re-keys both sides.
                 console.warn(
                     '[transact] getVerifiedTransactionRequest failed',
-                    {
-                        error: e,
-                        noConnection,
-                        hasEmbedded: !!embedded?.address,
-                    },
+                    e,
                 );
-                if (noConnection && embedded?.address) {
-                    try {
-                        const connReq =
-                            connectionRequestFromTransactUrl();
-                        console.info(
-                            '[transact] attempting inline acceptConnection',
-                            {
-                                hasConnReq: !!connReq,
-                                requesterPublicKeyPrefix:
-                                    connReq?.requesterPublicKey?.slice(
-                                        0,
-                                        12,
-                                    ),
-                                callbackUrl: connReq?.callbackUrl,
-                                address: embedded.address,
-                                userId: user.id,
-                            },
-                        );
-                        if (!connReq) throw e;
-                        const accessToken = await getAccessToken();
-                        if (!accessToken)
-                            throw new Error(
-                                t('connect.error.missingAccessToken'),
-                            );
-                        await client.acceptConnection({
-                            accessToken,
-                            address: embedded.address,
-                            userId: user.id,
-                            connectionRequest: connReq,
-                        });
-                        console.info(
-                            '[transact] acceptConnection succeeded, retrying fetch',
-                        );
-                        const data =
-                            await client.getVerifiedTransactionRequest({
-                                userId: user.id,
-                            });
-                        if (!cancelled) setVerified(data);
-                        return;
-                    } catch (retryErr) {
-                        console.error(
-                            '[transact] inline acceptConnection retry failed',
-                            retryErr,
-                        );
-                        if (!cancelled)
-                            setParseError({
-                                kind: 'invalid',
-                                message: errorMessage(
-                                    retryErr,
-                                    t('transact.error.failedToRead'),
-                                ),
-                            });
-                        return;
-                    }
-                }
                 if (!cancelled)
                     setParseError({
                         kind: 'invalid',
@@ -395,8 +280,6 @@ export function TransactClient() {
         client,
         authenticated,
         user?.id,
-        embedded?.address,
-        getAccessToken,
         t,
     ]);
 
