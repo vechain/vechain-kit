@@ -223,7 +223,7 @@
     },
     "connect": {
         "title": {
-            "default": "VeChain Cross-App Connect",
+            "default": "VeChain Connect",
             "couldNotLoad": "Не удалось загрузить запрос",
             "logIn": "Войдите в свой кошелёк",
             "connectTo": "Подключиться к {{app}}",
@@ -272,7 +272,7 @@
         }
     },
     "landing": {
-        "title": "VeChain Cross-App Connect",
+        "title": "VeChain Connect",
         "subtitle": "Whitelabel-хост для процессов подключения и транзакций Privy cross-app.",
         "routes": "Маршруты",
         "connectDesc": "обрабатывает запросы подключения",

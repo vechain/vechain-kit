@@ -223,7 +223,7 @@
     },
     "connect": {
         "title": {
-            "default": "VeChain Cross-App Connect",
+            "default": "VeChain Connect",
             "couldNotLoad": "İstek yüklenemedi",
             "logIn": "Cüzdanına giriş yap",
             "connectTo": "{{app}} uygulamasına bağlan",
@@ -272,7 +272,7 @@
         }
     },
     "landing": {
-        "title": "VeChain Cross-App Connect",
+        "title": "VeChain Connect",
         "subtitle": "Privy uygulamalar arası bağlantı ve işlem akışları için whitelabel host.",
         "routes": "Rotalar",
         "connectDesc": "bağlantı isteklerini yönetir",

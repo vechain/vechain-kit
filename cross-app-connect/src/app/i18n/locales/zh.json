@@ -223,7 +223,7 @@
     },
     "connect": {
         "title": {
-            "default": "VeChain Cross-App Connect",
+            "default": "VeChain Connect",
             "couldNotLoad": "无法加载请求",
             "logIn": "登录到您的钱包",
             "connectTo": "连接到 {{app}}",
@@ -272,7 +272,7 @@
         }
     },
     "landing": {
-        "title": "VeChain Cross-App Connect",
+        "title": "VeChain Connect",
         "subtitle": "用于 Privy 跨应用连接与交易流程的白标宿主。",
         "routes": "路由",
         "connectDesc": "处理连接请求",

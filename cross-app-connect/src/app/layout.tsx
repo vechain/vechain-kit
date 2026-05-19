@@ -12,7 +12,7 @@ import './globals.css';
 const colorModeScript = `(function(){try{var d=window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.dataset.colorMode=d?'dark':'light';}catch(e){document.documentElement.dataset.colorMode='light';}})();`;
 
 export const metadata = {
-    title: 'VeChain Cross-App Connect',
+    title: 'VeChain Connect',
 };
 
 export default function RootLayout({

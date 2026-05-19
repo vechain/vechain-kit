@@ -223,7 +223,7 @@
     },
     "connect": {
         "title": {
-            "default": "VeChain Cross-App Connect",
+            "default": "VeChain Connect",
             "couldNotLoad": "Anfrage konnte nicht geladen werden",
             "logIn": "In dein Wallet einloggen",
             "connectTo": "Mit {{app}} verbinden",
@@ -272,7 +272,7 @@
         }
     },
     "landing": {
-        "title": "VeChain Cross-App Connect",
+        "title": "VeChain Connect",
         "subtitle": "Whitelabel-Host für die App-übergreifenden Verbindungs- und Transaktionsflüsse von Privy.",
         "routes": "Routen",
         "connectDesc": "bearbeitet Verbindungsanfragen",
