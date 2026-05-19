@@ -263,8 +263,14 @@ export const MoreOptionsContent = ({
             hasNonNativePrivyMethod);
 
     const ecosystemApps = Object.values(appsInfo || {});
+    // Ecosystem apps are gated on `privyEcosystemAppIDS` being configured,
+    // not on `!!privy` — the cross-app SDK doesn't need the consuming dApp
+    // to own a Privy account, and the apps' name/logo come from Privy's
+    // public app-info endpoint, so this works fine in the no-Privy case
+    // too.
     const showEcosystemSection =
-        !!privy && (isEcosystemAppsLoading || ecosystemApps.length > 0);
+        (privyEcosystemAppIDS?.length ?? 0) > 0 &&
+        (isEcosystemAppsLoading || ecosystemApps.length > 0);
 
     // The "Continue with VeChain" cross-app picker. Works without a `privy`
     // prop because it routes through the whitelabel popup (VECHAIN_PRIVY_APP_ID).
