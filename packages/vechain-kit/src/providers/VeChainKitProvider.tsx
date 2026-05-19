@@ -80,6 +80,13 @@ type LoginMethodOrder = {
               : PrivyDependentMethods);
     gridColumn?: number;
     allowedApps?: string[]; // Only used by ecosystem method, if it's not provided, it will use default apps
+    /**
+     * Mark this method as the recommended primary CTA — filled inverted
+     * surface + RecommendedDot. If no entry sets `isPrimary`, the kit falls
+     * back to highlighting the first visible method automatically. The
+     * `more` method is never primary (it's a footer link).
+     */
+    isPrimary?: boolean;
 };
 
 export type LegalDocumentOptions = {

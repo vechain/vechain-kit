@@ -49,10 +49,13 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
         isOfficialVeChainApp,
     } = useLoginModalContent();
 
-    // The kit treats the first visible method (excluding the `more` footer
-    // link) as the recommended primary CTA. This used to be hardcoded to
-    // VeWorld; now whichever method the dev puts first in `loginMethods`
-    // gets the filled-inverted treatment + the recommended dot.
+    // Determine which method renders as the recommended primary CTA
+    // (filled-inverted surface + RecommendedDot). Two sources, in order:
+    //   1. Explicit: any entry with `isPrimary: true` (excluding `more`,
+    //      which is a footer link, not a button).
+    //   2. Implicit fallback: the first visible method in the array, so an
+    //      opt-out dev who doesn't think about emphasis still gets a
+    //      sensible default.
     const isMethodVisible = (method: string): boolean => {
         switch (method) {
             case 'email':
@@ -79,9 +82,13 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
                 return false;
         }
     };
-    const primaryMethod = loginMethods?.find(({ method }) =>
+    const explicitPrimary = loginMethods?.find(
+        (m) => m.isPrimary && m.method !== 'more' && isMethodVisible(m.method),
+    )?.method;
+    const implicitPrimary = loginMethods?.find(({ method }) =>
         isMethodVisible(method),
     )?.method;
+    const primaryMethod = explicitPrimary ?? implicitPrimary;
 
     const renderMethod = (
         method: string,
