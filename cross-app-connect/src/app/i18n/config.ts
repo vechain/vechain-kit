@@ -80,13 +80,8 @@ function normalizeBrowserTag(raw: string | undefined): SupportedLanguage | null 
  * Always use the device's language; fall back to English when the browser
  * locale isn't one we ship. No URL override, no localStorage stash — the
  * popup mirrors the OS / browser setting every time it opens.
- *
- * Temporarily forced to English for an upcoming demo. Re-enable browser
- * detection by removing the early return below.
  */
 export function resolveLanguage(): SupportedLanguage {
-    return 'en';
-    // eslint-disable-next-line no-unreachable
     if (typeof navigator === 'undefined') return 'en';
     return normalizeBrowserTag(navigator.language) ?? 'en';
 }
