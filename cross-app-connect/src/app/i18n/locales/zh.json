@@ -126,7 +126,8 @@
             "signIn": "登录以继续",
             "couldNotLoad": "无法加载请求",
             "signMessage": "签署一条消息",
-            "signData": "签署数据"
+            "signData": "签署数据",
+            "welcomeBack": "欢迎回来，{{identity}}"
         },
         "subtitle": {
             "sendVet": "向 {{recipient}} 发送 {{amount}} VET",

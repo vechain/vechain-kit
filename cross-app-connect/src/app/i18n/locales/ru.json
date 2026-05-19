@@ -126,7 +126,8 @@
             "signIn": "Войдите, чтобы продолжить",
             "couldNotLoad": "Не удалось загрузить запрос",
             "signMessage": "Подписать сообщение",
-            "signData": "Подписать данные"
+            "signData": "Подписать данные",
+            "welcomeBack": "С возвращением, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET → {{recipient}}",

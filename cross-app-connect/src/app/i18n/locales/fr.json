@@ -126,7 +126,8 @@
             "signIn": "Connectez-vous pour continuer",
             "couldNotLoad": "Impossible de charger la requête",
             "signMessage": "Signer un message",
-            "signData": "Signer des données"
+            "signData": "Signer des données",
+            "welcomeBack": "Bon retour, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET à {{recipient}}",

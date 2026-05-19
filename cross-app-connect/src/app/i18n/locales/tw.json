@@ -126,7 +126,8 @@
             "signIn": "登入以繼續",
             "couldNotLoad": "無法載入請求",
             "signMessage": "簽署一則訊息",
-            "signData": "簽署資料"
+            "signData": "簽署資料",
+            "welcomeBack": "歡迎回來，{{identity}}"
         },
         "subtitle": {
             "sendVet": "向 {{recipient}} 傳送 {{amount}} VET",

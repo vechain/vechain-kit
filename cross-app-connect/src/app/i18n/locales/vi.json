@@ -126,7 +126,8 @@
             "signIn": "Đăng nhập để tiếp tục",
             "couldNotLoad": "Không thể tải yêu cầu",
             "signMessage": "Ký một thông điệp",
-            "signData": "Ký dữ liệu"
+            "signData": "Ký dữ liệu",
+            "welcomeBack": "Chào mừng trở lại, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET đến {{recipient}}",

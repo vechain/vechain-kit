@@ -126,7 +126,8 @@
             "signIn": "Devam etmek için giriş yap",
             "couldNotLoad": "İstek yüklenemedi",
             "signMessage": "Bir mesaj imzala",
-            "signData": "Veri imzala"
+            "signData": "Veri imzala",
+            "welcomeBack": "Tekrar hoş geldin, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{recipient}} adresine {{amount}} VET",

@@ -126,7 +126,8 @@
             "signIn": "Anmelden, um fortzufahren",
             "couldNotLoad": "Anfrage konnte nicht geladen werden",
             "signMessage": "Eine Nachricht signieren",
-            "signData": "Daten signieren"
+            "signData": "Daten signieren",
+            "welcomeBack": "Willkommen zurück, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET an {{recipient}}",

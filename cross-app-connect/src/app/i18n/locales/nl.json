@@ -126,7 +126,8 @@
             "signIn": "Log in om door te gaan",
             "couldNotLoad": "Verzoek kon niet worden geladen",
             "signMessage": "Een bericht ondertekenen",
-            "signData": "Data ondertekenen"
+            "signData": "Data ondertekenen",
+            "welcomeBack": "Welkom terug, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET naar {{recipient}}",

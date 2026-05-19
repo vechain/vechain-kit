@@ -126,7 +126,8 @@
             "signIn": "Conectează-te pentru a continua",
             "couldNotLoad": "Cererea nu a putut fi încărcată",
             "signMessage": "Semnează un mesaj",
-            "signData": "Semnează date"
+            "signData": "Semnează date",
+            "welcomeBack": "Bun venit înapoi, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET către {{recipient}}",

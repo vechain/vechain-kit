@@ -10,7 +10,7 @@ import {
     LuShieldX,
 } from 'react-icons/lu';
 import type { IconType } from 'react-icons';
-import { useLogin, usePrivy, useWallets } from '@privy-io/react-auth';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 import type { VerifiedTransactionRequest } from '@privy-io/cross-app-provider/connect';
 import { formatUnits } from 'viem';
 import { useCrossAppClient } from '../_lib/client';
@@ -19,6 +19,13 @@ import { AddressTag } from '../../components/AddressTag';
 import { IdentityRow } from '../../components/IdentityRow';
 import { truncateAddress } from '../_lib/format';
 import { decodeClause, type DecodedClause } from '../_lib/decoder';
+import { SignInPanel } from '../_components/SignInPanel';
+import {
+    getLastIdentity,
+    labelFromPrivyUser,
+    setLastIdentity,
+} from '../_lib/lastIdentity';
+import { getRecentProvider } from '../_lib/recent';
 import {
     computeRisk,
     continueLabel,
@@ -149,8 +156,17 @@ export function TransactClient() {
         getAccessToken,
     } = usePrivy();
     const { wallets } = useWallets();
-    const { login } = useLogin();
     const embedded = wallets.find((w) => w.walletClientType === 'privy');
+
+    // Persist a friendly identity label whenever a user is active. Read
+    // back on the "session expired" branch below so we can greet the user
+    // by name and pre-highlight the right provider on re-login.
+    useEffect(() => {
+        if (!user) return;
+        const label = labelFromPrivyUser(user);
+        if (!label) return;
+        setLastIdentity({ label, provider: getRecentProvider() ?? undefined });
+    }, [user]);
 
     const [smartAccount, setSmartAccount] = useState<SmartAccountInfo | null>(
         null,
@@ -451,21 +467,29 @@ export function TransactClient() {
     }
 
     if (!authenticated) {
+        // Privy session expired (or first-time visitor). Skip Privy's modal
+        // entirely and drive the headless login hooks through our own
+        // SignInPanel. If we stashed an identity from a previous session,
+        // greet the user with it and pre-highlight the provider they used
+        // last — a cold re-login becomes a one-tap.
+        const last = getLastIdentity();
         return (
             <>
                 <VechainHeader
-                    title={t('transact.title.signIn')}
+                    title={
+                        last
+                            ? t('transact.title.welcomeBack', {
+                                  identity: last.label,
+                              })
+                            : t('transact.title.signIn')
+                    }
                     subtitle={t('transact.subtitle.signInWaiting')}
                 />
-                <div className={styles.card}>
-                    <button
-                        type="button"
-                        className={styles.btnBrand}
-                        onClick={() => login()}
-                    >
-                        {t('common.button.continue')}
-                    </button>
-                </div>
+                <SignInPanel
+                    intent={null}
+                    onCancel={onReject}
+                    presetRecent={last?.provider ?? null}
+                />
             </>
         );
     }

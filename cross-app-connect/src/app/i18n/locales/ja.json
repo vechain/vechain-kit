@@ -126,7 +126,8 @@
             "signIn": "続行するにはサインイン",
             "couldNotLoad": "リクエストを読み込めませんでした",
             "signMessage": "メッセージに署名",
-            "signData": "データに署名"
+            "signData": "データに署名",
+            "welcomeBack": "おかえりなさい、{{identity}}"
         },
         "subtitle": {
             "sendVet": "{{recipient}} に {{amount}} VET",

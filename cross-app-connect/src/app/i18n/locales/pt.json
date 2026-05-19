@@ -126,7 +126,8 @@
             "signIn": "Inicia sessão para continuar",
             "couldNotLoad": "Não foi possível carregar o pedido",
             "signMessage": "Assinar uma mensagem",
-            "signData": "Assinar dados"
+            "signData": "Assinar dados",
+            "welcomeBack": "Bem-vindo de volta, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET para {{recipient}}",

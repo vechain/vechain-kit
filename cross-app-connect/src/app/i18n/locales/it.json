@@ -126,7 +126,8 @@
             "signIn": "Accedi per continuare",
             "couldNotLoad": "Impossibile caricare la richiesta",
             "signMessage": "Firma un messaggio",
-            "signData": "Firma dati"
+            "signData": "Firma dati",
+            "welcomeBack": "Bentornato, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET a {{recipient}}",

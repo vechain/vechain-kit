@@ -126,7 +126,8 @@
             "signIn": "Logga in för att fortsätta",
             "couldNotLoad": "Kunde inte ladda begäran",
             "signMessage": "Signera ett meddelande",
-            "signData": "Signera data"
+            "signData": "Signera data",
+            "welcomeBack": "Välkommen tillbaka, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET till {{recipient}}",

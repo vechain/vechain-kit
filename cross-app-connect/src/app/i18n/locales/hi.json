@@ -126,7 +126,8 @@
             "signIn": "जारी रखने के लिए साइन इन करें",
             "couldNotLoad": "अनुरोध लोड नहीं हो सका",
             "signMessage": "एक संदेश साइन करें",
-            "signData": "डेटा साइन करें"
+            "signData": "डेटा साइन करें",
+            "welcomeBack": "वापस आने पर स्वागत है, {{identity}}"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET को {{recipient}}",

@@ -124,6 +124,7 @@
             "noRequest": "No transaction request",
             "reviewing": "Reviewing transaction",
             "signIn": "Sign in to continue",
+            "welcomeBack": "Welcome back, {{identity}}",
             "couldNotLoad": "Couldn't load request",
             "signMessage": "Sign a message",
             "signData": "Sign data"
