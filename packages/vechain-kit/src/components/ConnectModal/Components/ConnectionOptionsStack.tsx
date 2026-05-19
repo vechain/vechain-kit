@@ -49,10 +49,45 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
         isOfficialVeChainApp,
     } = useLoginModalContent();
 
+    // The kit treats the first visible method (excluding the `more` footer
+    // link) as the recommended primary CTA. This used to be hardcoded to
+    // VeWorld; now whichever method the dev puts first in `loginMethods`
+    // gets the filled-inverted treatment + the recommended dot.
+    const isMethodVisible = (method: string): boolean => {
+        switch (method) {
+            case 'email':
+                return showEmailLogin;
+            case 'google':
+                return showGoogleLogin;
+            case 'apple':
+                return showAppleLogin;
+            case 'github':
+                return showGithubLogin;
+            case 'passkey':
+                return showPasskey;
+            case 'vechain':
+                return showVeChainLogin;
+            case 'dappkit':
+                return showDappKit;
+            case 'veworld':
+                return showVeWorld;
+            case 'sync2':
+                return showSync2;
+            case 'wallet-connect':
+                return showWalletConnect;
+            default:
+                return false;
+        }
+    };
+    const primaryMethod = loginMethods?.find(({ method }) =>
+        isMethodVisible(method),
+    )?.method;
+
     const renderMethod = (
         method: string,
         gridColumn: number | undefined,
     ): React.ReactNode => {
+        const isPrimary = method === primaryMethod;
         switch (method) {
             case 'email':
                 return showEmailLogin && <EmailLoginButton key="email" />;
@@ -63,6 +98,7 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
                             key="google"
                             isDark={isDark}
                             gridColumn={gridColumn}
+                            isPrimary={isPrimary}
                         />
                     )
                 );
@@ -73,6 +109,7 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
                             key="apple"
                             isDark={isDark}
                             gridColumn={gridColumn}
+                            isPrimary={isPrimary}
                         />
                     )
                 );
@@ -83,6 +120,7 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
                             key="github"
                             isDark={isDark}
                             gridColumn={gridColumn}
+                            isPrimary={isPrimary}
                         />
                     )
                 );
@@ -133,6 +171,7 @@ export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
                             isDark={isDark}
                             gridColumn={gridColumn ?? 4}
                             setCurrentContent={setCurrentContent}
+                            isPrimary={isPrimary}
                         />
                     )
                 );
