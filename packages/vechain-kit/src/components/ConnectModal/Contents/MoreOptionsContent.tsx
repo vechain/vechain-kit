@@ -43,7 +43,12 @@ import {
 import { useVeChainKitConfig } from '@/providers';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { isRejectionError } from '@/utils/stringUtils';
-import { VechainLogoDark, VechainLogoLight, VeWorldLogoLight } from '@/assets';
+import {
+    VechainLogoDark,
+    VechainLogoLight,
+    VeWorldLogoDark,
+    VeWorldLogoLight,
+} from '@/assets';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useDisclosure } from '@chakra-ui/react';
@@ -438,34 +443,6 @@ export const MoreOptionsContent = ({
 
             <ModalBody>
                 <VStack spacing={6} w={'full'} align={'stretch'}>
-                    {showVeChainHere && (
-                        <Box>
-                            <SectionLabel>
-                                {t('Login with VeChain')}
-                            </SectionLabel>
-                            <VStack spacing={1} w={'full'} align={'stretch'}>
-                                <ProviderRow
-                                    customIcon={
-                                        isDark ? (
-                                            <VechainLogoLight
-                                                w={'20px'}
-                                                h={'20px'}
-                                            />
-                                        ) : (
-                                            <VechainLogoDark
-                                                w={'20px'}
-                                                h={'20px'}
-                                            />
-                                        )
-                                    }
-                                    label={t('Continue with VeChain')}
-                                    onClick={handleLoginWithVeChain}
-                                    iconBg={brandInverseBg}
-                                />
-                            </VStack>
-                        </Box>
-                    )}
-
                     {showWalletsSection && (
                         <Box>
                             <SectionLabel>{t('Other wallets')}</SectionLabel>
@@ -475,11 +452,21 @@ export const MoreOptionsContent = ({
                                         source={'veworld'}
                                         label={t('Continue with VeWorld')}
                                         customIcon={
-                                            <VeWorldLogoLight
-                                                w={'20px'}
-                                                h={'20px'}
-                                                color={brandInverseFg}
-                                            />
+                                            // Logos have hardcoded fill —
+                                            // `color` prop has no effect.
+                                            // Pick the variant that contrasts
+                                            // with the icon-tile background.
+                                            isDark ? (
+                                                <VeWorldLogoDark
+                                                    w={'20px'}
+                                                    h={'20px'}
+                                                />
+                                            ) : (
+                                                <VeWorldLogoLight
+                                                    w={'20px'}
+                                                    h={'20px'}
+                                                />
+                                            )
                                         }
                                         iconBg={brandInverseBg}
                                         setCurrentContent={setCurrentContent}
@@ -507,6 +494,34 @@ export const MoreOptionsContent = ({
                                         setCurrentContent={setCurrentContent}
                                     />
                                 )}
+                            </VStack>
+                        </Box>
+                    )}
+
+                    {showVeChainHere && (
+                        <Box>
+                            <SectionLabel>
+                                {t('View more socials')}
+                            </SectionLabel>
+                            <VStack spacing={1} w={'full'} align={'stretch'}>
+                                <ProviderRow
+                                    customIcon={
+                                        isDark ? (
+                                            <VechainLogoLight
+                                                w={'20px'}
+                                                h={'20px'}
+                                            />
+                                        ) : (
+                                            <VechainLogoDark
+                                                w={'20px'}
+                                                h={'20px'}
+                                            />
+                                        )
+                                    }
+                                    label={t('Continue with VeChain')}
+                                    onClick={handleLoginWithVeChain}
+                                    iconBg={brandInverseBg}
+                                />
                             </VStack>
                         </Box>
                     )}
