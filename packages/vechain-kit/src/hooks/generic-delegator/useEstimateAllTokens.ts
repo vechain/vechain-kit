@@ -5,7 +5,8 @@ import {
     useWallet,
     estimateGas,
     useGetAccountVersion,
-    computeCorrectedGasTokenCost,
+    computeCorrectedTotalGasNoFeePayer,
+    convertGasToGasTokenAmount,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TransactionClause } from '@vechain/sdk-core';
@@ -46,6 +47,15 @@ export const useEstimateAllTokens = ({
                 { cost: number; loading: boolean; error?: string }
             > = {} as any;
 
+            // Local gas estimate is token-agnostic — compute once,
+            // bounded by a timeout so a slow node can't hang the UI.
+            const totalGasNoFeePayer = await computeCorrectedTotalGasNoFeePayer({
+                thor,
+                clauses,
+                smartAccountAddress: smartAccount?.address ?? '',
+                version: smartAccountVersion?.version ?? 0,
+            });
+
             await Promise.all(
                 tokens.map(async (token) => {
                     try {
@@ -56,14 +66,14 @@ export const useEstimateAllTokens = ({
                             token,
                             'medium',
                         );
-                        const correctedCost = await computeCorrectedGasTokenCost({
-                            thor,
-                            clauses,
-                            smartAccountAddress: smartAccount?.address ?? '',
-                            version: smartAccountVersion?.version ?? 0,
-                            estimationResponse: estimation,
-                            gasToken: token,
-                        });
+                        const correctedCost =
+                            totalGasNoFeePayer !== null
+                                ? convertGasToGasTokenAmount({
+                                      totalGasNoFeePayer,
+                                      gasToken: token,
+                                      estimationResponse: estimation,
+                                  })
+                                : (estimation.transactionCost ?? 0) * 2;
                         estimates[token] = {
                             cost: correctedCost || 0,
                             loading: false,

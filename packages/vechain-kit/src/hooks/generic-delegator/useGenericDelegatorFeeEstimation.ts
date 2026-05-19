@@ -8,7 +8,8 @@ import {
     useTokenBalances,
     useGasTokenSelection,
     useGetAccountVersion,
-    computeCorrectedGasTokenCost,
+    computeCorrectedTotalGasNoFeePayer,
+    convertGasToGasTokenAmount,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TransactionClause } from '@vechain/sdk-core';
@@ -48,6 +49,18 @@ export const useGenericDelegatorFeeEstimation = ({
     return useQuery<EstimationResponse & { usedToken: string }, Error>({
         queryKey,
         queryFn: async () => {
+            // Run the local Thor gas estimate ONCE — the gas number is
+            // token-agnostic so we shouldn't pay for it inside the loop.
+            // Bounded by a timeout so a slow / unreachable node can't
+            // hang the fee-estimation UI forever; on timeout/failure each
+            // token falls back to a delegator-derived value.
+            const totalGasNoFeePayer = await computeCorrectedTotalGasNoFeePayer({
+                thor,
+                clauses: clauses as TransactionClause[],
+                smartAccountAddress: smartAccount?.address ?? '',
+                version: smartAccountVersion?.version ?? 0,
+            });
+
             let lastError: Error | null = null;
             // Try each token in sequence until one succeeds AND has sufficient balance
             for (const token of tokens) {
@@ -61,16 +74,17 @@ export const useGenericDelegatorFeeEstimation = ({
                     );
                     // The delegator's `transactionCost` is computed from a
                     // simulation that omits the smart-account auth wrapper
-                    // and can underestimate (or revert outright). Recompute
-                    // locally so the UI agrees with the actual send path.
-                    const gasCost = await computeCorrectedGasTokenCost({
-                        thor,
-                        clauses: clauses as TransactionClause[],
-                        smartAccountAddress: smartAccount?.address ?? '',
-                        version: smartAccountVersion?.version ?? 0,
-                        estimationResponse: estimation,
-                        gasToken: token as GasTokenType,
-                    });
+                    // and can underestimate (or revert outright). Reapply the
+                    // delegator's per-gas rate to our locally-estimated gas
+                    // number so the UI agrees with the actual send path.
+                    const gasCost =
+                        totalGasNoFeePayer !== null
+                            ? convertGasToGasTokenAmount({
+                                  totalGasNoFeePayer,
+                                  gasToken: token as GasTokenType,
+                                  estimationResponse: estimation,
+                              })
+                            : (estimation.transactionCost ?? 0) * 2;
                     const tokenBalance = Number(balances.find(t => t.symbol === token)?.balance || 0);
                     // If sending the same token as gas token, need balance for both
                     // If no sendingAmount is provided, we're only checking for gas fees

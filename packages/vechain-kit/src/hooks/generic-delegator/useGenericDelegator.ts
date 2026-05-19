@@ -134,69 +134,87 @@ export const estimateAndBuildTxBody = async (
 };
 
 /**
- * Compute the gas-token amount the smart account must transfer to the
- * generic delegator's deposit account to cover the transaction.
- *
- * The delegator's `/estimate/clauses` endpoint simulates the user's raw
- * clauses as if executed directly by the smart account, with no
- * `executeWithAuthorization` wrapper and no embedded-wallet signature, so
- * it under-estimates (and for NFT-heavy clauses can revert outright). We
- * trust its **rate** information (the gas-token-per-gas ratio is just a
- * market price and doesn't depend on the gas amount) but recompute the
- * gas number locally — including the wrapper overhead, fee-payer overhead,
- * and a 10% safety multiplier — and reapply the rate.
- *
- * @param thor - Thor client used for the local gas estimation
- * @param clauses - The user's raw clauses (NOT the wrapped ones)
- * @param smartAccountAddress - Caller used during simulation
- * @param version - Smart account version (selects the wrapper overhead)
- * @param estimationResponse - The delegator's /estimate/clauses response
- * @param gasToken - The selected gas token (selects the fee-payer overhead)
- * @returns The corrected gas-token amount as a decimal (human-readable)
+ * Hard timeout (ms) applied to the local Thor gas estimation. Stops the
+ * fee-estimation UI from hanging if the node is slow or unreachable.
  */
-export const computeCorrectedGasTokenCost = async ({
+export const GENERIC_DELEGATOR_LOCAL_ESTIMATE_TIMEOUT_MS = 6_000;
+
+const withTimeout = <T>(
+    promise: Promise<T>,
+    ms: number,
+): Promise<T | null> =>
+    new Promise<T | null>((resolve) => {
+        const timer = setTimeout(() => resolve(null), ms);
+        promise
+            .then((value) => {
+                clearTimeout(timer);
+                resolve(value);
+            })
+            .catch(() => {
+                clearTimeout(timer);
+                resolve(null);
+            });
+    });
+
+/**
+ * Run the local Thor gas estimation for the user's raw clauses (caller =
+ * smart account) and return the gas-token-agnostic total: raw gas + wrapper
+ * overhead, padded by the safety multiplier. Returns `null` if the
+ * simulation reverts, times out, or returns a non-positive number — the
+ * caller should then fall back to a delegator-derived estimate.
+ *
+ * The output is independent of the gas token, so callers iterating over
+ * a token-priority list should call this once and reuse the result.
+ */
+export const computeCorrectedTotalGasNoFeePayer = async ({
     thor,
     clauses,
     smartAccountAddress,
     version,
-    estimationResponse,
-    gasToken,
+    timeoutMs = GENERIC_DELEGATOR_LOCAL_ESTIMATE_TIMEOUT_MS,
 }: {
     thor: ThorClient;
     clauses: TransactionClause[];
     smartAccountAddress: string;
     version: number;
-    estimationResponse: EstimationResponse;
-    gasToken: GasTokenType;
-}): Promise<number> => {
-    const fallbackCost = (estimationResponse.transactionCost ?? 0) * 2;
+    timeoutMs?: number;
+}): Promise<number | null> => {
+    const rawGasResult = await withTimeout(
+        thor.gas.estimateGas(clauses, smartAccountAddress),
+        timeoutMs,
+    );
 
-    let rawGas: number;
-    try {
-        const rawGasResult = await thor.gas.estimateGas(
-            clauses,
-            smartAccountAddress,
-        );
-        rawGas = rawGasResult.totalGas;
-    } catch {
-        return fallbackCost;
-    }
-
+    const rawGas = rawGasResult?.totalGas;
     if (!rawGas || rawGas <= 0) {
-        return fallbackCost;
+        return null;
     }
 
     const wrapperOverhead = getWrapperOverheadGas(version);
-    const feePayerOverhead = GENERIC_DELEGATOR_FEE_PAYER_OVERHEAD_GAS[gasToken];
-
-    const totalGas = Math.ceil(
-        (rawGas + wrapperOverhead) * GENERIC_DELEGATOR_GAS_SAFETY_MULTIPLIER +
-            feePayerOverhead,
+    return Math.ceil(
+        (rawGas + wrapperOverhead) * GENERIC_DELEGATOR_GAS_SAFETY_MULTIPLIER,
     );
+};
 
-    // Derive the gas-token-per-gas rate from the delegator response. The
-    // rate is price-driven and independent of the gas amount, so it
-    // remains accurate even when the delegator's gas number is wrong.
+/**
+ * Convert a gas number (without the fee-payer transfer overhead) into the
+ * gas-token amount required to cover the transaction, using the per-gas
+ * rate returned by the delegator's `/estimate/clauses` response (which is
+ * accurate even when the absolute gas number from the same response is
+ * not). Adds the gas-token-specific fee-payer transfer overhead.
+ */
+export const convertGasToGasTokenAmount = ({
+    totalGasNoFeePayer,
+    gasToken,
+    estimationResponse,
+}: {
+    totalGasNoFeePayer: number;
+    gasToken: GasTokenType;
+    estimationResponse: EstimationResponse;
+}): number => {
+    const totalGas =
+        totalGasNoFeePayer +
+        GENERIC_DELEGATOR_FEE_PAYER_OVERHEAD_GAS[gasToken];
+
     let gasTokenPerGas = 0;
     if (
         estimationResponse.transactionCost &&
@@ -210,16 +228,65 @@ export const computeCorrectedGasTokenCost = async ({
         const rate = estimationResponse.rate ?? 1;
         const serviceFee = estimationResponse.serviceFee ?? 0;
         gasTokenPerGas =
-            estimationResponse.vthoPerGasAtSpeed *
-            rate *
-            (1 + serviceFee);
+            estimationResponse.vthoPerGasAtSpeed * rate * (1 + serviceFee);
     }
 
     if (!gasTokenPerGas || gasTokenPerGas <= 0) {
-        return fallbackCost;
+        return 0;
     }
 
     return totalGas * gasTokenPerGas;
+};
+
+/**
+ * Compute the gas-token amount the smart account must transfer to the
+ * generic delegator's deposit account to cover the transaction.
+ *
+ * The delegator's `/estimate/clauses` endpoint simulates the user's raw
+ * clauses as if executed directly by the smart account, with no
+ * `executeWithAuthorization` wrapper and no embedded-wallet signature, so
+ * it under-estimates (and for NFT-heavy clauses can revert outright). We
+ * trust its **rate** information (the gas-token-per-gas ratio is just a
+ * market price and doesn't depend on the gas amount) but recompute the
+ * gas number locally — including the wrapper overhead, fee-payer overhead,
+ * and a 10% safety multiplier — and reapply the rate.
+ */
+export const computeCorrectedGasTokenCost = async ({
+    thor,
+    clauses,
+    smartAccountAddress,
+    version,
+    estimationResponse,
+    gasToken,
+    timeoutMs,
+}: {
+    thor: ThorClient;
+    clauses: TransactionClause[];
+    smartAccountAddress: string;
+    version: number;
+    estimationResponse: EstimationResponse;
+    gasToken: GasTokenType;
+    timeoutMs?: number;
+}): Promise<number> => {
+    const fallbackCost = (estimationResponse.transactionCost ?? 0) * 2;
+
+    const totalGasNoFeePayer = await computeCorrectedTotalGasNoFeePayer({
+        thor,
+        clauses,
+        smartAccountAddress,
+        version,
+        timeoutMs,
+    });
+    if (totalGasNoFeePayer === null) {
+        return fallbackCost;
+    }
+
+    const cost = convertGasToGasTokenAmount({
+        totalGasNoFeePayer,
+        gasToken,
+        estimationResponse,
+    });
+    return cost > 0 ? cost : fallbackCost;
 };
 
 /**
