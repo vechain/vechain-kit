@@ -21,6 +21,16 @@ export const useEstimateAllTokens = ({
     );
     const { feeDelegation } = useVeChainKitConfig();
 
+    // eslint-disable-next-line no-console
+    console.log('[vk-debug] useEstimateAllTokens inputs:', {
+        callerEnabled: enabled,
+        clausesLen: clauses.length,
+        smartAccountAddress: smartAccount?.address,
+        genericDelegatorUrl: feeDelegation?.genericDelegatorUrl,
+        delegatorUrl: feeDelegation?.delegatorUrl,
+        tokensLen: tokens.length,
+    });
+
     return useQuery({
         queryKey: [
             'gas-estimation-all-tokens',
