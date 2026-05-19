@@ -4,7 +4,8 @@
             "back": "Înapoi",
             "cancel": "Anulează",
             "continue": "Continuă",
-            "continueAnyway": "Continuă oricum"
+            "continueAnyway": "Continuă oricum",
+            "close": "Închide"
         },
         "amount": {
             "unlimited": "Nelimitat"
@@ -127,7 +128,8 @@
             "couldNotLoad": "Cererea nu a putut fi încărcată",
             "signMessage": "Semnează un mesaj",
             "signData": "Semnează date",
-            "welcomeBack": "Bun venit înapoi, {{identity}}"
+            "welcomeBack": "Bun venit înapoi, {{identity}}",
+            "connectionExpired": "Reconectare necesară"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET către {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} acțiuni, {{unverified}} neverificate",
             "reviewMessage": "Verifică mesajul pe care această aplicație vrea să-l semnezi.",
             "reviewData": "Verifică datele pe care această aplicație vrea să le semnezi.",
-            "signInWaiting": "O cerere de semnare așteaptă. Conectează-te pentru a o verifica."
+            "signInWaiting": "O cerere de semnare așteaptă. Conectează-te pentru a o verifica.",
+            "connectionExpired": "Sesiunea de conexiune a expirat"
         },
         "button": {
             "confirm": "Confirmă",
@@ -213,6 +216,9 @@
             "signButton": "Semnează",
             "approveVeChainTx": "Aprobă tranzacția VeChain",
             "signStructuredData": "Semnează datele structurate"
+        },
+        "copy": {
+            "connectionExpiredBody": "Revino la aplicația care a deschis această fereastră și autentifică-te din nou — portofelul se va reconecta automat și vei putea reîncerca acțiunea."
         }
     },
     "connect": {

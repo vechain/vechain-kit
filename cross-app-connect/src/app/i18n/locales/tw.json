@@ -4,7 +4,8 @@
             "back": "返回",
             "cancel": "取消",
             "continue": "繼續",
-            "continueAnyway": "仍然繼續"
+            "continueAnyway": "仍然繼續",
+            "close": "關閉"
         },
         "amount": {
             "unlimited": "無限制"
@@ -127,7 +128,8 @@
             "couldNotLoad": "無法載入請求",
             "signMessage": "簽署一則訊息",
             "signData": "簽署資料",
-            "welcomeBack": "歡迎回來，{{identity}}"
+            "welcomeBack": "歡迎回來，{{identity}}",
+            "connectionExpired": "需要重新連線"
         },
         "subtitle": {
             "sendVet": "向 {{recipient}} 傳送 {{amount}} VET",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} 項操作，其中 {{unverified}} 項未驗證",
             "reviewMessage": "請檢視此應用程式希望您簽署的訊息。",
             "reviewData": "請檢視此應用程式希望您簽署的資料。",
-            "signInWaiting": "有一個簽署請求等待處理。請登入以檢視。"
+            "signInWaiting": "有一個簽署請求等待處理。請登入以檢視。",
+            "connectionExpired": "您的連線工作階段已過期"
         },
         "button": {
             "confirm": "確認",
@@ -213,6 +216,9 @@
             "signButton": "簽名",
             "approveVeChainTx": "核准 VeChain 交易",
             "signStructuredData": "簽名結構化資料"
+        },
+        "copy": {
+            "connectionExpiredBody": "請返回開啟此視窗的應用並重新登入——您的錢包將自動重新連線,您可以重試該操作。"
         }
     },
     "connect": {

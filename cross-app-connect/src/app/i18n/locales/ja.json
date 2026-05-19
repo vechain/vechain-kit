@@ -4,7 +4,8 @@
             "back": "戻る",
             "cancel": "キャンセル",
             "continue": "続行",
-            "continueAnyway": "それでも続行"
+            "continueAnyway": "それでも続行",
+            "close": "閉じる"
         },
         "amount": {
             "unlimited": "無制限"
@@ -127,7 +128,8 @@
             "couldNotLoad": "リクエストを読み込めませんでした",
             "signMessage": "メッセージに署名",
             "signData": "データに署名",
-            "welcomeBack": "おかえりなさい、{{identity}}"
+            "welcomeBack": "おかえりなさい、{{identity}}",
+            "connectionExpired": "再接続が必要です"
         },
         "subtitle": {
             "sendVet": "{{recipient}} に {{amount}} VET",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} 件のアクション、うち {{unverified}} 件が未認証",
             "reviewMessage": "このアプリが署名を求めているメッセージを確認してください。",
             "reviewData": "このアプリが署名を求めているデータを確認してください。",
-            "signInWaiting": "署名リクエストが待機中です。サインインして確認してください。"
+            "signInWaiting": "署名リクエストが待機中です。サインインして確認してください。",
+            "connectionExpired": "接続セッションの有効期限が切れました"
         },
         "button": {
             "confirm": "確認",
@@ -213,6 +216,9 @@
             "signButton": "署名",
             "approveVeChainTx": "VeChain トランザクションを承認",
             "signStructuredData": "構造化データに署名"
+        },
+        "copy": {
+            "connectionExpiredBody": "このウィンドウを開いたアプリに戻って再度ログインしてください。ウォレットは自動的に再接続され、操作を再試行できます。"
         }
     },
     "connect": {

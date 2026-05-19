@@ -4,7 +4,8 @@
             "back": "返回",
             "cancel": "取消",
             "continue": "继续",
-            "continueAnyway": "仍然继续"
+            "continueAnyway": "仍然继续",
+            "close": "关闭"
         },
         "amount": {
             "unlimited": "无限制"
@@ -127,7 +128,8 @@
             "couldNotLoad": "无法加载请求",
             "signMessage": "签署一条消息",
             "signData": "签署数据",
-            "welcomeBack": "欢迎回来，{{identity}}"
+            "welcomeBack": "欢迎回来，{{identity}}",
+            "connectionExpired": "需要重新连接"
         },
         "subtitle": {
             "sendVet": "向 {{recipient}} 发送 {{amount}} VET",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} 项操作，其中 {{unverified}} 项未验证",
             "reviewMessage": "请查看此应用希望您签署的消息。",
             "reviewData": "请查看此应用希望您签署的数据。",
-            "signInWaiting": "有一个签名请求等待处理。登录以查看。"
+            "signInWaiting": "有一个签名请求等待处理。登录以查看。",
+            "connectionExpired": "您的连接会话已过期"
         },
         "button": {
             "confirm": "确认",
@@ -213,6 +216,9 @@
             "signButton": "签名",
             "approveVeChainTx": "批准 VeChain 交易",
             "signStructuredData": "签名结构化数据"
+        },
+        "copy": {
+            "connectionExpiredBody": "请返回打开此窗口的应用并重新登录——您的钱包将自动重新连接,您可以重试该操作。"
         }
     },
     "connect": {

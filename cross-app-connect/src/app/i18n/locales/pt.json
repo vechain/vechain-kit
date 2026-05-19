@@ -4,7 +4,8 @@
             "back": "Voltar",
             "cancel": "Cancelar",
             "continue": "Continuar",
-            "continueAnyway": "Continuar mesmo assim"
+            "continueAnyway": "Continuar mesmo assim",
+            "close": "Fechar"
         },
         "amount": {
             "unlimited": "Ilimitado"
@@ -127,7 +128,8 @@
             "couldNotLoad": "Não foi possível carregar o pedido",
             "signMessage": "Assinar uma mensagem",
             "signData": "Assinar dados",
-            "welcomeBack": "Bem-vindo de volta, {{identity}}"
+            "welcomeBack": "Bem-vindo de volta, {{identity}}",
+            "connectionExpired": "Reconexão necessária"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET para {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} ações, {{unverified}} por verificar",
             "reviewMessage": "Revê a mensagem que esta app quer que assines.",
             "reviewData": "Revê os dados que esta app quer que assines.",
-            "signInWaiting": "Há um pedido de assinatura à espera. Inicia sessão para o rever."
+            "signInWaiting": "Há um pedido de assinatura à espera. Inicia sessão para o rever.",
+            "connectionExpired": "A sua sessão de ligação expirou"
         },
         "button": {
             "confirm": "Confirmar",
@@ -213,6 +216,9 @@
             "signButton": "Assinar",
             "approveVeChainTx": "Aprovar transação VeChain",
             "signStructuredData": "Assinar dados estruturados"
+        },
+        "copy": {
+            "connectionExpiredBody": "Volte à aplicação que abriu esta janela e inicie sessão novamente — a sua carteira reconecta-se automaticamente e poderá tentar novamente a ação."
         }
     },
     "connect": {

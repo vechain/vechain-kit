@@ -4,7 +4,8 @@
             "back": "Retour",
             "cancel": "Annuler",
             "continue": "Continuer",
-            "continueAnyway": "Continuer quand même"
+            "continueAnyway": "Continuer quand même",
+            "close": "Fermer"
         },
         "amount": {
             "unlimited": "Illimité"
@@ -127,7 +128,8 @@
             "couldNotLoad": "Impossible de charger la requête",
             "signMessage": "Signer un message",
             "signData": "Signer des données",
-            "welcomeBack": "Bon retour, {{identity}}"
+            "welcomeBack": "Bon retour, {{identity}}",
+            "connectionExpired": "Reconnexion nécessaire"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET à {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} actions, {{unverified}} non vérifiées",
             "reviewMessage": "Examinez le message que cette application veut vous faire signer.",
             "reviewData": "Examinez les données que cette application veut vous faire signer.",
-            "signInWaiting": "Une requête de signature est en attente. Connectez-vous pour l'examiner."
+            "signInWaiting": "Une requête de signature est en attente. Connectez-vous pour l'examiner.",
+            "connectionExpired": "Votre session de connexion a expiré"
         },
         "button": {
             "confirm": "Confirmer",
@@ -213,6 +216,9 @@
             "signButton": "Signer",
             "approveVeChainTx": "Approuver la transaction VeChain",
             "signStructuredData": "Signer les données structurées"
+        },
+        "copy": {
+            "connectionExpiredBody": "Retournez sur l'application qui a ouvert cette fenêtre et reconnectez-vous — votre portefeuille se reconnectera automatiquement, et vous pourrez réessayer l'action."
         }
     },
     "connect": {

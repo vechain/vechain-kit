@@ -3,6 +3,7 @@
         "button": {
             "back": "Back",
             "cancel": "Cancel",
+            "close": "Close",
             "continue": "Continue",
             "continueAnyway": "Continue anyway"
         },
@@ -126,6 +127,7 @@
             "signIn": "Sign in to continue",
             "welcomeBack": "Welcome back, {{identity}}",
             "couldNotLoad": "Couldn't load request",
+            "connectionExpired": "Reconnection needed",
             "signMessage": "Sign a message",
             "signData": "Sign data"
         },
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} actions, {{unverified}} unverified",
             "reviewMessage": "Review the message this app wants you to sign.",
             "reviewData": "Review the data this app wants you to sign.",
-            "signInWaiting": "A signing request is waiting. Sign in to review it."
+            "signInWaiting": "A signing request is waiting. Sign in to review it.",
+            "connectionExpired": "Your connection session has expired"
         },
         "button": {
             "confirm": "Confirm",
@@ -206,6 +209,9 @@
         "error": {
             "failedToRead": "Failed to read request",
             "failedToSign": "Failed to sign request"
+        },
+        "copy": {
+            "connectionExpiredBody": "Return to the app that opened this window and log in again — your wallet will reconnect automatically, and you can retry the action."
         },
         "privyUi": {
             "signMessage": "Sign message",

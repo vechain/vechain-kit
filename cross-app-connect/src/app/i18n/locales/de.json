@@ -4,7 +4,8 @@
             "back": "Zurück",
             "cancel": "Abbrechen",
             "continue": "Weiter",
-            "continueAnyway": "Trotzdem fortfahren"
+            "continueAnyway": "Trotzdem fortfahren",
+            "close": "Schließen"
         },
         "amount": {
             "unlimited": "Unbegrenzt"
@@ -127,7 +128,8 @@
             "couldNotLoad": "Anfrage konnte nicht geladen werden",
             "signMessage": "Eine Nachricht signieren",
             "signData": "Daten signieren",
-            "welcomeBack": "Willkommen zurück, {{identity}}"
+            "welcomeBack": "Willkommen zurück, {{identity}}",
+            "connectionExpired": "Neue Verbindung erforderlich"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET an {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} Aktionen, {{unverified}} unverifiziert",
             "reviewMessage": "Prüfe die Nachricht, die diese App von dir signiert haben möchte.",
             "reviewData": "Prüfe die Daten, die diese App von dir signiert haben möchte.",
-            "signInWaiting": "Eine Signaturanfrage wartet. Melde dich an, um sie zu prüfen."
+            "signInWaiting": "Eine Signaturanfrage wartet. Melde dich an, um sie zu prüfen.",
+            "connectionExpired": "Deine Verbindungssitzung ist abgelaufen"
         },
         "button": {
             "confirm": "Bestätigen",
@@ -213,6 +216,9 @@
             "signButton": "Signieren",
             "approveVeChainTx": "VeChain-Transaktion bestätigen",
             "signStructuredData": "Strukturierte Daten signieren"
+        },
+        "copy": {
+            "connectionExpiredBody": "Kehre zu der App zurück, die dieses Fenster geöffnet hat, und melde dich erneut an — deine Wallet stellt die Verbindung automatisch wieder her und du kannst die Aktion erneut versuchen."
         }
     },
     "connect": {

@@ -4,7 +4,8 @@
             "back": "वापस",
             "cancel": "रद्द करें",
             "continue": "जारी रखें",
-            "continueAnyway": "फिर भी जारी रखें"
+            "continueAnyway": "फिर भी जारी रखें",
+            "close": "बंद करें"
         },
         "amount": {
             "unlimited": "असीमित"
@@ -127,7 +128,8 @@
             "couldNotLoad": "अनुरोध लोड नहीं हो सका",
             "signMessage": "एक संदेश साइन करें",
             "signData": "डेटा साइन करें",
-            "welcomeBack": "वापस आने पर स्वागत है, {{identity}}"
+            "welcomeBack": "वापस आने पर स्वागत है, {{identity}}",
+            "connectionExpired": "पुनः कनेक्शन आवश्यक"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET को {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} कार्रवाइयाँ, {{unverified}} असत्यापित",
             "reviewMessage": "उस संदेश की समीक्षा करें जिसे यह ऐप आपसे साइन कराना चाहता है।",
             "reviewData": "उस डेटा की समीक्षा करें जिसे यह ऐप आपसे साइन कराना चाहता है।",
-            "signInWaiting": "एक साइनिंग अनुरोध इंतज़ार में है। समीक्षा के लिए साइन इन करें।"
+            "signInWaiting": "एक साइनिंग अनुरोध इंतज़ार में है। समीक्षा के लिए साइन इन करें।",
+            "connectionExpired": "आपका कनेक्शन सत्र समाप्त हो गया है"
         },
         "button": {
             "confirm": "पुष्टि करें",
@@ -213,6 +216,9 @@
             "signButton": "साइन करें",
             "approveVeChainTx": "VeChain लेन-देन स्वीकृत करें",
             "signStructuredData": "संरचित डेटा साइन करें"
+        },
+        "copy": {
+            "connectionExpiredBody": "इस विंडो को खोलने वाले ऐप पर लौटें और फिर से लॉगिन करें — आपका वॉलेट स्वचालित रूप से पुनः कनेक्ट हो जाएगा और आप कार्रवाई पुनः कर सकते हैं।"
         }
     },
     "connect": {

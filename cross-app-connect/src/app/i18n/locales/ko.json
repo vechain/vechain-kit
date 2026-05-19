@@ -4,7 +4,8 @@
             "back": "뒤로",
             "cancel": "취소",
             "continue": "계속",
-            "continueAnyway": "그래도 계속"
+            "continueAnyway": "그래도 계속",
+            "close": "닫기"
         },
         "amount": {
             "unlimited": "무제한"
@@ -127,7 +128,8 @@
             "couldNotLoad": "요청을 불러올 수 없습니다",
             "signMessage": "메시지 서명",
             "signData": "데이터 서명",
-            "welcomeBack": "다시 만나서 반갑습니다, {{identity}}"
+            "welcomeBack": "다시 만나서 반갑습니다, {{identity}}",
+            "connectionExpired": "재연결이 필요합니다"
         },
         "subtitle": {
             "sendVet": "{{recipient}} 에게 {{amount}} VET",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}}개 작업, 이 중 {{unverified}}개 미검증",
             "reviewMessage": "이 앱이 서명을 요청한 메시지를 확인하세요.",
             "reviewData": "이 앱이 서명을 요청한 데이터를 확인하세요.",
-            "signInWaiting": "서명 요청이 대기 중입니다. 로그인하여 검토하세요."
+            "signInWaiting": "서명 요청이 대기 중입니다. 로그인하여 검토하세요.",
+            "connectionExpired": "연결 세션이 만료되었습니다"
         },
         "button": {
             "confirm": "확인",
@@ -213,6 +216,9 @@
             "signButton": "서명",
             "approveVeChainTx": "VeChain 트랜잭션 승인",
             "signStructuredData": "구조화된 데이터 서명"
+        },
+        "copy": {
+            "connectionExpiredBody": "이 창을 연 앱으로 돌아가서 다시 로그인하세요 — 지갑이 자동으로 재연결되어 작업을 다시 시도할 수 있습니다."
         }
     },
     "connect": {

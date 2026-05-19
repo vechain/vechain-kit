@@ -4,7 +4,8 @@
             "back": "Terug",
             "cancel": "Annuleren",
             "continue": "Doorgaan",
-            "continueAnyway": "Toch doorgaan"
+            "continueAnyway": "Toch doorgaan",
+            "close": "Sluiten"
         },
         "amount": {
             "unlimited": "Onbeperkt"
@@ -127,7 +128,8 @@
             "couldNotLoad": "Verzoek kon niet worden geladen",
             "signMessage": "Een bericht ondertekenen",
             "signData": "Data ondertekenen",
-            "welcomeBack": "Welkom terug, {{identity}}"
+            "welcomeBack": "Welkom terug, {{identity}}",
+            "connectionExpired": "Opnieuw verbinden vereist"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET naar {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} acties, {{unverified}} niet geverifieerd",
             "reviewMessage": "Bekijk het bericht dat deze app je wil laten ondertekenen.",
             "reviewData": "Bekijk de data die deze app je wil laten ondertekenen.",
-            "signInWaiting": "Er staat een ondertekeningsverzoek te wachten. Log in om het te bekijken."
+            "signInWaiting": "Er staat een ondertekeningsverzoek te wachten. Log in om het te bekijken.",
+            "connectionExpired": "Je verbindingssessie is verlopen"
         },
         "button": {
             "confirm": "Bevestigen",
@@ -213,6 +216,9 @@
             "signButton": "Ondertekenen",
             "approveVeChainTx": "VeChain-transactie goedkeuren",
             "signStructuredData": "Gestructureerde data ondertekenen"
+        },
+        "copy": {
+            "connectionExpiredBody": "Ga terug naar de app die dit venster heeft geopend en log opnieuw in — je wallet maakt automatisch verbinding en je kunt de actie opnieuw proberen."
         }
     },
     "connect": {

@@ -52,6 +52,7 @@ import {
     getGenericDelegatorUrl,
 } from '@/utils/constants';
 import { Certificate, CertificateData } from '@vechain/sdk-core';
+import { CrossAppErrorRecovery } from './CrossAppErrorRecovery';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 
@@ -821,6 +822,7 @@ export const VeChainKitProvider = (
                                 }
                             >
                                 <ModalProvider>
+                                    <CrossAppErrorRecovery />
                                     <LegalDocumentsProvider>
                                         {children}
                                     </LegalDocumentsProvider>

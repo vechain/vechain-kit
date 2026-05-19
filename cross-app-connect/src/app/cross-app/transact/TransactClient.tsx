@@ -192,7 +192,10 @@ export function TransactClient() {
         null,
     );
     const [parseError, setParseError] = useState<
-        { kind: 'no_params' } | { kind: 'invalid'; message: string } | null
+        | { kind: 'no_params' }
+        | { kind: 'invalid'; message: string }
+        | { kind: 'connection_expired' }
+        | null
     >(null);
     const [block, setBlock] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
@@ -258,19 +261,39 @@ export function TransactClient() {
                 // the existing payload (Web Crypto throws OperationError on
                 // the second fetch attempt — verified). The user has to
                 // re-establish the connection through the kit-using app's
-                // login flow, which re-keys both sides.
+                // login flow, which re-keys both sides — the kit listens for
+                // a postMessage on this window's close and triggers an
+                // automatic logout + re-login to make the next attempt work.
                 console.warn(
                     '[transact] getVerifiedTransactionRequest failed',
                     e,
                 );
+                const msg = errorMessage(e, '');
+                const isNoConnection = /no connection/i.test(msg);
+                if (isNoConnection && typeof window !== 'undefined') {
+                    // Signal the parent (kit-using app) to clear its stale
+                    // session and re-prompt login. The kit listens for this
+                    // postMessage and routes the user through a fresh
+                    // connect flow on their next action.
+                    try {
+                        window.opener?.postMessage(
+                            { type: 'vk:cross-app-no-connection' },
+                            '*',
+                        );
+                    } catch {
+                        /* opener may be cross-origin-blocked; ignore */
+                    }
+                }
                 if (!cancelled)
-                    setParseError({
-                        kind: 'invalid',
-                        message: errorMessage(
-                            e,
-                            t('transact.error.failedToRead'),
-                        ),
-                    });
+                    setParseError(
+                        isNoConnection
+                            ? { kind: 'connection_expired' }
+                            : {
+                                  kind: 'invalid',
+                                  message:
+                                      msg || t('transact.error.failedToRead'),
+                              },
+                    );
             }
         })();
         return () => {
@@ -525,6 +548,35 @@ export function TransactClient() {
                     onCancel={onReject}
                     presetRecent={last?.provider ?? null}
                 />
+            </>
+        );
+    }
+
+    if (parseError?.kind === 'connection_expired') {
+        // The kit-using app encrypted this payload with a connection that
+        // Privy no longer has on file (TTL expired or first-time visitor).
+        // Don't expose the raw "No connection found" string — it reads as
+        // an internal error. Tell the user what actually happened and what
+        // to do next. The parent app has already been notified via
+        // postMessage and will re-prompt login on close.
+        return (
+            <>
+                <VechainHeader
+                    title={t('transact.title.connectionExpired')}
+                    subtitle={t('transact.subtitle.connectionExpired')}
+                />
+                <div className={styles.card}>
+                    <p className={styles.fallbackText}>
+                        {t('transact.copy.connectionExpiredBody')}
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    className={styles.btnGhost}
+                    onClick={onReject}
+                >
+                    {t('common.button.close')}
+                </button>
             </>
         );
     }

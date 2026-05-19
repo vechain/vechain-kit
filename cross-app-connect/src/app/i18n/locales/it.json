@@ -4,7 +4,8 @@
             "back": "Indietro",
             "cancel": "Annulla",
             "continue": "Continua",
-            "continueAnyway": "Continua comunque"
+            "continueAnyway": "Continua comunque",
+            "close": "Chiudi"
         },
         "amount": {
             "unlimited": "Illimitato"
@@ -127,7 +128,8 @@
             "couldNotLoad": "Impossibile caricare la richiesta",
             "signMessage": "Firma un messaggio",
             "signData": "Firma dati",
-            "welcomeBack": "Bentornato, {{identity}}"
+            "welcomeBack": "Bentornato, {{identity}}",
+            "connectionExpired": "Riconnessione necessaria"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET a {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} azioni, {{unverified}} non verificate",
             "reviewMessage": "Controlla il messaggio che questa app vuole farti firmare.",
             "reviewData": "Controlla i dati che questa app vuole farti firmare.",
-            "signInWaiting": "C'è una richiesta di firma in attesa. Accedi per visualizzarla."
+            "signInWaiting": "C'è una richiesta di firma in attesa. Accedi per visualizzarla.",
+            "connectionExpired": "La tua sessione di connessione è scaduta"
         },
         "button": {
             "confirm": "Conferma",
@@ -213,6 +216,9 @@
             "signButton": "Firma",
             "approveVeChainTx": "Approva la transazione VeChain",
             "signStructuredData": "Firma i dati strutturati"
+        },
+        "copy": {
+            "connectionExpiredBody": "Torna sull'app che ha aperto questa finestra e accedi di nuovo — il tuo wallet si riconnetterà automaticamente, e potrai riprovare l'azione."
         }
     },
     "connect": {

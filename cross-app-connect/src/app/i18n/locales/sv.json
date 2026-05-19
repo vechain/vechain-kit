@@ -4,7 +4,8 @@
             "back": "Tillbaka",
             "cancel": "Avbryt",
             "continue": "Fortsätt",
-            "continueAnyway": "Fortsätt ändå"
+            "continueAnyway": "Fortsätt ändå",
+            "close": "Stäng"
         },
         "amount": {
             "unlimited": "Obegränsat"
@@ -127,7 +128,8 @@
             "couldNotLoad": "Kunde inte ladda begäran",
             "signMessage": "Signera ett meddelande",
             "signData": "Signera data",
-            "welcomeBack": "Välkommen tillbaka, {{identity}}"
+            "welcomeBack": "Välkommen tillbaka, {{identity}}",
+            "connectionExpired": "Ny anslutning krävs"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET till {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} åtgärder, {{unverified}} overifierade",
             "reviewMessage": "Granska meddelandet som den här appen vill att du signerar.",
             "reviewData": "Granska datan som den här appen vill att du signerar.",
-            "signInWaiting": "En signeringsbegäran väntar. Logga in för att granska den."
+            "signInWaiting": "En signeringsbegäran väntar. Logga in för att granska den.",
+            "connectionExpired": "Din anslutningssession har gått ut"
         },
         "button": {
             "confirm": "Bekräfta",
@@ -213,6 +216,9 @@
             "signButton": "Signera",
             "approveVeChainTx": "Godkänn VeChain-transaktionen",
             "signStructuredData": "Signera strukturerade data"
+        },
+        "copy": {
+            "connectionExpiredBody": "Gå tillbaka till appen som öppnade detta fönster och logga in igen — din plånbok återansluts automatiskt och du kan försöka utföra åtgärden på nytt."
         }
     },
     "connect": {

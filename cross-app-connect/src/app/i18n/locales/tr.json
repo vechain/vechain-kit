@@ -4,7 +4,8 @@
             "back": "Geri",
             "cancel": "İptal",
             "continue": "Devam",
-            "continueAnyway": "Yine de devam et"
+            "continueAnyway": "Yine de devam et",
+            "close": "Kapat"
         },
         "amount": {
             "unlimited": "Sınırsız"
@@ -127,7 +128,8 @@
             "couldNotLoad": "İstek yüklenemedi",
             "signMessage": "Bir mesaj imzala",
             "signData": "Veri imzala",
-            "welcomeBack": "Tekrar hoş geldin, {{identity}}"
+            "welcomeBack": "Tekrar hoş geldin, {{identity}}",
+            "connectionExpired": "Yeniden bağlantı gerekli"
         },
         "subtitle": {
             "sendVet": "{{recipient}} adresine {{amount}} VET",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} işlem, {{unverified}} doğrulanmamış",
             "reviewMessage": "Bu uygulamanın imzalamanı istediği mesajı incele.",
             "reviewData": "Bu uygulamanın imzalamanı istediği veriyi incele.",
-            "signInWaiting": "Bir imzalama isteği bekliyor. İncelemek için giriş yap."
+            "signInWaiting": "Bir imzalama isteği bekliyor. İncelemek için giriş yap.",
+            "connectionExpired": "Bağlantı oturumunuzun süresi doldu"
         },
         "button": {
             "confirm": "Onayla",
@@ -213,6 +216,9 @@
             "signButton": "İmzala",
             "approveVeChainTx": "VeChain işlemini onayla",
             "signStructuredData": "Yapılandırılmış veriyi imzala"
+        },
+        "copy": {
+            "connectionExpiredBody": "Bu pencereyi açan uygulamaya geri dönün ve tekrar giriş yapın — cüzdanınız otomatik olarak yeniden bağlanacak ve işlemi tekrar deneyebileceksiniz."
         }
     },
     "connect": {

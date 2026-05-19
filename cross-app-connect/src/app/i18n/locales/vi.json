@@ -4,7 +4,8 @@
             "back": "Quay lại",
             "cancel": "Hủy",
             "continue": "Tiếp tục",
-            "continueAnyway": "Vẫn tiếp tục"
+            "continueAnyway": "Vẫn tiếp tục",
+            "close": "Đóng"
         },
         "amount": {
             "unlimited": "Không giới hạn"
@@ -127,7 +128,8 @@
             "couldNotLoad": "Không thể tải yêu cầu",
             "signMessage": "Ký một thông điệp",
             "signData": "Ký dữ liệu",
-            "welcomeBack": "Chào mừng trở lại, {{identity}}"
+            "welcomeBack": "Chào mừng trở lại, {{identity}}",
+            "connectionExpired": "Cần kết nối lại"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET đến {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} hành động, {{unverified}} chưa xác minh",
             "reviewMessage": "Xem lại thông điệp mà ứng dụng này muốn bạn ký.",
             "reviewData": "Xem lại dữ liệu mà ứng dụng này muốn bạn ký.",
-            "signInWaiting": "Có một yêu cầu ký đang chờ. Đăng nhập để xem lại."
+            "signInWaiting": "Có một yêu cầu ký đang chờ. Đăng nhập để xem lại.",
+            "connectionExpired": "Phiên kết nối của bạn đã hết hạn"
         },
         "button": {
             "confirm": "Xác nhận",
@@ -213,6 +216,9 @@
             "signButton": "Ký",
             "approveVeChainTx": "Phê duyệt giao dịch VeChain",
             "signStructuredData": "Ký dữ liệu có cấu trúc"
+        },
+        "copy": {
+            "connectionExpiredBody": "Quay lại ứng dụng đã mở cửa sổ này và đăng nhập lại — ví của bạn sẽ tự động kết nối lại và bạn có thể thử lại thao tác."
         }
     },
     "connect": {

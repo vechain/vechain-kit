@@ -4,7 +4,8 @@
             "back": "Atrás",
             "cancel": "Cancelar",
             "continue": "Continuar",
-            "continueAnyway": "Continuar de todos modos"
+            "continueAnyway": "Continuar de todos modos",
+            "close": "Cerrar"
         },
         "amount": {
             "unlimited": "Ilimitado"
@@ -127,7 +128,8 @@
             "couldNotLoad": "No se pudo cargar la solicitud",
             "signMessage": "Firmar un mensaje",
             "signData": "Firmar datos",
-            "welcomeBack": "Bienvenido de nuevo, {{identity}}"
+            "welcomeBack": "Bienvenido de nuevo, {{identity}}",
+            "connectionExpired": "Reconexión necesaria"
         },
         "subtitle": {
             "sendVet": "{{amount}} VET a {{recipient}}",
@@ -147,7 +149,8 @@
             "actionsWithUnverified": "{{count}} acciones, {{unverified}} sin verificar",
             "reviewMessage": "Revisa el mensaje que esta app quiere que firmes.",
             "reviewData": "Revisa los datos que esta app quiere que firmes.",
-            "signInWaiting": "Hay una solicitud de firma esperando. Inicia sesión para revisarla."
+            "signInWaiting": "Hay una solicitud de firma esperando. Inicia sesión para revisarla.",
+            "connectionExpired": "Tu sesión de conexión ha caducado"
         },
         "button": {
             "confirm": "Confirmar",
@@ -213,6 +216,9 @@
             "signButton": "Firmar",
             "approveVeChainTx": "Aprobar transacción VeChain",
             "signStructuredData": "Firmar datos estructurados"
+        },
+        "copy": {
+            "connectionExpiredBody": "Vuelve a la aplicación que abrió esta ventana e inicia sesión de nuevo — tu monedero se reconectará automáticamente y podrás reintentar la acción."
         }
     },
     "connect": {
