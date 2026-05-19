@@ -36,13 +36,14 @@ import {
     useFetchAppInfo,
     useLoginWithOAuth,
     useLoginWithPasskey,
+    useLoginWithVeChain,
     usePrivy,
     useConnectWithDappKitSource,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { isRejectionError } from '@/utils/stringUtils';
-import { VeWorldLogoLight } from '@/assets';
+import { VechainLogoDark, VechainLogoLight, VeWorldLogoLight } from '@/assets';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useDisclosure } from '@chakra-ui/react';
@@ -213,6 +214,7 @@ export const MoreOptionsContent = ({
     const { loginWithPasskey } = useLoginWithPasskey();
     const { setConnectionCache } = useCrossAppConnectionCache();
     const { login: loginWithCrossApp } = usePrivyCrossAppSdk();
+    const { login: loginWithVeChain } = useLoginWithVeChain();
 
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
@@ -263,6 +265,41 @@ export const MoreOptionsContent = ({
     const ecosystemApps = Object.values(appsInfo || {});
     const showEcosystemSection =
         !!privy && (isEcosystemAppsLoading || ecosystemApps.length > 0);
+
+    // The "Continue with VeChain" cross-app picker. Works without a `privy`
+    // prop because it routes through the whitelabel popup (VECHAIN_PRIVY_APP_ID).
+    // Surface it in the More sub-view whenever the dev didn't pin `vechain`
+    // to the main grid — without Privy + without this row, an opt-out dapp
+    // that ships {google, apple, more} would leave the user with no path to
+    // the broader VeChain picker.
+    const showVeChainHere = !onMainGrid('vechain');
+
+    const handleLoginWithVeChain = async () => {
+        setCurrentContent({
+            type: 'loading',
+            props: {
+                title: t('Connecting to VeChain'),
+                loadingText: t(
+                    'Please approve the request in the connection request window...',
+                ),
+                onTryAgain: handleLoginWithVeChain,
+            },
+        });
+        try {
+            await loginWithVeChain();
+        } catch (error) {
+            setCurrentContent({
+                type: 'error',
+                props: {
+                    error:
+                        error instanceof Error
+                            ? error.message
+                            : t('Failed to connect with VeChain'),
+                    onTryAgain: handleLoginWithVeChain,
+                },
+            });
+        }
+    };
 
     const handleLoginWithPasskey = async () => {
         setCurrentContent({
@@ -395,6 +432,34 @@ export const MoreOptionsContent = ({
 
             <ModalBody>
                 <VStack spacing={6} w={'full'} align={'stretch'}>
+                    {showVeChainHere && (
+                        <Box>
+                            <SectionLabel>
+                                {t('Login with VeChain')}
+                            </SectionLabel>
+                            <VStack spacing={1} w={'full'} align={'stretch'}>
+                                <ProviderRow
+                                    customIcon={
+                                        isDark ? (
+                                            <VechainLogoLight
+                                                w={'20px'}
+                                                h={'20px'}
+                                            />
+                                        ) : (
+                                            <VechainLogoDark
+                                                w={'20px'}
+                                                h={'20px'}
+                                            />
+                                        )
+                                    }
+                                    label={t('Continue with VeChain')}
+                                    onClick={handleLoginWithVeChain}
+                                    iconBg={brandInverseBg}
+                                />
+                            </VStack>
+                        </Box>
+                    )}
+
                     {showWalletsSection && (
                         <Box>
                             <SectionLabel>{t('Other wallets')}</SectionLabel>
@@ -635,7 +700,8 @@ export const MoreOptionsContent = ({
                         </Box>
                     )}
 
-                    {!showWalletsSection &&
+                    {!showVeChainHere &&
+                        !showWalletsSection &&
                         !showSocialsSection &&
                         !showEcosystemSection && (
                             <Text

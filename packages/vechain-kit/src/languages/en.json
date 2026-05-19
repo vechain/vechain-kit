@@ -491,5 +491,7 @@
   "Send NFT": "Send NFT",
   "{{count}} item": "{{count}} item",
   "{{count}} items": "{{count}} items",
-  "Continue with Email": "Continue with Email"
+  "Continue with Email": "Continue with Email",
+  "Login with VeChain": "Login with VeChain",
+  "Continue with VeChain": "Continue with VeChain"
 }

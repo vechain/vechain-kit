@@ -342,14 +342,16 @@ const validateConfig = (
     // Validate login methods if Privy is not configured.
     // Most OAuth providers fall back to the VeChain whitelabel cross-app
     // flow (via useLoginWithVeChain({ intent })) when no privy prop is set.
-    // Email, passkey, and 'more' have no cross-app fallback -- VeChain
-    // has email disabled in its Privy app, so cross-app-connect doesn't
-    // surface it either.
+    // Email and passkey have no cross-app fallback -- VeChain has email
+    // disabled in its Privy app, so cross-app-connect doesn't surface it
+    // either. `more` is allowed: the More sub-view gracefully degrades to
+    // whatever is available (dapp-kit wallets in `allowedWallets` that
+    // aren't on the main grid, plus a "Continue with VeChain" cross-app
+    // picker entry when `vechain` isn't on the main grid).
     if (validatedProps.loginMethods) {
         if (!validatedProps.privy) {
             const invalidMethods = validatedProps.loginMethods.filter(
-                (method) =>
-                    ['email', 'passkey', 'more'].includes(method.method),
+                (method) => ['email', 'passkey'].includes(method.method),
             );
 
             if (invalidMethods.length > 0) {
