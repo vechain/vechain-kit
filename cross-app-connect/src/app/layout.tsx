@@ -13,6 +13,27 @@ const colorModeScript = `(function(){try{var d=window.matchMedia('(prefers-color
 
 export const metadata = {
     title: 'VeChain Connect',
+    icons: {
+        // Switch the favicon variant on prefers-color-scheme so the
+        // VeChain logomark stays legible against both light and dark
+        // browser tab UIs. The `dark` glyph is for light tabs (dark V
+        // on light); the `light` glyph is for dark tabs (white V on
+        // dark). Reuses the existing 300×300 PNGs in public/brand/.
+        icon: [
+            {
+                url: '/brand/vechain-logomark-dark.png',
+                media: '(prefers-color-scheme: light)',
+            },
+            {
+                url: '/brand/vechain-logomark-light.png',
+                media: '(prefers-color-scheme: dark)',
+            },
+        ],
+        // iOS Add-to-Home-Screen — Apple doesn't honour prefers-color-scheme
+        // here, so we always send the dark glyph (which reads against the
+        // typical white home-screen tile).
+        apple: '/brand/vechain-logomark-dark.png',
+    },
 };
 
 export default function RootLayout({
