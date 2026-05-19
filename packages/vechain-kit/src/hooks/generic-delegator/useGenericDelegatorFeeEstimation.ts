@@ -1,9 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { EstimationResponse } from '@/types/gasEstimation';
 import { EnhancedClause, GasTokenType } from '@/types';
-import { useSmartAccount, useWallet, estimateGas, useTokenBalances, useGasTokenSelection } from '@/hooks';
+import {
+    useSmartAccount,
+    useWallet,
+    estimateGas,
+    useTokenBalances,
+    useGasTokenSelection,
+    useGetAccountVersion,
+    computeCorrectedGasTokenCost,
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TransactionClause } from '@vechain/sdk-core';
+import { ThorClient } from '@vechain/sdk-network';
+import { getConfig } from '@/config';
 
 export interface useGenericDelegatorFeeEstimationParams {
     clauses: EnhancedClause[];
@@ -24,12 +34,17 @@ export const useGenericDelegatorFeeEstimation = ({
     const { data: smartAccount } = useSmartAccount(
         connectedWallet?.address ?? '',
     );
-    const { feeDelegation } = useVeChainKitConfig();
+    const { data: smartAccountVersion } = useGetAccountVersion(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+    );
+    const { feeDelegation, network } = useVeChainKitConfig();
     const { balances } = useTokenBalances(account?.address ?? '');
     const { updatePreferences } = useGasTokenSelection();
+    const thor = ThorClient.at(getConfig(network.type).nodeUrl);
     // Only include essential data in query key to prevent unnecessary refetches
     const queryKey = ['gas-estimation', JSON.stringify(clauses), JSON.stringify(tokens), sendingAmount, sendingTokenSymbol];
-    
+
     return useQuery<EstimationResponse & { usedToken: string }, Error>({
         queryKey,
         queryFn: async () => {
@@ -44,20 +59,30 @@ export const useGenericDelegatorFeeEstimation = ({
                         token as GasTokenType,
                         'medium',
                     );
-                    // Check if user has enough balance for this token
-                    const gasCost = estimation.transactionCost;
+                    // The delegator's `transactionCost` is computed from a
+                    // simulation that omits the smart-account auth wrapper
+                    // and can underestimate (or revert outright). Recompute
+                    // locally so the UI agrees with the actual send path.
+                    const gasCost = await computeCorrectedGasTokenCost({
+                        thor,
+                        clauses: clauses as TransactionClause[],
+                        smartAccountAddress: smartAccount?.address ?? '',
+                        version: smartAccountVersion?.version ?? 0,
+                        estimationResponse: estimation,
+                        gasToken: token as GasTokenType,
+                    });
                     const tokenBalance = Number(balances.find(t => t.symbol === token)?.balance || 0);
                     // If sending the same token as gas token, need balance for both
                     // If no sendingAmount is provided, we're only checking for gas fees
-                    const additionalAmount = (sendingAmount && sendingTokenSymbol && token === sendingTokenSymbol) 
+                    const additionalAmount = (sendingAmount && sendingTokenSymbol && token === sendingTokenSymbol)
                         ? Number(sendingAmount)
                         : 0;
                     const requiredBalance = gasCost + additionalAmount;
-                    
+
                     if (tokenBalance >= requiredBalance) {
                         // Has enough balance, return this token
                         updatePreferences({ gasTokenToUse: token as GasTokenType });
-                        return { ...estimation, usedToken: token };
+                        return { ...estimation, transactionCost: gasCost, usedToken: token };
                     }
                     // Not enough balance, try next token
                     lastError = new Error(`Insufficient ${token} balance: has ${tokenBalance}, needs ${requiredBalance}`);

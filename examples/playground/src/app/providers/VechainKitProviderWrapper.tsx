@@ -238,9 +238,9 @@ export function VechainKitProviderWrapper({ children }: Props) {
             //     vot3ContractAddress:
             //         '0xf7a08af15cb3501feee53ebe11f4428a966fa459',
             // }}
-            feeDelegation={{
-                delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
-            }}
+            // feeDelegation={{
+            //     delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
+            // }}
         >
             <LanguageSync>{children}</LanguageSync>
         </VeChainKitProvider>

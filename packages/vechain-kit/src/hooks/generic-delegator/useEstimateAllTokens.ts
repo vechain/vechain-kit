@@ -1,8 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { GasTokenType } from '@/types';
-import { useSmartAccount, useWallet, estimateGas } from '@/hooks';
+import {
+    useSmartAccount,
+    useWallet,
+    estimateGas,
+    useGetAccountVersion,
+    computeCorrectedGasTokenCost,
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TransactionClause } from '@vechain/sdk-core';
+import { ThorClient } from '@vechain/sdk-network';
+import { getConfig } from '@/config';
 
 export interface UseEstimateAllTokensParams {
     clauses: TransactionClause[];
@@ -19,7 +27,12 @@ export const useEstimateAllTokens = ({
     const { data: smartAccount } = useSmartAccount(
         connectedWallet?.address ?? '',
     );
-    const { feeDelegation } = useVeChainKitConfig();
+    const { data: smartAccountVersion } = useGetAccountVersion(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+    );
+    const { feeDelegation, network } = useVeChainKitConfig();
+    const thor = ThorClient.at(getConfig(network.type).nodeUrl);
 
     return useQuery({
         queryKey: [
@@ -43,8 +56,16 @@ export const useEstimateAllTokens = ({
                             token,
                             'medium',
                         );
+                        const correctedCost = await computeCorrectedGasTokenCost({
+                            thor,
+                            clauses,
+                            smartAccountAddress: smartAccount?.address ?? '',
+                            version: smartAccountVersion?.version ?? 0,
+                            estimationResponse: estimation,
+                            gasToken: token,
+                        });
                         estimates[token] = {
-                            cost: estimation.transactionCost || 0,
+                            cost: correctedCost || 0,
                             loading: false,
                         };
                     } catch (error) {
