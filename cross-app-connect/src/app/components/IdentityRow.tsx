@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAddressInfo } from '../cross-app/_lib/useAddressInfo';
 import { truncateAddress } from '../cross-app/_lib/format';
+import { labelFromPrivyUser } from '../cross-app/_lib/lastIdentity';
 import { linkedSocials } from './socials';
 import styles from './IdentityRow.module.css';
 
@@ -26,19 +27,12 @@ type Props = {
     pendingLabel?: ReactNode;
 };
 
-type PrivyUserShape = {
-    id?: string;
-    email?: { address?: string } | null;
-    google?: { email?: string } | null;
-    phone?: unknown;
-    farcaster?: unknown;
-};
-
 /**
- * Shared "your account" card: avatar + display name (email or Privy id) +
- * linked-social icon badges + the smart-account address (with .vet domain
- * when one is set). Used on both the connect confirm screen and the
- * transact/sign popups so the user sees a consistent identity treatment.
+ * Shared "your account" card: avatar + display name (email / phone / social
+ * handle / truncated DID) + linked-social icon badges + the smart-account
+ * address (with .vet domain when one is set). Used on both the connect
+ * confirm screen and the transact/sign popups so the user sees a
+ * consistent identity treatment.
  */
 export function IdentityRow({
     walletAddress,
@@ -47,9 +41,13 @@ export function IdentityRow({
 }: Props) {
     const { t } = useTranslation();
     const { domain, avatar, isLoading } = useAddressInfo(walletAddress);
-    const u = user as PrivyUserShape | null | undefined;
-    const email = u?.email?.address ?? u?.google?.email ?? u?.id;
-    const linked = linkedSocials(u);
+    // Reuse the kit-wide identity resolver — same logic as the "Welcome
+    // back" greeting, so a user logged in via X (Twitter) sees @handle
+    // here too instead of a raw did:privy:… string.
+    const displayName = labelFromPrivyUser(user);
+    const linked = linkedSocials(
+        user as { phone?: unknown; farcaster?: unknown } | null | undefined,
+    );
     const walletPending = !walletAddress || isLoading;
 
     return (
@@ -70,8 +68,11 @@ export function IdentityRow({
             )}
             <div className={styles.body}>
                 <div className={styles.head}>
-                    <p className={styles.name} title={email ?? undefined}>
-                        {email ?? t('identity.signedIn')}
+                    <p
+                        className={styles.name}
+                        title={displayName ?? undefined}
+                    >
+                        {displayName ?? t('identity.signedIn')}
                     </p>
                     {linked.length > 0 && (
                         <span className={styles.badges}>
