@@ -123,6 +123,29 @@ function decodePersonalSignMessage(raw: string): string {
     }
 }
 
+/**
+ * Reconstruct a `CrossAppConnectionRequest` from the transact popup's URL
+ * params. The Privy SDK builds the transact URL with `requester_public_key`
+ * and `requester_origin` — exactly the two fields that
+ * `acceptConnection({ connectionRequest })` requires. Used as a fallback
+ * when `getVerifiedTransactionRequest` fails with "No connection found":
+ * we create the missing connection record inline and retry.
+ */
+function connectionRequestFromTransactUrl():
+    | { requesterPublicKey: string; callbackUrl: string }
+    | null {
+    if (typeof window === 'undefined') return null;
+    try {
+        const params = new URL(window.location.href).searchParams;
+        const requesterPublicKey = params.get('requester_public_key');
+        const callbackUrl = params.get('requester_origin');
+        if (!requesterPublicKey || !callbackUrl) return null;
+        return { requesterPublicKey, callbackUrl };
+    } catch {
+        return null;
+    }
+}
+
 function parseClauses(typedData: SmartAccountTypedData): Clause[] {
     const { to, value, data } = typedData.message;
     if (Array.isArray(to)) {
@@ -233,6 +256,51 @@ export function TransactClient() {
                 });
                 if (!cancelled) setVerified(data);
             } catch (e) {
+                // "No connection found for requester" means the user has a
+                // valid Privy session but no recorded connection to *this*
+                // requester app yet — the case where they're transacting
+                // before ever doing a connect popup. The cross-app SDK
+                // accepts a `CrossAppConnectionRequest = { requesterPublicKey,
+                // callbackUrl }` that we can reconstruct from the transact
+                // URL params: `requester_public_key` and `requester_origin`
+                // already carry both. Create the connection inline, then
+                // retry. Avoids falling back to Privy's modal.
+                const noConnection =
+                    e instanceof Error && /no connection/i.test(e.message);
+                if (noConnection && embedded?.address) {
+                    try {
+                        const connReq =
+                            connectionRequestFromTransactUrl();
+                        if (!connReq) throw e;
+                        const accessToken = await getAccessToken();
+                        if (!accessToken)
+                            throw new Error(
+                                t('connect.error.missingAccessToken'),
+                            );
+                        await client.acceptConnection({
+                            accessToken,
+                            address: embedded.address,
+                            userId: user.id,
+                            connectionRequest: connReq,
+                        });
+                        const data =
+                            await client.getVerifiedTransactionRequest({
+                                userId: user.id,
+                            });
+                        if (!cancelled) setVerified(data);
+                        return;
+                    } catch (retryErr) {
+                        if (!cancelled)
+                            setParseError({
+                                kind: 'invalid',
+                                message:
+                                    retryErr instanceof Error
+                                        ? retryErr.message
+                                        : t('transact.error.failedToRead'),
+                            });
+                        return;
+                    }
+                }
                 if (!cancelled)
                     setParseError({
                         kind: 'invalid',
@@ -246,7 +314,14 @@ export function TransactClient() {
         return () => {
             cancelled = true;
         };
-    }, [client, authenticated, user?.id]);
+    }, [
+        client,
+        authenticated,
+        user?.id,
+        embedded?.address,
+        getAccessToken,
+        t,
+    ]);
 
     const parsed = useMemo<ParsedRequest | null>(() => {
         if (!verified) return null;
