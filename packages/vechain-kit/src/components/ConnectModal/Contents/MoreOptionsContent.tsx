@@ -43,12 +43,7 @@ import {
 import { useVeChainKitConfig } from '@/providers';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { isRejectionError } from '@/utils/stringUtils';
-import {
-    VechainLogoDark,
-    VechainLogoLight,
-    VeWorldLogoDark,
-    VeWorldLogoLight,
-} from '@/assets';
+import { VeWorldLogoDark, VeWorldLogoLight } from '@/assets';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useDisclosure } from '@chakra-ui/react';
@@ -505,22 +500,11 @@ export const MoreOptionsContent = ({
                             </SectionLabel>
                             <VStack spacing={1} w={'full'} align={'stretch'}>
                                 <ProviderRow
-                                    customIcon={
-                                        isDark ? (
-                                            <VechainLogoLight
-                                                w={'20px'}
-                                                h={'20px'}
-                                            />
-                                        ) : (
-                                            <VechainLogoDark
-                                                w={'20px'}
-                                                h={'20px'}
-                                            />
-                                        )
-                                    }
-                                    label={t('Login with social')}
+                                    icon={LuEllipsis}
+                                    label={t('View more')}
                                     onClick={handleLoginWithVeChain}
-                                    iconBg={brandInverseBg}
+                                    iconBg={secondaryBg}
+                                    iconColor={textPrimary}
                                 />
                             </VStack>
                         </Box>
