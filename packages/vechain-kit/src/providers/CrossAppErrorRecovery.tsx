@@ -21,13 +21,13 @@ export function CrossAppErrorRecovery() {
     const { openConnectModal } = useModal();
 
     useEffect(() => {
+        console.log('[vechain-kit] CrossAppErrorRecovery listener installed');
         function handle(event: MessageEvent) {
-            if (
-                !event.data ||
-                typeof event.data !== 'object' ||
-                (event.data as { type?: unknown }).type !==
-                    'vk:cross-app-no-connection'
-            ) {
+            const type = (event.data as { type?: unknown } | null)?.type;
+            if (typeof type === 'string' && type.startsWith('vk:')) {
+                console.log('[vechain-kit] received vk message', type);
+            }
+            if (type !== 'vk:cross-app-no-connection') {
                 return;
             }
             console.warn(
@@ -46,7 +46,12 @@ export function CrossAppErrorRecovery() {
             })();
         }
         window.addEventListener('message', handle);
-        return () => window.removeEventListener('message', handle);
+        return () => {
+            console.log(
+                '[vechain-kit] CrossAppErrorRecovery listener removed',
+            );
+            window.removeEventListener('message', handle);
+        };
     }, [disconnect, openConnectModal]);
 
     return null;
