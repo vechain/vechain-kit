@@ -74,6 +74,8 @@ jobs:
                   # popup needs them to construct the Privy client. The build
                   # tolerates missing values but won't run end-to-end without
                   # them — sufficient to verify the bundle compiles cleanly.
-                  NEXT_PUBLIC_PRIVY_APP_ID: ${{ vars.NEXT_PUBLIC_PRIVY_APP_ID }}
-                  NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ vars.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
-                  NEXT_PUBLIC_PRIVY_DOMAIN: ${{ vars.NEXT_PUBLIC_PRIVY_DOMAIN }}
+                  # See `cross-app-connect-deploy.yaml` for the rationale —
+                  # NEXT_PUBLIC_* values live in Secrets on this repo.
+                  NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
+                  NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
+                  NEXT_PUBLIC_PRIVY_DOMAIN: ${{ secrets.NEXT_PUBLIC_PRIVY_DOMAIN }}

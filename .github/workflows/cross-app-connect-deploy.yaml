@@ -42,9 +42,13 @@ jobs:
             - name: Build (cross-app-connect)
               run: yarn workspace cross-app-connect build
               env:
-                  NEXT_PUBLIC_PRIVY_APP_ID: ${{ vars.NEXT_PUBLIC_PRIVY_APP_ID }}
-                  NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ vars.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
-                  NEXT_PUBLIC_PRIVY_DOMAIN: ${{ vars.NEXT_PUBLIC_PRIVY_DOMAIN }}
+                  # `NEXT_PUBLIC_*` values end up in the client bundle, so
+                  # they're not actually sensitive — but they're stored on
+                  # this repo as Secrets, so read them from `secrets.*`
+                  # (not `vars.*`) at build time.
+                  NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
+                  NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
+                  NEXT_PUBLIC_PRIVY_DOMAIN: ${{ secrets.NEXT_PUBLIC_PRIVY_DOMAIN }}
                   # Empty when a custom domain is set up in repo Settings →
                   # Pages. Override to `/vechain-kit` (or whatever the repo
                   # name is) if you want to test at the default
