@@ -84,7 +84,11 @@ export const TransactionModalContent = ({
         return (
             <StatusScreen
                 status={'success'}
-                title={t('Transaction successful!')}
+                title={t('Operation successful')}
+                description={
+                    uiConfig?.description ??
+                    t('Your action has been completed and recorded on-chain.')
+                }
                 bodyExtras={
                     uiConfig?.showShareOnSocials && txReceipt?.meta.txID ? (
                         <VStack spacing={3} pt={1}>
@@ -112,7 +116,10 @@ export const TransactionModalContent = ({
             <StatusScreen
                 status={'error'}
                 title={t('Something went wrong')}
-                description={errorMessage ?? t('An unexpected error occurred.')}
+                description={
+                    errorMessage ??
+                    t("We couldn't complete this action. Please try again.")
+                }
                 actions={
                     <VStack spacing={3} width={'full'}>
                         {onTryAgain && (

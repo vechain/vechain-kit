@@ -100,12 +100,24 @@ export const SendTokenSummaryContent = ({
 
     const handleSuccess = React.useCallback(
         (txId: string) => {
+            const recipientLabel =
+                resolvedDomain || resolvedAddress || toAddressOrDomain;
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
                     setCurrentContent,
                     txId,
-                    title: t('Transaction successful'),
+                    title: t('Tokens sent'),
+                    description: t(
+                        '{{amount}} {{symbol}} is on its way to {{recipient}}.',
+                        {
+                            amount: Number(amount).toLocaleString(undefined, {
+                                maximumFractionDigits: 6,
+                            }),
+                            symbol: selectedToken.symbol,
+                            recipient: recipientLabel,
+                        },
+                    ),
                     onDone: () => {
                         if (isolatedView) {
                             closeAccountModal();
@@ -117,7 +129,17 @@ export const SendTokenSummaryContent = ({
                 },
             });
         },
-        [setCurrentContent, t, isolatedView, closeAccountModal],
+        [
+            setCurrentContent,
+            t,
+            isolatedView,
+            closeAccountModal,
+            amount,
+            selectedToken.symbol,
+            resolvedDomain,
+            resolvedAddress,
+            toAddressOrDomain,
+        ],
     );
 
     const {

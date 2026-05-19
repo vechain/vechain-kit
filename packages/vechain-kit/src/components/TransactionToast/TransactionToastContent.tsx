@@ -110,7 +110,7 @@ export const TransactionToastContent = ({
                             data-testid="success-icon-toast"
                         />
                     ),
-                    title: t('Transaction successful!'),
+                    title: t('Operation successful'),
                     closeDisabled: false,
                     description: undefined,
                 };
