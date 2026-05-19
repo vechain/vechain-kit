@@ -27,18 +27,6 @@
     max-width: 24rem;
 }
 
-.titleRow {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.titleIcon {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-}
-
 .title {
     font-family: var(--font-heading);
     font-weight: 600;

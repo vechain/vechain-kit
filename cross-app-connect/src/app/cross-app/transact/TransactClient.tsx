@@ -2,14 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-    LuChevronDown,
-    LuChevronUp,
-    LuShieldAlert,
-    LuShieldCheck,
-    LuShieldX,
-} from 'react-icons/lu';
-import type { IconType } from 'react-icons';
+import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import type { VerifiedTransactionRequest } from '@privy-io/cross-app-provider/connect';
 import { formatUnits } from 'viem';
@@ -42,15 +35,6 @@ import {
     type SmartAccountInfo,
 } from '../_lib/thor';
 import styles from './transact.module.css';
-
-const RISK_SHIELD: Record<
-    Risk,
-    { Icon: IconType; color: string }
-> = {
-    safe: { Icon: LuShieldCheck, color: 'var(--accent)' },
-    caution: { Icon: LuShieldAlert, color: 'var(--warn)' },
-    danger: { Icon: LuShieldX, color: 'var(--danger)' },
-};
 
 const SUPPORTED_METHODS = [
     'eth_signTypedData_v4',
@@ -648,7 +632,6 @@ export function TransactClient() {
             (d) => d.kind === 'token_approve' && d.unlimited,
         ) ?? false);
     const risk: Risk = isSmartAccount ? computeRisk(decoded, blocked) : 'safe';
-    const { Icon: ShieldIcon, color: shieldColor } = RISK_SHIELD[risk];
     const title = isSmartAccount
         ? titleForActions(decoded, blocked)
         : parsed.kind === 'message'
@@ -678,8 +661,6 @@ export function TransactClient() {
         <>
             <VechainHeader
                 title={title}
-                titleIcon={ShieldIcon}
-                titleIconColor={shieldColor}
                 subtitle={subtitle}
                 requesterUrl={verified.connection.callbackUrl}
             />
