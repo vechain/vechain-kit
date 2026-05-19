@@ -12,25 +12,14 @@ import {
     Spinner,
     useToken,
 } from '@chakra-ui/react';
-import { ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import {
-    LuExternalLink,
-    LuCircleCheck,
-    LuCircleAlert,
-    LuRefreshCw,
-} from 'react-icons/lu';
+import { LuExternalLink, LuRefreshCw } from 'react-icons/lu';
 import { ShareButtons } from './Components/ShareButtons';
-import { StickyHeaderContainer } from '../common';
+import { StatusScreen, StickyHeaderContainer } from '../common';
 import { TransactionModalProps } from './TransactionModal';
-
-type StatusConfig = {
-    title: ReactNode;
-    icon: ReactNode;
-    description: string;
-};
 
 export const TransactionModalContent = ({
     status,
@@ -43,199 +32,177 @@ export const TransactionModalContent = ({
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
 
-    const errorColor = useToken('colors', 'vechain-kit-error');
-    const successColor = useToken('colors', 'vechain-kit-success');
-    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
 
     const errorMessage = useMemo(() => {
         if (!txError) return null;
         return (
-            (txError as any).reason ||
+            (txError as unknown as { reason?: string }).reason ||
             t('Something went wrong. Please try again.')
         );
     }, [txError, t]);
 
-    const getStatusConfig = (): StatusConfig => {
-        // overwrite status to avoid flickering
-        const isSendingTransaction = status === 'waitingConfirmation';
-        if (isSendingTransaction) {
-            status = 'pending';
-        }
-        switch (status) {
-            case 'pending':
-                return {
-                    title:
-                        uiConfig?.title ??
-                        (isSendingTransaction
-                            ? t('Sending Transaction...')
-                            : t('Waiting for confirmation')),
-                    icon: uiConfig?.loadingIcon ?? (
-                        <Spinner
-                            size="xl"
-                            data-testid="pending-spinner-modal"
-                        />
-                    ),
-                    description: isSendingTransaction
-                        ? t(
-                              'Transaction is being processed, it can take up to 15 seconds.',
-                          )
-                        : uiConfig?.description ??
-                          t('Please confirm the transaction in your wallet.'),
-                };
-            case 'error':
-                return {
-                    title: t('Something went wrong'),
-                    icon: uiConfig?.errorIcon ?? (
-                        <Icon
-                            as={LuCircleAlert}
-                            color={errorColor}
-                            fontSize="100px"
-                            data-testid="error-icon-modal"
-                        />
-                    ),
-                    description:
-                        errorMessage ?? t('An unexpected error occurred.'),
-                };
-            case 'success':
-                return {
-                    title: t('Transaction successful!'),
-                    icon: uiConfig?.successIcon ?? (
-                        <Icon
-                            as={LuCircleCheck}
-                            color={successColor}
-                            fontSize="100px"
-                            data-testid="success-icon-modal"
-                        />
-                    ),
-                    description: '',
-                };
-            case 'ready':
-                return {
-                    title: uiConfig?.title ?? t('Confirm transaction'),
-                    icon: null,
-                    description:
-                        uiConfig?.description ??
-                        t(
-                            'Confirm the transaction in your wallet to complete it.',
-                        ),
-                };
-            default:
-                return {
-                    title: '',
-                    icon: null,
-                    description: '',
-                };
-        }
-    };
+    const explorerUrl = getConfig(network.type).explorerUrl;
+    const socialDescription = `${explorerUrl}/${txReceipt?.meta.txID}`;
 
-    const statusConfig = getStatusConfig();
-    const socialDescription = `${getConfig(network.type).explorerUrl}/${
-        txReceipt?.meta.txID
-    }`;
+    const explorerLink = uiConfig?.showExplorerButton &&
+        txReceipt?.meta.txID && (
+            <Link
+                href={`${explorerUrl}/${txReceipt.meta.txID}`}
+                isExternal
+                opacity={0.6}
+                fontSize={'14px'}
+                textDecoration={'underline'}
+            >
+                <HStack
+                    spacing={1}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                >
+                    <Text color={textSecondary}>
+                        {t('View transaction on the explorer')}
+                    </Text>
+                    <Icon as={LuExternalLink} boxSize={'14px'} />
+                </HStack>
+            </Link>
+        );
 
-    return (
-        <>
-            <StickyHeaderContainer>
-                <ModalHeader>{statusConfig.title}</ModalHeader>
-                <ModalCloseButton
-                    isDisabled={status === 'pending' && !uiConfig?.isClosable}
-                />
-            </StickyHeaderContainer>
+    const closeButton = (
+        <Button onClick={onClose} variant={'ghost'} width={'full'}>
+            {t('Close')}
+        </Button>
+    );
 
-            <ModalBody>
-                <VStack align="center" p={6} spacing={3}>
-                    {statusConfig.icon}
+    // Treat the in-flight wallet step as `pending` visually so the spinner
+    // doesn't disappear and reappear between "waiting for user signature"
+    // and "waiting for chain confirmation".
+    const isSendingTransaction = status === 'waitingConfirmation';
+    const effectiveStatus = isSendingTransaction ? 'pending' : status;
 
-                    {status === 'success' && uiConfig?.showShareOnSocials && (
-                        <VStack mt={2} spacing={3}>
+    if (effectiveStatus === 'success') {
+        return (
+            <StatusScreen
+                status={'success'}
+                title={t('Transaction successful!')}
+                bodyExtras={
+                    uiConfig?.showShareOnSocials && txReceipt?.meta.txID ? (
+                        <VStack spacing={3} pt={1}>
                             <Text
-                                fontSize="sm"
-                                fontWeight={'bold'}
+                                fontSize={'12px'}
+                                fontWeight={600}
                                 color={textSecondary}
+                                textTransform={'uppercase'}
+                                letterSpacing={'0.06em'}
                             >
                                 {t('Share on')}
                             </Text>
                             <ShareButtons description={socialDescription} />
                         </VStack>
-                    )}
+                    ) : undefined
+                }
+                actions={closeButton}
+                footerExtras={explorerLink || undefined}
+            />
+        );
+    }
 
-                    {statusConfig.description && (
+    if (effectiveStatus === 'error') {
+        return (
+            <StatusScreen
+                status={'error'}
+                title={t('Something went wrong')}
+                description={errorMessage ?? t('An unexpected error occurred.')}
+                actions={
+                    <VStack spacing={3} width={'full'}>
+                        {onTryAgain && (
+                            <Button
+                                variant={'vechainKitPrimary'}
+                                onClick={onTryAgain}
+                                width={'full'}
+                            >
+                                <Icon mr={2} as={LuRefreshCw} />
+                                {t('Try again')}
+                            </Button>
+                        )}
+                        {closeButton}
+                    </VStack>
+                }
+                footerExtras={explorerLink || undefined}
+            />
+        );
+    }
+
+    // Pending and ready states keep the legacy layout — they're transient
+    // and don't benefit from the badge treatment. Pending in particular
+    // needs the spinner front-and-centre, not an icon-in-disc.
+    const titleNode =
+        effectiveStatus === 'pending'
+            ? uiConfig?.title ??
+              (isSendingTransaction
+                  ? t('Sending Transaction...')
+                  : t('Waiting for confirmation'))
+            : uiConfig?.title ?? t('Confirm transaction');
+
+    const descriptionNode =
+        effectiveStatus === 'pending'
+            ? isSendingTransaction
+                ? t(
+                      'Transaction is being processed, it can take up to 15 seconds.',
+                  )
+                : uiConfig?.description ??
+                  t('Please confirm the transaction in your wallet.')
+            : uiConfig?.description ??
+              t('Confirm the transaction in your wallet to complete it.');
+
+    return (
+        <>
+            <StickyHeaderContainer>
+                <ModalHeader textAlign={'center'}>{titleNode}</ModalHeader>
+                <ModalCloseButton
+                    isDisabled={
+                        effectiveStatus === 'pending' && !uiConfig?.isClosable
+                    }
+                />
+            </StickyHeaderContainer>
+
+            <ModalBody>
+                <VStack align={'center'} px={6} py={4} spacing={5}>
+                    {effectiveStatus === 'pending' &&
+                        (uiConfig?.loadingIcon ?? (
+                            <Spinner
+                                size={'xl'}
+                                data-testid={'pending-spinner-modal'}
+                            />
+                        ))}
+
+                    {descriptionNode && (
                         <Text
-                            fontSize={status === 'ready' ? 'md' : 'sm'}
-                            textAlign="center"
-                            color={
-                                status === 'error' ? errorColor : textPrimary
-                            }
-                            mt={5}
-                            style={{
-                                lineBreak: 'anywhere',
-                            }}
+                            fontSize={'14px'}
+                            lineHeight={'1.5'}
+                            textAlign={'center'}
+                            color={textPrimary}
+                            maxW={'36ch'}
                         >
-                            {statusConfig.description}
+                            {descriptionNode}
                         </Text>
                     )}
                 </VStack>
             </ModalBody>
 
-            <ModalFooter justifyContent="center">
-                <VStack width="full" spacing={4}>
-                    {status === 'error' && !!onTryAgain && (
-                        <Button
-                            variant="vechainKitPrimary"
-                            onClick={onTryAgain}
-                            width="full"
-                        >
-                            <Icon mr={2} as={LuRefreshCw} />
-                            {t('Try again')}
-                        </Button>
-                    )}
-
-                    {status === 'ready' && (
+            <ModalFooter justifyContent={'center'}>
+                <VStack width={'full'} spacing={3}>
+                    {effectiveStatus === 'ready' && (
                         <Button
                             onClick={onTryAgain}
-                            variant="vechainKitPrimary"
-                            width="full"
+                            variant={'vechainKitPrimary'}
+                            width={'full'}
                         >
                             {t('Confirm')}
                         </Button>
                     )}
-
-                    {(status === 'success' ||
-                        status === 'error' ||
-                        status === 'ready') && (
-                        <Button onClick={onClose} variant="ghost" width="full">
-                            {t('Close')}
-                        </Button>
-                    )}
-
-                    {uiConfig?.showExplorerButton && txReceipt?.meta.txID && (
-                        <Link
-                            href={`${getConfig(network.type).explorerUrl}/${
-                                txReceipt?.meta.txID
-                            }`}
-                            isExternal
-                            opacity={0.5}
-                            fontSize="14px"
-                            textDecoration="underline"
-                        >
-                            <HStack
-                                spacing={1}
-                                alignItems="center"
-                                w="full"
-                                justifyContent="center"
-                            >
-                                <Text color={textSecondary}>
-                                    {t('View transaction on the explorer')}
-                                </Text>
-                                <Icon
-                                    size="sm"
-                                    as={LuExternalLink}
-                                    color={textSecondary}
-                                />
-                            </HStack>
-                        </Link>
-                    )}
+                    {effectiveStatus === 'ready' && closeButton}
+                    {explorerLink}
                 </VStack>
             </ModalFooter>
         </>

@@ -91,9 +91,13 @@ const getThemeConfig = (
             'vechain-kit-border-button': tokens.colors.border.button,
             'vechain-kit-success': tokens.colors.success,
             'vechain-kit-error': tokens.colors.error,
-            // Soft red surface used by the connect modal's error circle and
-            // any other "muted error" backgrounds. Derived from the error
-            // color at 12% alpha so it tracks dev overrides automatically.
+            // Soft tinted surfaces used by the StatusScreen badges and any
+            // other "muted success/error" backgrounds. Derived at 12% alpha
+            // so they track dev overrides automatically.
+            'vechain-kit-success-bg': applyOpacityHelper(
+                tokens.colors.success,
+                0.12,
+            ),
             'vechain-kit-error-bg': applyOpacityHelper(tokens.colors.error, 0.12),
             'vechain-kit-warning': tokens.colors.warning,
             'vechain-kit-accent': tokens.colors.accent,
