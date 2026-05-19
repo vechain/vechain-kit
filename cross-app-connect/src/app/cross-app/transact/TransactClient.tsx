@@ -146,6 +146,33 @@ function connectionRequestFromTransactUrl():
     }
 }
 
+/**
+ * Dev-only escape hatch to force the "No connection found for requester"
+ * code path. The real condition needs a server-side state on Privy that's
+ * hard to reproduce locally (connection expired or never created on this
+ * provider app), so without this flag the auto-`acceptConnection` retry
+ * branch is impossible to exercise.
+ *
+ * Activate by either:
+ *  - appending `?forceNoConnection=1` to the popup URL (awkward because
+ *    Privy SDK builds it), OR
+ *  - setting `localStorage.setItem('vk-force-no-connection','1')` once
+ *    from the host origin's devtools — flag persists until you clear it.
+ */
+function isForcingNoConnection(): boolean {
+    if (typeof window === 'undefined') return false;
+    try {
+        const params = new URL(window.location.href).searchParams;
+        if (params.get('forceNoConnection') === '1') return true;
+        if (window.localStorage.getItem('vk-force-no-connection') === '1') {
+            return true;
+        }
+    } catch {
+        /* ignore */
+    }
+    return false;
+}
+
 function parseClauses(typedData: SmartAccountTypedData): Clause[] {
     const { to, value, data } = typedData.message;
     if (Array.isArray(to)) {
@@ -251,6 +278,11 @@ export function TransactClient() {
         let cancelled = false;
         (async () => {
             try {
+                if (isForcingNoConnection()) {
+                    throw new Error(
+                        'No connection found for requester (forced via dev flag)',
+                    );
+                }
                 const data = await client.getVerifiedTransactionRequest({
                     userId: user.id,
                 });
