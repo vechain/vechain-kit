@@ -9,8 +9,7 @@ on:
     workflow_dispatch:
 
 permissions:
-    contents: write
-    pull-requests: write
+    contents: read
 
 concurrency:
     # Only one refresh attempt at a time; if a previous PR is still pending
@@ -22,6 +21,11 @@ jobs:
     refresh:
         name: Regenerate app-hub.json
         runs-on: ubuntu-latest
+        # PR-opening permissions are scoped to this job (zizmor flags them
+        # as too broad at the workflow level).
+        permissions:
+            contents: write
+            pull-requests: write
         steps:
             - name: Checkout
               uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1

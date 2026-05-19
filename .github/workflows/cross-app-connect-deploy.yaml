@@ -19,13 +19,13 @@ concurrency:
 
 permissions:
     contents: read
-    pages: write
-    id-token: write
 
 jobs:
     build:
         name: Build static site
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
         steps:
             - name: Checkout
               uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -68,6 +68,12 @@ jobs:
         name: Deploy to GitHub Pages
         needs: build
         runs-on: ubuntu-latest
+        # Pages-specific permissions scoped to this job only — zizmor flags
+        # them as too broad at the workflow level since the build job
+        # doesn't need to write anything.
+        permissions:
+            pages: write
+            id-token: write
         environment:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
