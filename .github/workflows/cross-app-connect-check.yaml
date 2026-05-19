@@ -1,0 +1,77 @@
+name: Cross-App Connect — Check
+
+on:
+    # zizmor: ignore[dangerous-triggers] - Mitigated with label-based approval
+    pull_request_target:
+        types: [labeled, opened, synchronize, reopened]
+        branches:
+            - main
+        paths:
+            - 'cross-app-connect/**'
+            - 'packages/vechain-kit/**'
+            - 'yarn.lock'
+            - '.github/workflows/cross-app-connect-check.yaml'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    # External PRs: post a one-time comment explaining the safe-to-build gate.
+    comment-external-pr:
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: write
+        if: |
+            github.event.pull_request.head.repo.full_name != github.repository &&
+            github.event.action == 'opened'
+        steps:
+            - name: Comment on external PR
+              uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
+              with:
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body: |
+                      ## 👋 Thanks for your contribution!
+
+                      Since this PR comes from a fork, the cross-app-connect
+                      check will only run after a maintainer adds the
+                      `safe-to-build` label (and re-adds it after each new
+                      commit, for security).
+
+    typecheck-and-build:
+        name: Type-check & Build
+        runs-on: ubuntu-latest
+        if: |
+            (github.event.label.name == 'safe-to-build') ||
+            (github.event.pull_request.head.repo.full_name == github.repository) && github.event.pull_request.head.ref != 'main'
+        steps:
+            - name: Checkout
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+
+            - name: Setup Node
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Install
+              run: yarn && yarn install:all
+
+            - name: Type-check (cross-app-connect)
+              run: yarn workspace cross-app-connect typecheck
+
+            - name: Build (cross-app-connect)
+              run: yarn workspace cross-app-connect build
+              env:
+                  # Build-time public env. Provided as repo Variables; the
+                  # popup needs them to construct the Privy client. The build
+                  # tolerates missing values but won't run end-to-end without
+                  # them — sufficient to verify the bundle compiles cleanly.
+                  NEXT_PUBLIC_PRIVY_APP_ID: ${{ vars.NEXT_PUBLIC_PRIVY_APP_ID }}
+                  NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ vars.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
+                  NEXT_PUBLIC_PRIVY_DOMAIN: ${{ vars.NEXT_PUBLIC_PRIVY_DOMAIN }}
