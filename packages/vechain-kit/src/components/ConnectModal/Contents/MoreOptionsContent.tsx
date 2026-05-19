@@ -518,7 +518,7 @@ export const MoreOptionsContent = ({
                                             />
                                         )
                                     }
-                                    label={t('Continue with VeChain')}
+                                    label={t('Login with social')}
                                     onClick={handleLoginWithVeChain}
                                     iconBg={brandInverseBg}
                                 />
