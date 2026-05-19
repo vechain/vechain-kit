@@ -223,7 +223,7 @@
     },
     "connect": {
         "title": {
-            "default": "VeChain Cross-App Connect",
+            "default": "VeChain Connect",
             "couldNotLoad": "요청을 불러올 수 없습니다",
             "logIn": "지갑에 로그인",
             "connectTo": "{{app}} 에 연결",
@@ -272,7 +272,7 @@
         }
     },
     "landing": {
-        "title": "VeChain Cross-App Connect",
+        "title": "VeChain Connect",
         "subtitle": "Privy 의 크로스 앱 연결 및 트랜잭션 플로우를 위한 화이트 라벨 호스트입니다.",
         "routes": "경로",
         "connectDesc": "연결 요청 처리",

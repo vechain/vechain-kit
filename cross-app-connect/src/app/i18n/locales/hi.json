@@ -223,7 +223,7 @@
     },
     "connect": {
         "title": {
-            "default": "VeChain Cross-App Connect",
+            "default": "VeChain Connect",
             "couldNotLoad": "अनुरोध लोड नहीं हो सका",
             "logIn": "अपने वॉलेट में लॉग इन करें",
             "connectTo": "{{app}} से कनेक्ट करें",
@@ -272,7 +272,7 @@
         }
     },
     "landing": {
-        "title": "VeChain Cross-App Connect",
+        "title": "VeChain Connect",
         "subtitle": "Privy क्रॉस-ऐप कनेक्शन और ट्रांज़ैक्शन फ़्लो के लिए व्हाइटलेबल होस्ट।",
         "routes": "रूट्स",
         "connectDesc": "कनेक्शन अनुरोधों को संभालता है",

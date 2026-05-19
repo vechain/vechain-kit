@@ -223,7 +223,7 @@
     },
     "connect": {
         "title": {
-            "default": "VeChain Cross-App Connect",
+            "default": "VeChain Connect",
             "couldNotLoad": "Kunde inte ladda begäran",
             "logIn": "Logga in på din plånbok",
             "connectTo": "Anslut till {{app}}",
@@ -272,7 +272,7 @@
         }
     },
     "landing": {
-        "title": "VeChain Cross-App Connect",
+        "title": "VeChain Connect",
         "subtitle": "Whitelabel-värd för Privy cross-app anslutnings- och transaktionsflöden.",
         "routes": "Rutter",
         "connectDesc": "hanterar anslutningsbegäranden",

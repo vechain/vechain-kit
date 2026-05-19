@@ -223,7 +223,7 @@
     },
     "connect": {
         "title": {
-            "default": "VeChain Cross-App Connect",
+            "default": "VeChain Connect",
             "couldNotLoad": "リクエストを読み込めませんでした",
             "logIn": "ウォレットにログイン",
             "connectTo": "{{app}} に接続",
@@ -272,7 +272,7 @@
         }
     },
     "landing": {
-        "title": "VeChain Cross-App Connect",
+        "title": "VeChain Connect",
         "subtitle": "Privy のクロスアプリ接続およびトランザクションフロー用のホワイトレーベルホストです。",
         "routes": "ルート",
         "connectDesc": "接続リクエストを処理",
