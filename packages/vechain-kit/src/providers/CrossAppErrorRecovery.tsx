@@ -26,11 +26,24 @@ export function CrossAppErrorRecovery() {
 
     const handlerRef = useRef<(event: MessageEvent) => void>(() => {});
     handlerRef.current = (event) => {
-        const type = (event.data as { type?: unknown } | null)?.type;
-        console.log('[vechain-kit] message received', {
-            data: event.data,
-            origin: event.origin,
-        });
+        const data = event.data as
+            | { type?: unknown; target?: unknown }
+            | null;
+        const type = data?.type;
+        // Filter out the high-frequency noise: MetaMask injected-provider
+        // bridge (`{target: 'metamask-inpage', ...}`), React DevTools, etc.
+        const isNoise =
+            data?.target === 'metamask-inpage' ||
+            data?.target === 'metamask-contentscript' ||
+            (typeof type === 'string' &&
+                (type.startsWith('react-devtools') ||
+                    type.startsWith('webpackHot')));
+        if (!isNoise) {
+            console.log('[vechain-kit] message received', {
+                data: event.data,
+                origin: event.origin,
+            });
+        }
         if (type !== 'vk:cross-app-no-connection') {
             return;
         }
