@@ -33,7 +33,11 @@ export function AddressTag({
 }: Props) {
     const { t } = useTranslation();
     const { domain, avatar } = useAddressInfo(address);
-    const resolved = resolveContractLabel(address, self);
+    const isSelf =
+        !!self && address.toLowerCase() === self.toLowerCase();
+    const resolved = isSelf
+        ? { label: t('transact.detail.yourAccount'), verified: true }
+        : resolveContractLabel(address);
 
     if (resolved) {
         return (

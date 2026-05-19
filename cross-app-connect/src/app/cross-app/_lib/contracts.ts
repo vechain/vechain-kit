@@ -52,14 +52,9 @@ const APP_CONFIG_LABELS: Partial<Record<keyof KnownContracts, string>> = {
 
 export function resolveContractLabel(
     address: string | undefined,
-    self?: string,
 ): ContractLabel | null {
     if (!address) return null;
     const lower = address.toLowerCase();
-
-    if (self && lower === self.toLowerCase()) {
-        return { label: 'Your account', verified: true };
-    }
 
     for (const [field, label] of Object.entries(APP_CONFIG_LABELS) as Array<
         [keyof KnownContracts, string]

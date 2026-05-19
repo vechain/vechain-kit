@@ -1232,8 +1232,8 @@ function RawClauseRow({
                         onClick={() => setShowRaw((s) => !s)}
                     >
                         {showRaw
-                            ? t('transact.detail.hideCalldata')
-                            : t('transact.detail.showCalldata')}
+                            ? t('transact.inspect.hideCalldata')
+                            : t('transact.inspect.showCalldata')}
                         {showRaw ? (
                             <LuChevronUp size={12} />
                         ) : (
