@@ -193,8 +193,68 @@ export const extractSwapAmounts = (
         }
     }
 
-    return {
-        fromAmount: fromAmount ?? 0n,
-        toAmount: toAmount ?? 0n,
-    };
+    // Strict matching can miss one side when a swap goes through a smart-
+    // account / router intermediation chain: the user is the originator
+    // but the actual Transfer-event `from` / `to` is an intermediate
+    // contract. Fall back to "the largest non-zero Transfer value on the
+    // relevant token contract" — across all routing patterns we see, that
+    // movement is the user's net inflow / outflow on that token.
+    if (fromAmount === null && !isFromTokenVET) {
+        for (const event of transferEvents) {
+            try {
+                const decoded = decodeEventLog({
+                    abi: [transferEventAbi],
+                    data: event.data.toString() as `0x${string}`,
+                    topics: event.topics.map((t: any) => t.toString()) as [
+                        `0x${string}`,
+                        ...`0x${string}`[],
+                    ],
+                });
+                if (!decoded.args || !('value' in decoded.args)) continue;
+                const value = (decoded.args as { value: bigint }).value;
+                if (
+                    event.address.toLowerCase() === fromTokenAddressLower &&
+                    value > 0n &&
+                    (fromAmount === null || value > fromAmount)
+                ) {
+                    fromAmount = value;
+                }
+            } catch {
+                /* ignore undecodable */
+            }
+        }
+    }
+    if (toAmount === null && !isToTokenVET) {
+        for (const event of transferEvents) {
+            try {
+                const decoded = decodeEventLog({
+                    abi: [transferEventAbi],
+                    data: event.data.toString() as `0x${string}`,
+                    topics: event.topics.map((t: any) => t.toString()) as [
+                        `0x${string}`,
+                        ...`0x${string}`[],
+                    ],
+                });
+                if (!decoded.args || !('value' in decoded.args)) continue;
+                const value = (decoded.args as { value: bigint }).value;
+                if (
+                    event.address.toLowerCase() === toTokenAddressLower &&
+                    value > 0n &&
+                    (toAmount === null || value > toAmount)
+                ) {
+                    toAmount = value;
+                }
+            } catch {
+                /* ignore undecodable */
+            }
+        }
+    }
+
+    // Honor the documented contract: signal "couldn't extract" with null
+    // rather than returning 0n placeholders that the UI then renders as
+    // "swapped 0 B3TR for …". The caller falls back to a generic message.
+    if (fromAmount === null || toAmount === null) return null;
+    if (fromAmount === 0n || toAmount === 0n) return null;
+
+    return { fromAmount, toAmount };
 };
