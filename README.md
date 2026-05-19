@@ -12,8 +12,9 @@ VeChain Kit is a comprehensive library designed to make building VeChain applica
 
 It offers:
 
--   <b>Seamless Wallet Integration:</b> Support for VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, and social logins (Google, Apple, GitHub, email, passkey — powered by Privy).
+-   <b>Seamless Wallet Integration:</b> Support for VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, and social logins (Google, Apple, GitHub, X/Twitter, Discord, TikTok, LINE, email, passkey — powered by Privy).
 -   <b>Custom Connection UI:</b> Vechain-kit's own connect modal handles the VeWorld and Sync2 flows directly, with a built-in “Waiting for signature…” view and a fully themeable layout. WalletConnect's QR modal is preserved.
+-   <b>Social Logins Without Your Own Privy Account:</b> Drop a "Continue with Google / Apple / X / Discord / GitHub / TikTok / LINE" button in your app and it just works — the kit routes through VeChain's whitelabel cross-app host (`cross-app-connect/`) so users get one VeChain identity that follows them across every kit-using dApp. No Privy bill, no dashboard setup.
 -   <b>Unified Ecosystem Accounts:</b> Leverage Privy’s Ecosystem feature to give users a single wallet across multiple dApps, providing a consistent identity within the VeChain network.
 -   <b>Developer-Friendly Hooks:</b> Easy-to-use React Hooks that let you read and write data on the VeChainThor blockchain.
 -   <b>Pre-Built UI Components:</b> Ready-to-use components (e.g., TransactionModal) to simplify wallet operations and enhance your users’ experience.
@@ -30,6 +31,14 @@ It offers:
 -   [Sample Next.js App](https://github.com/vechain/vechain-kit/tree/main/examples/next-template)
 -   [Smart Account Factory](https://vechain.github.io/smart-accounts/)
 -   [Docs](https://docs.vechainkit.vechain.org/)
+
+## Cross-app Whitelabel Host
+
+When a user picks "Continue with Google / Apple / VeChain / …" from a kit-using dApp, the kit opens a small popup that handles the OAuth/SMS handshake and posts the resulting signature back. That popup runs on VeChain's whitelabel host, which lives in this repo at [`cross-app-connect/`](./cross-app-connect/) — a Next.js static export with VeChain branding, a calldata-aware transaction summary, recovery from stale connection records, and 17 languages.
+
+The whitelabel popup is why your app can offer social login without owning a Privy account: users see VeChain chrome and get one identity across every kit-integrated dApp.
+
+See [`cross-app-connect/README.md`](./cross-app-connect/README.md) for the popup's architecture, the rationale behind dropping Chakra / TanStack Query / vechain-kit from that surface, deploy instructions (GitHub Pages workflow included), and how to add translation keys.
 
 ## Table of Contents
 
