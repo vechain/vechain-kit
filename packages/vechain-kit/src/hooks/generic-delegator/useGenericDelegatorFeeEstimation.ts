@@ -30,18 +30,6 @@ export const useGenericDelegatorFeeEstimation = ({
     // Only include essential data in query key to prevent unnecessary refetches
     const queryKey = ['gas-estimation', JSON.stringify(clauses), JSON.stringify(tokens), sendingAmount, sendingTokenSymbol];
 
-    // eslint-disable-next-line no-console
-    console.log('[vk-debug] useGenericDelegatorFeeEstimation inputs:', {
-        callerEnabled: enabled,
-        clausesLen: clauses.length,
-        accountAddress: account?.address,
-        smartAccountAddress: smartAccount?.address,
-        genericDelegatorUrl: feeDelegation?.genericDelegatorUrl,
-        delegatorUrl: feeDelegation?.delegatorUrl,
-        tokensLen: tokens.length,
-        balancesLen: balances.length,
-    });
-
     return useQuery<EstimationResponse & { usedToken: string }, Error>({
         queryKey,
         queryFn: async () => {
