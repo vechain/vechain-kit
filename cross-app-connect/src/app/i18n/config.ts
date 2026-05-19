@@ -21,11 +21,9 @@ import tr from './locales/tr.json';
 import hi from './locales/hi.json';
 import pt from './locales/pt.json';
 
-const STORAGE_KEY = 'vk-cross-app-connect:lng';
-
 /**
  * Languages we ship, matching the vechain-kit's set. Order is irrelevant;
- * the value is a string-set lookup used by `resolveLanguage`.
+ * the value is a string-set lookup used by `normalizeBrowserTag`.
  */
 export const SUPPORTED_LANGUAGES = [
     'en', 'de', 'it', 'fr', 'es', 'zh', 'ja', 'ru', 'ro',
@@ -79,70 +77,19 @@ function normalizeBrowserTag(raw: string | undefined): SupportedLanguage | null 
 }
 
 /**
- * Resolution chain at boot, evaluated once on the client:
- *   1. URL `?lng=` (set by the kit-using app when it triggers the popup).
- *   2. localStorage `vk-cross-app-connect:lng` (stashed by a prior visit).
- *   3. `navigator.language` mapped to a supported tag.
- *   4. 'en' fallback.
- *
- * Persists the resolved language back to localStorage so the transact
- * popup -- which Privy's SDK builds without our URL params -- picks up
- * what the connect popup learned.
+ * Always use the device's language; fall back to English when the browser
+ * locale isn't one we ship. No URL override, no localStorage stash — the
+ * popup mirrors the OS / browser setting every time it opens.
  */
 export function resolveLanguage(): SupportedLanguage {
-    if (typeof window === 'undefined') return 'en';
-
-    // 1. URL param
-    try {
-        const url = new URL(window.location.href);
-        const fromUrl = url.searchParams.get('lng');
-        if (fromUrl) {
-            const normalized = normalizeBrowserTag(fromUrl);
-            if (normalized) {
-                persistLanguage(normalized);
-                return normalized;
-            }
-        }
-    } catch {
-        /* malformed URL — ignore */
-    }
-
-    // 2. Local storage from a prior visit
-    try {
-        const stored = window.localStorage.getItem(STORAGE_KEY);
-        if (stored && SUPPORTED.has(stored)) {
-            return stored as SupportedLanguage;
-        }
-    } catch {
-        /* private mode / disabled storage — ignore */
-    }
-
-    // 3. Browser preference
-    const fromBrowser = normalizeBrowserTag(
-        typeof navigator !== 'undefined' ? navigator.language : undefined,
-    );
-    if (fromBrowser) {
-        persistLanguage(fromBrowser);
-        return fromBrowser;
-    }
-
-    return 'en';
-}
-
-function persistLanguage(lng: SupportedLanguage) {
-    try {
-        window.localStorage.setItem(STORAGE_KEY, lng);
-    } catch {
-        /* ignore storage errors */
-    }
+    if (typeof navigator === 'undefined') return 'en';
+    return normalizeBrowserTag(navigator.language) ?? 'en';
 }
 
 // Initialise once at module load with 'en' so server-rendered HTML and the
 // client's first React render produce *identical* strings — that's what
-// avoids React's hydration-mismatch warning. The actual language detection
-// happens in `<I18nProvider>` via a layout effect that calls
-// `i18n.changeLanguage(resolveLanguage())` immediately after mount, before
-// browser paint. Result: no flash of English, no console error.
+// avoids React's hydration-mismatch warning. The actual language is applied
+// in `<I18nProvider>` after the SSR/first-render gate.
 i18n.use(initReactI18next).init({
     resources,
     lng: 'en',
