@@ -242,12 +242,15 @@ export function SignInPanel({
                             <PinInput
                                 value={code}
                                 onChange={setCode}
-                                onComplete={(v) => {
-                                    setCode(v);
-                                    loginWithCode({ code: v }).catch((e) =>
-                                        setError(String(e)),
-                                    );
-                                }}
+                                // Auto-submission used to race with the
+                                // Verify button — both calling loginWithCode
+                                // before `submittingCode` flipped, firing two
+                                // verification requests against Privy. Keep
+                                // a single submission path: typing the 6th
+                                // digit just fills the input; the Verify
+                                // button (which respects `submittingCode`)
+                                // is the only thing that submits.
+                                onComplete={setCode}
                             />
                         </div>
                         <button

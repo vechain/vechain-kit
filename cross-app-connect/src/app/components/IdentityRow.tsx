@@ -48,7 +48,12 @@ export function IdentityRow({
     const linked = linkedSocials(
         user as { phone?: unknown; farcaster?: unknown } | null | undefined,
     );
-    const walletPending = !walletAddress || isLoading;
+    // Show the skeleton only while the resolver is actively running. If
+    // resolution has settled and there's still no walletAddress, the
+    // render tree falls through to the `pendingLabel` placeholder branch
+    // (previously unreachable, because the old `!walletAddress` term
+    // forced walletPending=true any time the address was missing).
+    const walletPending = isLoading;
 
     return (
         <div className={styles.container}>

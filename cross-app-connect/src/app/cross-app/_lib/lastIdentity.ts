@@ -23,13 +23,32 @@ export type LastIdentity = {
     provider?: string;
 };
 
+// 30-day retention. The label can carry semi-sensitive identifiers (email,
+// phone) so we don't keep it around indefinitely — long enough that a
+// returning user still gets the "Welcome back, …" greeting, short enough
+// that an abandoned device or shared browser flushes it on its own.
+const TTL_MS = 30 * 24 * 60 * 60 * 1000;
+
+type StoredIdentity = LastIdentity & { savedAt?: number };
+
 export function getLastIdentity(): LastIdentity | null {
     if (typeof localStorage === 'undefined') return null;
     try {
         const raw = localStorage.getItem(key());
         if (!raw) return null;
-        const parsed = JSON.parse(raw) as LastIdentity;
-        return parsed && typeof parsed.label === 'string' ? parsed : null;
+        const parsed = JSON.parse(raw) as StoredIdentity;
+        if (!parsed || typeof parsed.label !== 'string') return null;
+        // Expire records older than the TTL. Records written before the
+        // TTL was introduced have no `savedAt`; treat them as fresh once
+        // and let the next write upgrade the shape.
+        if (
+            typeof parsed.savedAt === 'number' &&
+            Date.now() - parsed.savedAt > TTL_MS
+        ) {
+            localStorage.removeItem(key());
+            return null;
+        }
+        return { label: parsed.label, provider: parsed.provider };
     } catch {
         return null;
     }
@@ -38,7 +57,8 @@ export function getLastIdentity(): LastIdentity | null {
 export function setLastIdentity(identity: LastIdentity): void {
     if (typeof localStorage === 'undefined') return;
     try {
-        localStorage.setItem(key(), JSON.stringify(identity));
+        const record: StoredIdentity = { ...identity, savedAt: Date.now() };
+        localStorage.setItem(key(), JSON.stringify(record));
     } catch {
         // quota / private-browsing — fail open
     }

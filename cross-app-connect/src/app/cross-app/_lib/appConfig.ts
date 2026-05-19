@@ -104,9 +104,11 @@ const TESTNET: Partial<KnownContracts> = {
     accountFactoryAddress: '0x713b908Bcf77f3E00EFEf328E50b657a1A23AeaF',
 };
 
-const NETWORK_TYPE = (process.env.NEXT_PUBLIC_NETWORK_TYPE ?? 'main') as
-    | 'main'
-    | 'test';
+// Validate explicitly — an unexpected value otherwise sneaks past the
+// `as` cast and silently falls back to undefined when indexed.
+const rawNetworkType = process.env.NEXT_PUBLIC_NETWORK_TYPE;
+const NETWORK_TYPE: 'main' | 'test' =
+    rawNetworkType === 'test' ? 'test' : 'main';
 
 export const knownContracts: KnownContracts =
     NETWORK_TYPE === 'main' ? MAINNET : ({ ...MAINNET, ...TESTNET } as KnownContracts);

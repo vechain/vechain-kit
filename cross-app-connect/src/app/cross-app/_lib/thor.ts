@@ -12,9 +12,11 @@ import { picasso } from '@vechain/picasso';
 
 // Network configuration: hardcoded once, no React context required.
 // Matches the kit's mainnet/testnet config (`packages/vechain-kit/src/config/*.ts`).
-const NETWORK_TYPE = (process.env.NEXT_PUBLIC_NETWORK_TYPE ?? 'main') as
-    | 'main'
-    | 'test';
+// Validate the env var explicitly — a stray value (e.g. 'production') would
+// fall through `NETWORK[NETWORK_TYPE]` undefined and crash on `.nodeUrl`.
+const rawNetworkType = process.env.NEXT_PUBLIC_NETWORK_TYPE;
+const NETWORK_TYPE: 'main' | 'test' =
+    rawNetworkType === 'test' ? 'test' : 'main';
 
 const NETWORK = {
     main: {

@@ -26,6 +26,19 @@ export function CrossAppErrorRecovery() {
 
     const handlerRef = useRef<(event: MessageEvent) => void>(() => {});
     handlerRef.current = (event) => {
+        // Trust only same-origin messages. The kit dispatches the recovery
+        // event to itself from PrivyCrossAppProvider's signTypedData /
+        // signMessage catch when Privy's SDK has already routed the popup's
+        // PRIVY_CROSS_APP_ACTION_ERROR through the normal channel — so the
+        // happy path always goes through self-origin. Cross-origin frames
+        // (e.g. an embedded ad or a hostile iframe) can't fake this to
+        // force a logout + modal reopen on the user.
+        if (
+            typeof window !== 'undefined' &&
+            event.origin !== window.location.origin
+        ) {
+            return;
+        }
         const type = (event.data as { type?: unknown } | null)?.type;
         if (type !== 'vk:cross-app-no-connection') return;
         void (async () => {

@@ -301,8 +301,16 @@ export function TransactClient() {
 
         if (method === 'eth_signTypedData_v4') {
             const raw = Array.isArray(params) ? params[1] : undefined;
-            const typedData =
-                typeof raw === 'string' ? JSON.parse(raw) : raw;
+            let typedData: SmartAccountTypedData | undefined;
+            try {
+                typedData =
+                    typeof raw === 'string' ? JSON.parse(raw) : raw;
+            } catch {
+                // Malformed JSON from the requester app — return null so
+                // the UI falls back to the "couldn't read request" screen
+                // instead of crashing the component.
+                return null;
+            }
             if (!typedData?.domain || !typedData?.message) return null;
             const primaryType = typedData.primaryType;
             const isSmartAccountAuth =

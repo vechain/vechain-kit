@@ -199,7 +199,7 @@ export const TransactionModalContent = ({
 
             <ModalFooter justifyContent={'center'}>
                 <VStack width={'full'} spacing={3}>
-                    {effectiveStatus === 'ready' && (
+                    {effectiveStatus === 'ready' && onTryAgain && (
                         <Button
                             onClick={onTryAgain}
                             variant={'vechainKitPrimary'}

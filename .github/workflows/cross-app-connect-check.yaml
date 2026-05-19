@@ -13,7 +13,9 @@ on:
             - '.github/workflows/cross-app-connect-check.yaml'
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+    # Key by PR number so two PRs that happen to share a branch name
+    # (common from forks) don't cancel each other's checks.
+    group: ${{ github.workflow }}-pr-${{ github.event.pull_request.number || github.ref_name }}
     cancel-in-progress: true
 
 permissions:

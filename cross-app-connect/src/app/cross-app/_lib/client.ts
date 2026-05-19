@@ -13,8 +13,15 @@ export const useCrossAppClient = () =>
                     'https://privy.your-app.privy.dev).',
             );
         }
+        const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+        if (!appId) {
+            throw new Error(
+                'NEXT_PUBLIC_PRIVY_APP_ID is required. Set it to the Privy ' +
+                    'app id provisioned for the whitelabel cross-app host.',
+            );
+        }
         return createClient({
-            appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+            appId,
             appClientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID,
             privyDomain,
         });

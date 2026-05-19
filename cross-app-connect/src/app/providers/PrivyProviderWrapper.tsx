@@ -17,9 +17,16 @@ interface Props {
  * `cross-app/_lib/thor.ts`.
  */
 export function PrivyProviderWrapper({ children }: Props) {
+    const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+    if (!appId) {
+        throw new Error(
+            'NEXT_PUBLIC_PRIVY_APP_ID is required to bootstrap the ' +
+                'cross-app host. Set it in the environment before building.',
+        );
+    }
     return (
         <PrivyProvider
-            appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
+            appId={appId}
             clientId={process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID}
             config={{
                 loginMethodsAndOrder: {
