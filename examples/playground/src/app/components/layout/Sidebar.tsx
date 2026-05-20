@@ -42,15 +42,15 @@ export function Sidebar({ onItemClick }: SidebarProps) {
                 style={{ textDecoration: 'none' }}
                 onClick={onItemClick}
             >
-                <HStack spacing={2} pl={2} pt={1}>
+                <HStack spacing={3} pl={2} pt={1}>
                     <Image
                         src={`${basePath}/images/logo.png`}
-                        alt="VeChain Kit"
-                        boxSize="28px"
-                        borderRadius="md"
+                        alt="VeKit"
+                        height={8}
+                        width="auto"
                     />
-                    <Text fontWeight="bold" fontSize="md">
-                        VeChain Kit
+                    <Text fontWeight="bold" fontSize="lg">
+                        VeKit Playground
                     </Text>
                 </HStack>
             </Link>
@@ -83,16 +83,6 @@ export function Sidebar({ onItemClick }: SidebarProps) {
             </VStack>
 
             <Box flex={1} />
-
-            <Text
-                fontSize="xs"
-                opacity={0.5}
-                px={3}
-                pb={2}
-                textAlign="center"
-            >
-                {t('VeChain Kit Playground')}
-            </Text>
         </VStack>
     );
 }

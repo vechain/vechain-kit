@@ -17,6 +17,7 @@ import {
     LuLightbulb,
     LuPackage,
     LuServer,
+    LuSparkles,
 } from 'react-icons/lu';
 import { IconType } from 'react-icons';
 import { useTranslation } from 'react-i18next';
@@ -33,6 +34,14 @@ export function ResourceList() {
     const { t } = useTranslation();
 
     const resources: Resource[] = [
+        {
+            title: t('VeChain AI Skills'),
+            description: t(
+                'Install 11 VeChain skills in Claude Code, Cursor or any agent so it ships dApps with domain knowledge baked in.',
+            ),
+            href: 'https://github.com/vechain/vechain-ai-skills',
+            icon: LuSparkles,
+        },
         {
             title: t('Documentation'),
             description: t(
