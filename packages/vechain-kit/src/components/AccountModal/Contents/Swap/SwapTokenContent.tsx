@@ -42,6 +42,11 @@ import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { formatUnits, parseUnits } from 'viem';
 import { compareAddresses, NON_TRANSFERABLE_TOKEN_SYMBOLS } from '@/utils';
+
+const SWAP_EXCLUDED_TOKEN_SYMBOLS: readonly string[] = [
+    ...NON_TRANSFERABLE_TOKEN_SYMBOLS,
+    'veDelegate',
+];
 import { SelectTokenContent } from '../SendToken/SelectTokenContent';
 import { formatCompactCurrency } from '@/utils/currencyUtils';
 import {
@@ -143,7 +148,7 @@ export const SwapTokenContent = ({
                 );
                 if (
                     match &&
-                    !NON_TRANSFERABLE_TOKEN_SYMBOLS.includes(match.symbol)
+                    !SWAP_EXCLUDED_TOKEN_SYMBOLS.includes(match.symbol)
                 ) {
                     setFromToken(match);
                 }
@@ -154,7 +159,7 @@ export const SwapTokenContent = ({
                 );
                 if (
                     match &&
-                    !NON_TRANSFERABLE_TOKEN_SYMBOLS.includes(match.symbol)
+                    !SWAP_EXCLUDED_TOKEN_SYMBOLS.includes(match.symbol)
                 ) {
                     setToToken(match);
                 }
@@ -621,6 +626,7 @@ export const SwapTokenContent = ({
                 onSelectToken={handleSelectFromToken}
                 onBack={() => setStep('main')}
                 showAllTokens={false}
+                excludedTokenSymbols={SWAP_EXCLUDED_TOKEN_SYMBOLS}
             />
         );
     }
@@ -647,6 +653,7 @@ export const SwapTokenContent = ({
                 onSelectToken={handleSelectToToken}
                 onBack={() => setStep('main')}
                 showAllTokens={true}
+                excludedTokenSymbols={SWAP_EXCLUDED_TOKEN_SYMBOLS}
             />
         );
     }

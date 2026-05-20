@@ -92,6 +92,7 @@ export const TokenDetailContent = ({
     const isNonTransferable = NON_TRANSFERABLE_TOKEN_SYMBOLS.includes(
         token.symbol,
     );
+    const isNonSwappable = isNonTransferable || token.symbol === 'veDelegate';
 
     const amountNumber = Number(token.balance);
     const balanceText = amountNumber.toLocaleString(undefined, {
@@ -237,7 +238,7 @@ export const TokenDetailContent = ({
                                 icon={LuArrowLeftRight}
                                 label="Swap"
                                 onClick={handleSwap}
-                                isDisabled={isNonTransferable}
+                                isDisabled={isNonSwappable}
                             />
                             <ActionIconButton
                                 icon={LuArrowUpFromLine}
