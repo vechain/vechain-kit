@@ -50,8 +50,20 @@ export const SelectWalletContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
-    const { account, disconnect } = useWallet();
-    const { disconnect: dappKitDisconnect } = useDAppKitWallet();
+    const {
+        account,
+        accounts: kitAccounts,
+        setActiveAccount,
+        connection,
+        disconnect,
+    } = useWallet();
+    const {
+        disconnect: dappKitDisconnect,
+        switchWallet: dappKitSwitchWallet,
+        requestPermissions: dappKitRequestPermissions,
+        revokeAccount: dappKitRevokeAccount,
+        availableMethods: dappKitAvailableMethods,
+    } = useDAppKitWallet();
     const { open: openDappKitModal } = useDAppKitWalletModal();
     const { getStoredWallets, setActiveWallet, removeWallet } =
         useSwitchWallet();
@@ -60,17 +72,65 @@ export const SelectWalletContent = ({
 
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
-    const [wallets, setWallets] = useState(getStoredWallets());
-    const walletsHashRef = useRef(hashWallets(getStoredWallets()));
+    // On desktop dapp-kit, use `kitAccounts` as the source of truth;
+    // otherwise fall back to legacy storage. Use a stable primitive key in
+    // dep arrays — `kitAccounts` reference changes on every valtio write.
+    const kitAccountsRef = useRef(kitAccounts);
+    kitAccountsRef.current = kitAccounts;
+    const kitAccountsKey = useMemo(
+        () =>
+            kitAccounts
+                .map((a) => a.address.toLowerCase())
+                .sort()
+                .join('|'),
+        [kitAccounts],
+    );
+
+    const useDappKitAccountsAsSource = useMemo(
+        () =>
+            connection.isConnectedWithDappKit &&
+            !connection.isInAppBrowser &&
+            kitAccounts.length > 0,
+        [
+            connection.isConnectedWithDappKit,
+            connection.isInAppBrowser,
+            kitAccounts.length,
+        ],
+    );
+
+    const initialWallets = useMemo<StoredWallet[]>(() => {
+        if (useDappKitAccountsAsSource) {
+            const activeLower = account?.address?.toLowerCase();
+            return kitAccountsRef.current.map((a) => ({
+                address: a.address,
+                connectedAt: Date.now(),
+                isActive: a.address.toLowerCase() === activeLower,
+            }));
+        }
+        return getStoredWallets();
+    }, [useDappKitAccountsAsSource, kitAccountsKey, account?.address, getStoredWallets]);
+
+    const [wallets, setWallets] = useState<StoredWallet[]>(initialWallets);
+    const walletsHashRef = useRef(hashWallets(initialWallets));
 
     // Function to refresh wallets list
     const refreshWallets = useCallback(() => {
+        if (useDappKitAccountsAsSource) {
+            const activeLower = account?.address?.toLowerCase();
+            const next: StoredWallet[] = kitAccountsRef.current.map((a) => ({
+                address: a.address,
+                connectedAt: Date.now(),
+                isActive: a.address.toLowerCase() === activeLower,
+            }));
+            setWallets(next);
+            walletsHashRef.current = hashWallets(next);
+            return;
+        }
         const updatedWallets = getStoredWallets();
         setWallets(updatedWallets);
         walletsHashRef.current = hashWallets(updatedWallets);
-    }, [getStoredWallets]);
+    }, [useDappKitAccountsAsSource, kitAccountsKey, account?.address, getStoredWallets]);
 
-    // Refresh wallets list when account changes (new wallet connected) or when wallets are updated
     useEffect(() => {
         refreshWallets();
     }, [refreshWallets, account?.address]);
@@ -143,13 +203,15 @@ export const SelectWalletContent = ({
                 return;
             }
 
-            // Ensure the wallet that was previously active is saved
-            // Metadata will be fetched dynamically when needed
-            if (activeWallet) {
-                saveWallet(activeWallet.address);
+            if (useDappKitAccountsAsSource) {
+                // Dapp-kit v2: switch without re-signing.
+                setActiveAccount(address);
+            } else {
+                if (activeWallet) {
+                    saveWallet(activeWallet.address);
+                }
+                setActiveWallet(address);
             }
-
-            setActiveWallet(address);
 
             // Refresh wallets list immediately after switch
             setTimeout(() => {
@@ -172,12 +234,14 @@ export const SelectWalletContent = ({
         [
             activeWalletAddress,
             activeWallet,
-            account,
+            useDappKitAccountsAsSource,
+            setActiveAccount,
             setActiveWallet,
             refresh,
             setCurrentContent,
             refreshWallets,
             saveWallet,
+            returnTo,
         ],
     );
 
@@ -189,6 +253,13 @@ export const SelectWalletContent = ({
             const remainingWallets = wallets.filter(
                 (w) => w.address.toLowerCase() !== wallet.address.toLowerCase(),
             );
+            const supportsRevokeAccount =
+                useDappKitAccountsAsSource &&
+                Array.isArray(dappKitAvailableMethods) &&
+                dappKitAvailableMethods.includes(
+                    'wallet_revokeAccountPermission',
+                ) &&
+                typeof dappKitRevokeAccount === 'function';
 
             // Navigate to remove wallet confirmation screen
             setCurrentContent({
@@ -197,6 +268,29 @@ export const SelectWalletContent = ({
                     walletAddress: wallet.address,
                     walletDomain: null, // Domain will be fetched dynamically in RemoveWalletConfirmContent
                     onConfirm: async () => {
+                        if (supportsRevokeAccount) {
+                            await dappKitRevokeAccount(wallet.address);
+                            setTimeout(() => {
+                                refreshWallets();
+                            }, 50);
+
+                            if (remainingWallets.length === 0) {
+                                _onLogoutSuccess?.();
+                                return;
+                            }
+
+                            setCurrentContent({
+                                type: 'select-wallet',
+                                props: {
+                                    setCurrentContent,
+                                    onClose: () => {},
+                                    returnTo,
+                                    onLogoutSuccess: _onLogoutSuccess,
+                                },
+                            });
+                            return;
+                        }
+
                         // If removing the active wallet and there are other wallets, switch to the first one
                         if (isActiveWallet && remainingWallets.length > 0) {
                             const nextActiveWallet = remainingWallets[0];
@@ -263,12 +357,49 @@ export const SelectWalletContent = ({
             wallets,
             setActiveWallet,
             dappKitDisconnect,
+            dappKitAvailableMethods,
+            dappKitRevokeAccount,
+            useDappKitAccountsAsSource,
         ],
     );
 
+    const supportsRequestPermissions =
+        Array.isArray(dappKitAvailableMethods) &&
+        dappKitAvailableMethods.includes('wallet_requestPermissions') &&
+        typeof dappKitRequestPermissions === 'function';
+    const supportsRevokeAccount =
+        Array.isArray(dappKitAvailableMethods) &&
+        dappKitAvailableMethods.includes('wallet_revokeAccountPermission') &&
+        typeof dappKitRevokeAccount === 'function';
+
     const handleAddNewWallet = useCallback(() => {
+        if (useDappKitAccountsAsSource) {
+            // VeWorld v2: prefer EIP-2255 `wallet_requestPermissions`,
+            // fall back to legacy `thor_switchWallet`.
+            if (supportsRequestPermissions) {
+                dappKitRequestPermissions()
+                    .then(() => {
+                        refresh();
+                    })
+                    .catch((e) => {
+                        console.error('dapp-kit requestPermissions failed', e);
+                    });
+                return;
+            }
+            dappKitSwitchWallet().catch((e) => {
+                console.error('dapp-kit switchWallet failed', e);
+            });
+            return;
+        }
         openDappKitModal();
-    }, [openDappKitModal]);
+    }, [
+        useDappKitAccountsAsSource,
+        supportsRequestPermissions,
+        dappKitRequestPermissions,
+        dappKitSwitchWallet,
+        openDappKitModal,
+        refresh,
+    ]);
 
     const handleLogout = () => {
         disconnect();
@@ -303,7 +434,10 @@ export const SelectWalletContent = ({
                                 onRemove={() =>
                                     handleRemoveWallet(activeWallet)
                                 }
-                                showRemove={wallets.length > 1}
+                                showRemove={
+                                    !useDappKitAccountsAsSource &&
+                                    wallets.length > 1
+                                }
                             />
                         </VStack>
                     )}
@@ -322,7 +456,10 @@ export const SelectWalletContent = ({
                                         handleWalletSelect(wallet.address)
                                     }
                                     onRemove={() => handleRemoveWallet(wallet)}
-                                    showRemove={true}
+                                    showRemove={
+                                        !useDappKitAccountsAsSource ||
+                                        supportsRevokeAccount
+                                    }
                                 />
                             ))}
                         </VStack>
@@ -337,7 +474,9 @@ export const SelectWalletContent = ({
                         variant="vechainKitSecondary"
                         onClick={handleAddNewWallet}
                     >
-                        {t('Add New Wallet')}
+                        {useDappKitAccountsAsSource
+                            ? t('Change connected accounts')
+                            : t('Add New Wallet')}
                     </Button>
                     <Button
                         w="full"

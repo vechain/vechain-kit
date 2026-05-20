@@ -18,7 +18,6 @@ import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 export type ProfileCardProps = {
     address: string;
     onEditClick?: () => void;
-    onLogout?: () => void;
     showHeader?: boolean;
     showLinks?: boolean;
     showDescription?: boolean;
@@ -39,7 +38,6 @@ export const ProfileCard = ({
     showDisplayName = true,
     reserveNameDescriptionSpace = false,
     setCurrentContent,
-    onLogout,
 }: ProfileCardProps) => {
     const { network } = useVeChainKitConfig();
 
@@ -209,7 +207,6 @@ export const ProfileCard = ({
                 )}
 
                 <AddressDisplay
-                    onLogout={onLogout}
                     wallet={{
                         address,
                         domain: metadata?.domain,

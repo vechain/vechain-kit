@@ -500,5 +500,6 @@
   "Tokens sent": "Tokens sent",
   "{{amount}} {{symbol}} is on its way to {{recipient}}.": "{{amount}} {{symbol}} is on its way to {{recipient}}.",
   "NFT sent": "NFT sent",
-  "{{nft}} is now in {{recipient}}’s wallet.": "{{nft}} is now in {{recipient}}’s wallet."
+  "{{nft}} is now in {{recipient}}’s wallet.": "{{nft}} is now in {{recipient}}’s wallet.",
+  "Change connected accounts": "Change connected accounts"
 }

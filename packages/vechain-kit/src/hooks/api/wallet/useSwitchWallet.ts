@@ -10,6 +10,17 @@ export type UseSwitchWalletReturnType = {
     setActiveWallet: (address: string) => void;
     removeWallet: (address: string) => void;
     isInAppBrowser: boolean;
+    /**
+     * Whether the wallet-switch UI should be exposed to the user.
+     * - VeWorld in-app browser: requires the wallet to advertise
+     *   `thor_switchWallet` (`isSwitchWalletEnabled`).
+     * - External browser (desktop or mobile) on dapp-kit: always true except
+     *   for WalletConnect, where the session exposes a single account and
+     *   doesn't support `wallet_requestPermissions` / `thor_switchWallet`,
+     *   so "Switch" would only trigger a full reconnect.
+     * - Privy / social-login / cross-app: false (no dapp-kit connection).
+     */
+    canSwitchWallet: boolean;
 };
 
 /**
@@ -18,7 +29,11 @@ export type UseSwitchWalletReturnType = {
  * - On desktop: Provides wallet storage functions for UI-based switching
  */
 export const useSwitchWallet = (): UseSwitchWalletReturnType => {
-    const { switchWallet: dappKitSwitchWallet } = useDAppKitWallet();
+    const {
+        switchWallet: dappKitSwitchWallet,
+        isSwitchWalletEnabled,
+        source: dappKitSource,
+    } = useDAppKitWallet();
     const { connection } = useWallet();
     const [isSwitching, setIsSwitching] = useState(false);
     const {
@@ -28,6 +43,11 @@ export const useSwitchWallet = (): UseSwitchWalletReturnType => {
     } = useWalletStorage();
 
     const isInAppBrowser = connection.isInAppBrowser;
+
+    const canSwitchWallet = isInAppBrowser
+        ? isSwitchWalletEnabled
+        : connection.isConnectedWithDappKit &&
+          dappKitSource !== 'wallet-connect';
 
     const switchWallet = useCallback(async () => {
         if (isInAppBrowser) {
@@ -71,5 +91,6 @@ export const useSwitchWallet = (): UseSwitchWalletReturnType => {
         setActiveWallet,
         removeWallet: removeWalletStorage,
         isInAppBrowser,
+        canSwitchWallet,
     };
 };

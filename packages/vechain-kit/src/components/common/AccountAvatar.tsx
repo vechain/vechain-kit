@@ -1,4 +1,5 @@
 import { Wallet } from '@/types';
+import { getPicassoImage } from '@/utils';
 import { Image, ImageProps, Skeleton } from '@chakra-ui/react';
 import { useRef, useEffect } from 'react';
 
@@ -28,10 +29,15 @@ export const AccountAvatar = ({ wallet, props }: AccountAvatarProps) => {
         }
     }, [wallet?.image, wallet?.isLoadingMetadata]);
 
-    if (
-        (!props?.src && !wallet?.image && !previousImageRef.current) ||
-        wallet?.isLoadingMetadata
-    ) {
+    // Deterministic Picasso fallback so the avatar never stays on the skeleton.
+    const picassoFallback = wallet?.address
+        ? getPicassoImage(wallet.address)
+        : undefined;
+
+    const resolvedSrc =
+        props?.src || wallet?.image || previousImageRef.current;
+
+    if (wallet?.isLoadingMetadata && !resolvedSrc && !picassoFallback) {
         return (
             <Skeleton
                 rounded="full"
@@ -40,13 +46,14 @@ export const AccountAvatar = ({ wallet, props }: AccountAvatarProps) => {
             />
         );
     }
+
     return (
         <Image
-            src={props?.src || wallet?.image || previousImageRef.current}
+            src={resolvedSrc || picassoFallback}
             alt={props?.alt || wallet?.domain}
             objectFit="cover"
             rounded="full"
-            // fallbackSrc={getPicassoImage(wallet?.address ?? '')}
+            fallbackSrc={picassoFallback}
             {...props}
         />
     );

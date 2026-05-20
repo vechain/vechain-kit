@@ -44,19 +44,17 @@ const extractErrorMessage = (err: unknown): string => {
 /**
  * Drives a dapp-kit wallet connection (setSource + connect) while reflecting
  * progress in the ConnectModal's local sub-content state (loading/error).
- *
- * Uses the legacy `connect()` API rather than `connectV2()` because:
- *   - WalletConnect's signer throws "not implemented" for V2.
- *   - The VeWorld desktop extension also rejects V2 ("Attempt failed").
- * V2 is only reliable inside the VeWorld mobile in-app browser, which is
- * handled separately in ModalProvider.
  */
 export const useConnectWithDappKitSource = (
     source: WalletSource,
     setCurrentContent: SetCurrentContent,
 ) => {
     const { t } = useTranslation();
-    const { setSource, connect: dappKitConnect } = useDAppKitWallet();
+    const {
+        setSource,
+        connect: connectV1,
+        connectV2,
+    } = useDAppKitWallet();
 
     const connect = useCallback(async () => {
         const displayName = sourceDisplayName[source] ?? source;
@@ -75,7 +73,9 @@ export const useConnectWithDappKitSource = (
             !window.vechain
         ) {
             window.open(
-                `${VEWORLD_UNIVERSAL_LINK}${encodeURIComponent(window.location.href)}`,
+                `${VEWORLD_UNIVERSAL_LINK}${encodeURIComponent(
+                    window.location.href,
+                )}`,
                 '_self',
             );
             return;
@@ -100,7 +100,11 @@ export const useConnectWithDappKitSource = (
 
         try {
             setSource(source);
-            await dappKitConnect();
+            if (source === 'veworld') {
+                await connectV2(null);
+            } else {
+                await connectV1();
+            }
             // ConnectModal closes automatically when useWallet flips
             // `connection.isConnected` to true.
         } catch (err) {
@@ -120,7 +124,7 @@ export const useConnectWithDappKitSource = (
                 },
             });
         }
-    }, [source, setSource, dappKitConnect, setCurrentContent, t]);
+    }, [source, setSource, connectV1, connectV2, setCurrentContent, t]);
 
     return { connect };
 };

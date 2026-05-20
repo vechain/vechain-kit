@@ -6,13 +6,13 @@ import {
     VStack,
     HStack,
     Button,
+    IconButton,
     Icon,
     Text,
 } from '@chakra-ui/react';
 import {
     useSwitchWallet,
     useWallet,
-    useDAppKitWallet,
     useTotalBalance,
     LocalStorageKey,
     useLocalStorage,
@@ -43,9 +43,9 @@ export const ProfileContent = ({
     switchFeedback,
 }: ProfileContentProps) => {
     const { t } = useTranslation();
-    const { account, disconnect, connection } = useWallet();
-    const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
-    const { isSwitchWalletEnabled } = useDAppKitWallet();
+    const { account, disconnect } = useWallet();
+    const { switchWallet, isSwitching, isInAppBrowser, canSwitchWallet } =
+        useSwitchWallet();
     const { hasAnyBalance, formattedBalance } = useTotalBalance({
         address: account?.address,
     });
@@ -110,18 +110,14 @@ export const ProfileContent = ({
                         address={account?.address ?? ''}
                         showHeader={false}
                         setCurrentContent={setCurrentContent}
-                        onLogout={() => {
-                            disconnect();
-                            onLogoutSuccess?.();
-                        }}
                     />
                 </VStack>
             </ModalBody>
             <ModalFooter w="full">
-                <HStack w="full" justify="space-between" spacing={4} mt={4}>
+                <HStack w="full" justify="space-between" spacing={3} mt={4}>
                     <Button
                         size="md"
-                        width="full"
+                        flex={1}
                         height="40px"
                         variant="vechainKitSecondary"
                         leftIcon={
@@ -149,18 +145,14 @@ export const ProfileContent = ({
 
                     {/* In VeWorld mobile we call switchWallet
                     on the desktop we call setCurrentContent to select-wallet
-                    otherwise we show logout button
                     */}
-                    {(connection.isInAppBrowser && isSwitchWalletEnabled) ||
-                    (!connection.isInAppBrowser &&
-                        connection.isConnectedWithDappKit) ? (
+                    {canSwitchWallet && (
                         <Button
                             size="md"
-                            width="full"
+                            flex={1}
                             height="40px"
                             variant="vechainKitSecondary"
                             leftIcon={<Icon as={LuArrowLeftRight} />}
-                            colorScheme="red"
                             onClick={async () => {
                                 handleSwitchWallet();
                             }}
@@ -170,32 +162,31 @@ export const ProfileContent = ({
                         >
                             {t('Switch')}
                         </Button>
-                    ) : (
-                        <Button
-                            size="md"
-                            width="full"
-                            height="40px"
-                            variant="vechainKitSecondary"
-                            leftIcon={<Icon as={LuLogOut} />}
-                            colorScheme="red"
-                            onClick={() =>
-                                setCurrentContent({
-                                    type: 'disconnect-confirm',
-                                    props: {
-                                        onDisconnect: () => {
-                                            disconnect();
-                                            onLogoutSuccess?.();
-                                        },
-                                        onBack: () =>
-                                            setCurrentContent?.('profile'),
-                                    },
-                                })
-                            }
-                            data-testid="logout-button"
-                        >
-                            {t('Logout')}
-                        </Button>
                     )}
+
+                    <IconButton
+                        size="md"
+                        height="40px"
+                        minW="40px"
+                        w="40px"
+                        variant="vechainKitLogout"
+                        icon={<Icon as={LuLogOut} />}
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: () => {
+                                        disconnect();
+                                        onLogoutSuccess?.();
+                                    },
+                                    onBack: () =>
+                                        setCurrentContent?.('profile'),
+                                },
+                            })
+                        }
+                        aria-label={t('Logout')}
+                        data-testid="logout-button"
+                    />
                 </HStack>
             </ModalFooter>
         </>

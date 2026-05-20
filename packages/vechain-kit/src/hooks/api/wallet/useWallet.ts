@@ -21,9 +21,23 @@ import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useWalletMetadata } from './useWalletMetadata';
 import { useWalletStorage } from './useWalletStorage';
 import { isBrowser } from '@/utils/ssrUtils';
+import { getVechainDomainQueryKey } from '@/hooks/api/vetDomains/useVechainDomain';
+import { getAvatarOfAddressQueryKey } from '@/hooks/api/vetDomains/useGetAvatarOfAddress';
+
+// Normalize addresses to lowercase at the `useWallet` boundary so that the
+// case returned by `account.address` / `connectedWallet.address` is stable
+// across vechain-kit versions and dapp-kit connect flows (v1 certificate vs
+// v2 `wallet_requestPermissions`, which may return mixed case).
+// Downstream consumers (React Query keys, app-side caches, stored wallets)
+// historically treated the address as lowercase; returning a checksummed
+// address here would break that contract and silently invalidate caches
+// when switching between vechain-kit versions on the same domain.
+// Strict EIP-55 callers must opt-in explicitly via `Address.checksum`.
+const normalizeAddress = (addr: string): string => addr.toLowerCase();
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
@@ -31,6 +45,14 @@ export type UseWalletReturnType = {
 
     // The wallet in use between dappKitWallet, embeddedWallet and crossAppWallet
     connectedWallet: Wallet;
+
+    /** All accounts approved by the wallet (dapp-kit multi-account); single
+     * entry for Privy / cross-app. The active one is `account`. */
+    accounts: NonNullable<Wallet>[];
+
+    /** Switch active account without reopening the wallet picker. No-op for
+     * Privy / cross-app. */
+    setActiveAccount: (address: string) => void;
 
     // Every user connected with privy has one
     smartAccount: SmartAccount;
@@ -71,8 +93,20 @@ export const useWallet = (): UseWalletReturnType => {
     const { feeDelegation, network, privy } = useVeChainKitConfig();
     const { user, authenticated, logout, ready } = usePrivy();
     const { data: chainId } = useGetChainId();
-    const { account: dappKitAccount, disconnect: dappKitDisconnect } =
-        useDAppKitWallet();
+    const {
+        account: dappKitAccount,
+        accounts: dappKitAccountsRaw,
+        setActiveAccount: dappKitSetActiveAccount,
+        disconnect: dappKitDisconnect,
+    } = useDAppKitWallet();
+
+    // Fall back to `[dappKitAccount]` for dapp-kit-react < 2.2.0 or when
+    // v2 persistence didn't populate `addresses`.
+    const dappKitAccounts: string[] = useMemo(() => {
+        if (dappKitAccountsRaw && dappKitAccountsRaw.length > 0)
+            return dappKitAccountsRaw;
+        return dappKitAccount ? [dappKitAccount] : [];
+    }, [dappKitAccountsRaw, dappKitAccount]);
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -81,7 +115,11 @@ export const useWallet = (): UseWalletReturnType => {
         getActiveWallet,
         saveWallet,
         getStoredWallets,
+        setActiveWallet: setActiveWalletStorage,
+        removeWallet,
     } = useWalletStorage();
+
+    const queryClient = useQueryClient();
 
     const nodeUrl = useGetNodeUrl();
 
@@ -167,6 +205,104 @@ export const useWallet = (): UseWalletReturnType => {
         : isConnectedWithCrossApp
         ? crossAppAddress
         : privyEmbeddedWalletAddress;
+
+    // Invalidate VNS/avatar queries on dapp-kit v2 connect — `connectV2` only
+    // sets `state.address`, it doesn't trigger the VNS lookup v1 did.
+    useEffect(() => {
+        if (!dappKitAccount) return;
+        queryClient.invalidateQueries({
+            queryKey: getVechainDomainQueryKey(dappKitAccount),
+        });
+        queryClient.invalidateQueries({
+            queryKey: getAvatarOfAddressQueryKey(dappKitAccount),
+        });
+    }, [dappKitAccount, queryClient]);
+
+    // Cross-version compat: dapp-kit v2 (`wallet_requestPermissions`) and
+    // older builds of this kit may persist mixed-case, non-EIP-55 addresses
+    // under both `dappkit@vechain/v2/*` (dapp-kit) and
+    // `vechain_kit_wallets_*` / `vechain_kit_active_wallet_*` (kit). Older
+    // vechain-kit consumers on the same origin read those keys verbatim and
+    // then hit `ethers.isAddress()` strict EIP-55 checks downstream
+    // (balance/domain/avatar all fail). Normalize every relevant entry to
+    // lowercase so any reader — old or new — gets a uniformly safe value.
+    useEffect(() => {
+        if (!isBrowser() || !isConnectedWithDappKit || !dappKitAccount) return;
+
+        const normalizeStringEntry = (key: string) => {
+            try {
+                const v = window.localStorage.getItem(key);
+                if (v && v !== v.toLowerCase()) {
+                    window.localStorage.setItem(key, v.toLowerCase());
+                }
+            } catch {
+                /* ignore: localStorage may be unavailable */
+            }
+        };
+
+        const normalizeJsonArrayEntry = (key: string) => {
+            try {
+                const v = window.localStorage.getItem(key);
+                if (!v) return;
+                const parsed = JSON.parse(v);
+                if (
+                    Array.isArray(parsed) &&
+                    parsed.some(
+                        (a) => typeof a === 'string' && a !== a.toLowerCase(),
+                    )
+                ) {
+                    window.localStorage.setItem(
+                        key,
+                        JSON.stringify(
+                            parsed.map((a) =>
+                                typeof a === 'string' ? a.toLowerCase() : a,
+                            ),
+                        ),
+                    );
+                }
+            } catch {
+                /* ignore: malformed JSON or unavailable storage */
+            }
+        };
+
+        const normalizeStoredWalletsEntry = (key: string) => {
+            try {
+                const v = window.localStorage.getItem(key);
+                if (!v) return;
+                const parsed = JSON.parse(v);
+                if (!Array.isArray(parsed)) return;
+                const next = parsed.map((w) => {
+                    if (
+                        w &&
+                        typeof w === 'object' &&
+                        typeof w.address === 'string'
+                    ) {
+                        return { ...w, address: w.address.toLowerCase() };
+                    }
+                    return w;
+                });
+                const changed = next.some(
+                    (w, i) =>
+                        w?.address !== (parsed[i] as { address?: string })?.address,
+                );
+                if (changed) {
+                    window.localStorage.setItem(key, JSON.stringify(next));
+                }
+            } catch {
+                /* ignore */
+            }
+        };
+
+        normalizeStringEntry('dappkit@vechain/v2/account');
+        normalizeJsonArrayEntry('dappkit@vechain/v2/accounts');
+        normalizeStringEntry(`vechain_kit_active_wallet_${network.type}`);
+        normalizeStoredWalletsEntry(`vechain_kit_wallets_${network.type}`);
+    }, [
+        isConnectedWithDappKit,
+        dappKitAccount,
+        dappKitAccountsRaw,
+        network.type,
+    ]);
 
     // For desktop dappkit wallets, check if there's a stored active wallet
     // Use state to track active wallet so it updates immediately on switch
@@ -272,7 +408,56 @@ export const useWallet = (): UseWalletReturnType => {
         network.type,
     );
 
-    const { setActiveWallet: setActiveWalletStorage } = useWalletStorage();
+    const dappKitAccountsRef = useRef(dappKitAccounts);
+    dappKitAccountsRef.current = dappKitAccounts;
+
+    // Reconcile kit storage with the dapp-kit approved set.
+    //   - dapp-kit v2 (`accounts` populated): full multi-account set.
+    //   - dapp-kit v1 / single-account flow (`accounts` missing or empty):
+    //     fall back to `[dappKitAccount]`. This handles the recovery case
+    //     where the user disconnected from an older vechain-kit on the
+    //     same origin and re-logged in with a single account — without
+    //     pruning here, `vechain_kit_wallets_*` keeps stale multi-account
+    //     entries written by a previous v2 session and the old kit's UI
+    //     surfaces accounts the wallet no longer approves.
+    useEffect(() => {
+        if (
+            !isConnectedWithDappKit ||
+            isInAppBrowser ||
+            !dappKitAccount
+        ) {
+            return;
+        }
+
+        const approvedAddresses: string[] =
+            dappKitAccountsRaw && dappKitAccountsRaw.length > 0
+                ? dappKitAccountsRaw
+                : [dappKitAccount];
+
+        const stored = getStoredWallets();
+        const approvedLower = new Set(
+            approvedAddresses.map((a) => a.toLowerCase()),
+        );
+        const storedLower = new Set(
+            stored.map((w) => w.address.toLowerCase()),
+        );
+
+        approvedAddresses.forEach((addr) => {
+            if (!storedLower.has(addr.toLowerCase())) saveWallet(addr);
+        });
+        stored.forEach((w) => {
+            if (!approvedLower.has(w.address.toLowerCase()))
+                removeWallet(w.address);
+        });
+    }, [
+        isConnectedWithDappKit,
+        isInAppBrowser,
+        dappKitAccount,
+        dappKitAccountsRaw,
+        getStoredWallets,
+        saveWallet,
+        removeWallet,
+    ]);
 
     // Track recently removed wallets to prevent them from being set as active again
     const recentlyRemovedWalletsRef = useRef<Set<string>>(new Set());
@@ -398,7 +583,7 @@ export const useWallet = (): UseWalletReturnType => {
 
     const account = activeAddress
         ? {
-              address: activeAddress,
+              address: normalizeAddress(activeAddress),
               domain: activeAccountMetadata.domain,
               image: activeAccountMetadata.image,
               isLoadingMetadata: activeAccountMetadata.isLoading,
@@ -408,13 +593,62 @@ export const useWallet = (): UseWalletReturnType => {
 
     const connectedWallet = connectedWalletAddress
         ? {
-              address: connectedWalletAddress,
+              address: normalizeAddress(connectedWalletAddress),
               domain: connectedMetadata.domain,
               image: connectedMetadata.image,
               isLoadingMetadata: connectedMetadata.isLoading,
               metadata: connectedMetadata.records,
           }
         : null;
+
+    // Approved-accounts list surfaced to consumers (dapp-kit only; Privy /
+    // cross-app always have a single wallet).
+    const accountsList: NonNullable<Wallet>[] = useMemo(() => {
+        if (isConnectedWithDappKit) {
+            return dappKitAccounts.map((addr) => ({
+                address: normalizeAddress(addr),
+                domain: undefined,
+                image: undefined,
+                isLoadingMetadata: false,
+                metadata: undefined,
+            }));
+        }
+        return connectedWallet ? [connectedWallet] : [];
+    }, [isConnectedWithDappKit, dappKitAccounts, connectedWallet]);
+
+    const setActiveAccount = useCallback(
+        (address: string) => {
+            if (!isConnectedWithDappKit) return;
+            if (typeof dappKitSetActiveAccount === 'function') {
+                try {
+                    dappKitSetActiveAccount(address);
+                } catch (e) {
+                    console.error(
+                        'setActiveAccount: dapp-kit rejected the address',
+                        e,
+                    );
+                    return;
+                }
+            }
+            if (!isInAppBrowser) {
+                setActiveWalletStorage(address);
+                setStoredActiveWalletAddress(address);
+                if (isBrowser()) {
+                    window.dispatchEvent(
+                        new CustomEvent('wallet_switched', {
+                            detail: { address },
+                        }),
+                    );
+                }
+            }
+        },
+        [
+            isConnectedWithDappKit,
+            isInAppBrowser,
+            dappKitSetActiveAccount,
+            setActiveWalletStorage,
+        ],
+    );
 
     // Get smart account version
     const { data: smartAccountVersion } = useGetAccountVersion(
@@ -433,13 +667,31 @@ export const useWallet = (): UseWalletReturnType => {
             // First set connection state to false
             setIsConnected(false);
 
-            // Then perform disconnection logic
+            // Then perform disconnection logic. `dappKitDisconnect` already
+            // wipes both `dappkit@vechain/v2/*` and the legacy
+            // `dappkit@vechain/*` keys; we add the kit-side storage cleanup
+            // below so a logout always leaves a clean slate (no stale
+            // multi-account list surfacing on the next login, regardless of
+            // which vechain-kit version connects next on the same origin).
             if (isConnectedWithDappKit) {
                 dappKitDisconnect();
             } else if (isConnectedWithSocialLogin) {
                 await logout();
             } else if (isConnectedWithCrossApp) {
                 await disconnectCrossApp();
+            }
+
+            if (isBrowser()) {
+                try {
+                    window.localStorage.removeItem(
+                        `vechain_kit_wallets_${network.type}`,
+                    );
+                    window.localStorage.removeItem(
+                        `vechain_kit_active_wallet_${network.type}`,
+                    );
+                } catch {
+                    /* ignore: localStorage may be unavailable */
+                }
             }
 
             clearConnectionCache();
@@ -457,10 +709,13 @@ export const useWallet = (): UseWalletReturnType => {
         isConnectedWithCrossApp,
         disconnectCrossApp,
         clearConnectionCache,
+        network.type,
     ]);
 
     return {
         account,
+        accounts: accountsList,
+        setActiveAccount,
         smartAccount: {
             address: smartAccount?.address ?? '',
             domain: smartAccountMetadata.domain,
