@@ -46,7 +46,7 @@ The hosted properties of VeChain Kit live across three repos:
 
 -   **[vechain/vechain-kit-infra](https://github.com/vechain/vechain-kit-infra)** — Terraform that provisions S3 + CloudFront + ACM + Route53 for `vechainkit.vechain.org`, `kit.vechain.org`, `preview.vechainkit.vechain.org`, and `playground.vechainkit.vechain.org`. Owns the `vechainkit.vechain.org` Route53 zone.
 -   **[vechain/vechain.org-domains](https://github.com/vechain/vechain.org-domains)** — Terraform-managed DNS records for the `vechain.org` zone. Holds the NS delegation that points `vechainkit.vechain.org` at the AWS nameservers managed by `vechain-kit-infra`.
--   **This repo's `.github/workflows/`** — `deploy-cloudfront.yaml` (homepage on push to main), `deploy-preview.yaml` (per-PR preview environments), `deploy-playground-cloudfront.yaml` (playground on kit/playground changes).
+-   **This repo's `.github/workflows/`** — `deploy-cloudfront.yaml` (homepage on push to main), `deploy-preview.yaml` (per-PR homepage previews), `deploy-playground-cloudfront.yaml` (playground on push to main), `deploy-playground-preview.yaml` (per-PR playground previews at `preview.vechainkit.vechain.org/<branch>/playground`).
 
 Deploys are triggered by GitHub Actions; the infrastructure (S3 buckets, CloudFront distributions, IAM role for OIDC) is provisioned out-of-band by `terraform apply` against `vechain-kit-infra/terraform/frontend`.
 
