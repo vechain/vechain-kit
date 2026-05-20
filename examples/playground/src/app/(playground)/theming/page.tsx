@@ -124,6 +124,10 @@ export default function ThemingPage() {
                 )}
                 hooks={['useColorMode']}
                 code={THEME_SNIPPET}
+                aiPrompt={t(
+                    'Add a dark/light mode toggle to my Next.js + Chakra UI v3 app using next-themes. Persist the choice in localStorage and respect prefers-color-scheme on first visit. Show a sun/moon icon button in the header.',
+                )}
+                aiSkills={['vechain-kit']}
             >
                 <ThemeDemo />
             </DemoSection>
@@ -135,6 +139,10 @@ export default function ThemingPage() {
                 )}
                 hooks={['useTranslation']}
                 code={I18N_SNIPPET}
+                aiPrompt={t(
+                    'Set up react-i18next in my Next.js app with English, Italian and Japanese. Create JSON files under src/app/languages/, detect the browser language with a localStorage fallback, and add a flag-based dropdown in the header to switch.',
+                )}
+                aiSkills={['vechain-kit', 'translate']}
             >
                 <I18nDemo />
             </DemoSection>

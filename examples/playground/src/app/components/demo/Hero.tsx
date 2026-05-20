@@ -10,7 +10,7 @@ import {
     VStack,
     useColorMode,
 } from '@chakra-ui/react';
-import { LuGithub, LuBook } from 'react-icons/lu';
+import { LuGithub, LuBook, LuSparkles } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { WalletButton, useWallet } from '@vechain/vechain-kit';
 
@@ -37,7 +37,7 @@ export function Hero() {
             }
         >
             <VStack align="flex-start" spacing={6} maxW="2xl">
-                <Box
+                <HStack
                     px={3}
                     py={1}
                     borderRadius="full"
@@ -47,9 +47,11 @@ export function Hero() {
                     letterSpacing="0.06em"
                     textTransform="uppercase"
                     color={colorMode === 'light' ? 'blue.700' : 'blue.200'}
+                    spacing={2}
                 >
-                    {t('VeChain Kit Playground')}
-                </Box>
+                    <Icon as={LuSparkles} boxSize={3} />
+                    <Text>{t('AI-friendly playground')}</Text>
+                </HStack>
 
                 <Heading
                     size={{ base: 'xl', md: '2xl' }}
@@ -64,7 +66,7 @@ export function Hero() {
                     color={colorMode === 'light' ? 'gray.700' : 'gray.300'}
                 >
                     {t(
-                        'Connect wallets, sign messages, build transactions and ship social login — all in a few hooks. Explore each capability live, then copy the code.',
+                        'Every demo ships with three things: a live preview, the code, and a ready-made prompt you can paste into Claude Code, Cursor or any AI agent.',
                     )}
                 </Text>
 

@@ -7,3 +7,4 @@ export { DemoSection } from './DemoSection';
 export { Hero } from './Hero';
 export { InstallSnippet } from './InstallSnippet';
 export { ConnectGate } from './ConnectGate';
+export { AIPromptBlock } from './AIPromptBlock';

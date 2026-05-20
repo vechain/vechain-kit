@@ -35,6 +35,10 @@ export default function ModalsPage() {
                         'Click any card to open the corresponding modal in isolated view. Each card lists the hook that opens it.',
                     )}
                     code={MODAL_SNIPPET}
+                    aiPrompt={t(
+                        'Add a quick-action row to my dashboard with three buttons: "Send", "Receive", and "Swap". Each opens the corresponding modal from @vechain/vechain-kit (useSendTokenModal, useReceiveModal, useSwapTokenModal). Use icons from react-icons/lu.',
+                    )}
+                    aiSkills={['vechain-kit']}
                 >
                     <ModalCatalog />
                 </DemoSection>

@@ -64,6 +64,10 @@ export default function ConnectPage() {
                 hooks={['WalletButton', 'useConnectModal', 'useDAppKitWalletModal']}
                 status="STABLE"
                 code={WALLET_BUTTON_SNIPPET}
+                aiPrompt={t(
+                    'Add a "Sign in" button to my Next.js app header using WalletButton from @vechain/vechain-kit. Use the modal variant. Style it to match my design system (pink primary, rounded-full). On mobile, show only the icon variant.',
+                )}
+                aiSkills={['vechain-kit']}
             >
                 <WalletButtonVariants />
             </DemoSection>
@@ -75,6 +79,10 @@ export default function ConnectPage() {
                 )}
                 hooks={['useLoginWithOAuth']}
                 code={OAUTH_SNIPPET}
+                aiPrompt={t(
+                    'Add a "Continue with Google" and "Continue with Apple" button to my login screen using useLoginWithOAuth from @vechain/vechain-kit. Show the brand icons (FcGoogle, FaApple) and keep them as outline buttons.',
+                )}
+                aiSkills={['vechain-kit']}
             >
                 <OAuthGrid />
             </DemoSection>

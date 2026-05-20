@@ -123,6 +123,10 @@ export default function DataPage() {
                     )}
                     hooks={['useGetB3trBalance', 'useGetVot3Balance']}
                     code={BALANCE_SNIPPET}
+                    aiPrompt={t(
+                        'Build a "Portfolio" card that shows B3TR and VOT3 balances for the connected user via useGetB3trBalance and useGetVot3Balance from @vechain/vechain-kit. Show a Chakra UI Skeleton while loading, format numbers with thousand separators, and add a "Refresh" button that invalidates the queries.',
+                    )}
+                    aiSkills={['vechain-kit']}
                 >
                     <VStack align="stretch" spacing={2}>
                         <DataRow
@@ -145,6 +149,10 @@ export default function DataPage() {
                     )}
                     hooks={['useGetTokenUsdPrice']}
                     code={PRICE_SNIPPET}
+                    aiPrompt={t(
+                        'Show the live VET/USD price in my app header using useGetTokenUsdPrice from @vechain/vechain-kit. Format it as $X.XXXX, refresh every 30 seconds, and add a tooltip that says "Powered by VeChain Kit".',
+                    )}
+                    aiSkills={['vechain-kit']}
                 >
                     <DataRow
                         label={t('VET Price')}
@@ -163,6 +171,10 @@ export default function DataPage() {
                         'useIsPerson',
                     ]}
                     code={VBD_SNIPPET}
+                    aiPrompt={t(
+                        'In my X2Earn app, gate reward submission behind a valid VeBetterDAO passport. Use useIsPerson from @vechain/vechain-kit. If the user is not a valid person, show a banner explaining how to get one. Also display the current allocations round id with useCurrentAllocationsRoundId.',
+                    )}
+                    aiSkills={['vechain-kit', 'vebetterdao']}
                 >
                     <VStack align="stretch" spacing={2}>
                         <DataRow

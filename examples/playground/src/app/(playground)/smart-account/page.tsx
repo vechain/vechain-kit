@@ -47,6 +47,10 @@ export default function SmartAccountPage() {
                 description={t(
                     'A primer on the ownership and recovery model.',
                 )}
+                aiPrompt={t(
+                    'Explain to me how smart accounts work in @vechain/vechain-kit when a user signs in with Privy. Cover: when the smart account gets deployed, who owns it, how recovery works, and how to read it via useWallet().',
+                )}
+                aiSkills={['vechain-kit', 'vechain-dev']}
             >
                 <SmartAccountInfo />
             </DemoSection>
@@ -59,6 +63,10 @@ export default function SmartAccountPage() {
                     )}
                     hooks={['useUpgradeSmartAccountModal']}
                     code={UPGRADE_SNIPPET}
+                    aiPrompt={t(
+                        'Add an "Upgrade smart account" item to my settings menu that opens the upgrade modal from useUpgradeSmartAccountModal in @vechain/vechain-kit. Only show it if the user is connected with Privy and the smart account version is behind the latest.',
+                    )}
+                    aiSkills={['vechain-kit']}
                 >
                     <UpgradeButtonInline />
                 </DemoSection>

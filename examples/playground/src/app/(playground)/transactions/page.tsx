@@ -201,6 +201,10 @@ export default function TransactionsPage() {
                     ]}
                     status="STABLE"
                     code={TX_SNIPPET}
+                    aiPrompt={t(
+                        'Build a "Send B3TR" form in my Next.js app that takes a recipient address and an amount, then sends the transaction using useBuildTransaction from @vechain/vechain-kit. Show progress in a transaction modal via useTransactionModal. Validate the address is a valid 0x… format and amount > 0 before sending. Use IB3TR__factory.abi from @vechain/vechain-contract-types for the clause builder.',
+                    )}
+                    aiSkills={['vechain-kit', 'vechain-dev']}
                 >
                     <TransactionDemo />
                 </DemoSection>

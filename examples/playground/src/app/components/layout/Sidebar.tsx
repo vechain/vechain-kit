@@ -74,6 +74,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
                                 href={item.href}
                                 icon={item.icon}
                                 label={item.label}
+                                status={item.status}
                                 onSelect={onItemClick}
                             />
                         ))}

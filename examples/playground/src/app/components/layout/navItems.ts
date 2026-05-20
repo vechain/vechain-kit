@@ -9,6 +9,7 @@ import {
     LuLayoutGrid,
     LuPalette,
     LuBookOpen,
+    LuSparkles,
 } from 'react-icons/lu';
 import type { IconType } from 'react-icons';
 import type { Status } from '../demo/StatusBadge';
@@ -34,6 +35,12 @@ export const NAV_GROUPS: NavGroup[] = [
                 href: '/getting-started',
                 icon: LuRocket,
                 label: 'Getting Started',
+            },
+            {
+                href: '/ai-skills',
+                icon: LuSparkles,
+                label: 'AI Skills',
+                status: 'NEW',
             },
         ],
     },

@@ -4,6 +4,7 @@ import {
     Box,
     Heading,
     HStack,
+    Icon,
     Tab,
     TabList,
     TabPanel,
@@ -16,10 +17,12 @@ import {
     WrapItem,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import { LuSparkles } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { CodeBlock } from './CodeBlock';
 import { HookBadge } from './HookBadge';
 import { Status, StatusBadge } from './StatusBadge';
+import { AIPromptBlock } from './AIPromptBlock';
 
 interface DemoSectionProps {
     title: string;
@@ -28,6 +31,8 @@ interface DemoSectionProps {
     status?: Status;
     code?: string;
     codeLanguage?: string;
+    aiPrompt?: string;
+    aiSkills?: string[];
     children?: ReactNode;
 }
 
@@ -38,12 +43,16 @@ export function DemoSection({
     status,
     code,
     codeLanguage = 'tsx',
+    aiPrompt,
+    aiSkills,
     children,
 }: DemoSectionProps) {
     const { colorMode } = useColorMode();
     const { t } = useTranslation();
 
     const hasCode = Boolean(code);
+    const hasAI = Boolean(aiPrompt);
+    const tabCount = (children ? 1 : 0) + (hasCode ? 1 : 0) + (hasAI ? 1 : 0);
 
     return (
         <Box
@@ -59,12 +68,17 @@ export function DemoSection({
                 align="stretch"
                 spacing={4}
                 p={{ base: 4, md: 6 }}
-                borderBottomWidth={hasCode || children ? '1px' : 0}
+                borderBottomWidth={tabCount > 0 ? '1px' : 0}
                 borderBottomColor={
                     colorMode === 'light' ? 'gray.100' : 'whiteAlpha.100'
                 }
             >
-                <HStack justify="space-between" align="flex-start" flexWrap="wrap" spacing={3}>
+                <HStack
+                    justify="space-between"
+                    align="flex-start"
+                    flexWrap="wrap"
+                    spacing={3}
+                >
                     <Heading size="md" fontWeight="semibold">
                         {title}
                     </Heading>
@@ -91,29 +105,60 @@ export function DemoSection({
                 )}
             </VStack>
 
-            {children && hasCode ? (
-                <Tabs
-                    variant="line"
-                    colorScheme="blue"
-                    size="sm"
-                    isLazy
-                >
+            {tabCount > 1 ? (
+                <Tabs variant="line" colorScheme="blue" size="sm" isLazy>
                     <TabList px={{ base: 2, md: 4 }}>
-                        <Tab fontWeight="medium">{t('Live demo')}</Tab>
-                        <Tab fontWeight="medium">{t('View code')}</Tab>
+                        {children && (
+                            <Tab fontWeight="medium">{t('Live demo')}</Tab>
+                        )}
+                        {hasCode && (
+                            <Tab fontWeight="medium">{t('View code')}</Tab>
+                        )}
+                        {hasAI && (
+                            <Tab fontWeight="medium">
+                                <HStack spacing={1.5}>
+                                    <Icon as={LuSparkles} boxSize={3.5} />
+                                    <Text>{t('AI prompt')}</Text>
+                                </HStack>
+                            </Tab>
+                        )}
                     </TabList>
                     <TabPanels>
-                        <TabPanel p={{ base: 4, md: 6 }}>{children}</TabPanel>
-                        <TabPanel p={{ base: 3, md: 4 }}>
-                            <CodeBlock code={code!} language={codeLanguage} />
-                        </TabPanel>
+                        {children && (
+                            <TabPanel p={{ base: 4, md: 6 }}>
+                                {children}
+                            </TabPanel>
+                        )}
+                        {hasCode && (
+                            <TabPanel p={{ base: 3, md: 4 }}>
+                                <CodeBlock
+                                    code={code!}
+                                    language={codeLanguage}
+                                />
+                            </TabPanel>
+                        )}
+                        {hasAI && (
+                            <TabPanel p={{ base: 3, md: 4 }}>
+                                <AIPromptBlock
+                                    prompt={aiPrompt!}
+                                    requiredSkills={aiSkills}
+                                />
+                            </TabPanel>
+                        )}
                     </TabPanels>
                 </Tabs>
-            ) : children ? (
-                <Box p={{ base: 4, md: 6 }}>{children}</Box>
-            ) : hasCode ? (
-                <Box p={{ base: 3, md: 4 }}>
-                    <CodeBlock code={code!} language={codeLanguage} />
+            ) : tabCount === 1 ? (
+                <Box p={{ base: 4, md: 6 }}>
+                    {children}
+                    {hasCode && !children && (
+                        <CodeBlock code={code!} language={codeLanguage} />
+                    )}
+                    {hasAI && !children && !hasCode && (
+                        <AIPromptBlock
+                            prompt={aiPrompt!}
+                            requiredSkills={aiSkills}
+                        />
+                    )}
                 </Box>
             ) : null}
         </Box>

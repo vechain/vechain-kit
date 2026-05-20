@@ -47,6 +47,10 @@ export default function IdentityPage() {
                     )}
                     hooks={['useWallet']}
                     code={USE_WALLET_SNIPPET}
+                    aiPrompt={t(
+                        'Build a "ProfileCard" component that uses useWallet from @vechain/vechain-kit to show the connected user\'s address, VET domain, smart account address (with a "Deployed" tag), and a copy-to-clipboard button on each address. Truncate long addresses like 0x1234…abcd. Use Chakra UI v3.',
+                    )}
+                    aiSkills={['vechain-kit']}
                 >
                     <IdentityPanel />
                 </DemoSection>
@@ -57,6 +61,10 @@ export default function IdentityPage() {
                         'How the user is authenticated — direct wallet, Privy, or cross-app.',
                     )}
                     hooks={['useWallet']}
+                    aiPrompt={t(
+                        'Show a small badge in my app header indicating how the user is connected (Privy, Privy cross-app, or direct wallet). Read connection.source.type from useWallet and pick a color: blue for wallet, purple for privy, pink for cross-app.',
+                    )}
+                    aiSkills={['vechain-kit']}
                 >
                     <ConnectionInfo />
                 </DemoSection>

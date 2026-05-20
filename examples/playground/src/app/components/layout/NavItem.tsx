@@ -5,15 +5,17 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { IconType } from 'react-icons';
 import { useTranslation } from 'react-i18next';
+import { StatusBadge, type Status } from '../demo/StatusBadge';
 
 interface NavItemProps {
     href: string;
     icon: IconType;
     label: string;
+    status?: Status;
     onSelect?: () => void;
 }
 
-export function NavItem({ href, icon, label, onSelect }: NavItemProps) {
+export function NavItem({ href, icon, label, status, onSelect }: NavItemProps) {
     const { colorMode } = useColorMode();
     const pathname = usePathname();
     const { t } = useTranslation();
@@ -46,7 +48,10 @@ export function NavItem({ href, icon, label, onSelect }: NavItemProps) {
                 cursor="pointer"
             >
                 <Icon as={icon} boxSize={4} />
-                <Text fontSize="sm">{t(label)}</Text>
+                <Text fontSize="sm" flex={1}>
+                    {t(label)}
+                </Text>
+                {status && <StatusBadge status={status} />}
             </HStack>
         </Link>
     );

@@ -175,6 +175,10 @@ export default function SigningPage() {
                     )}
                     hooks={['useSignMessage']}
                     code={SIGN_MESSAGE_SNIPPET}
+                    aiPrompt={t(
+                        'Add a "Verify ownership" button to my app that signs a server-issued nonce message using useSignMessage from @vechain/vechain-kit. After signing, POST the signature + the connected address to /api/verify so the backend can confirm ownership.',
+                    )}
+                    aiSkills={['vechain-kit', 'vechain-dev']}
                 >
                     <SignMessageDemo />
                 </DemoSection>
@@ -186,6 +190,10 @@ export default function SigningPage() {
                     )}
                     hooks={['useSignTypedData']}
                     code={SIGN_TYPED_DATA_SNIPPET}
+                    aiPrompt={t(
+                        'Build an EIP-712 typed-data sign flow using useSignTypedData from @vechain/vechain-kit. The schema is an Order({ trader: address, amount: uint256, expiry: uint256 }). After signing, log the signature so I can wire it into my marketplace backend.',
+                    )}
+                    aiSkills={['vechain-kit', 'vechain-dev']}
                 >
                     <SignTypedDataDemo />
                 </DemoSection>

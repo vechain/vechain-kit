@@ -17,7 +17,10 @@ import {
     LuDatabase,
     LuPalette,
     LuShield,
+    LuSparkles,
+    LuArrowRight,
 } from 'react-icons/lu';
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { Hero } from '../../components/demo/Hero';
 import { InstallSnippet } from '../../components/demo/InstallSnippet';
@@ -150,29 +153,101 @@ export default function GettingStartedPage() {
             </Box>
 
             <DemoSection
-                title={t('1. Install')}
+                title={t('🚀 Start a new VeChain dApp')}
                 description={t(
-                    'Add the package to your React or Next.js app — no global config needed.',
+                    'The recommended path. Hand this prompt to your coding agent — it will read the VeChain skills and scaffold the entire project, provider included.',
                 )}
-            >
-                <InstallSnippet />
-            </DemoSection>
-
-            <DemoSection
-                title={t('2. Wrap your app with the provider')}
-                description={t(
-                    'Configure login methods, network and dapp-kit options once. The provider exposes hooks and modals to the whole tree.',
+                status="NEW"
+                aiPrompt={t(
+                    'Scaffold a new VeChain dApp for me using create-vechain-dapp, with:\n- VeChain Kit pre-wired (Privy social login: Google + email, plus VeWorld and WalletConnect)\n- Chakra UI v3 (with next-themes) and dark mode by default — follow the next-chakra-v3 example in the vechain-kit repo for wiring the kit\'s `theme` prop via `useChakraContext().token.var(...)` so theme tokens stay reactive\n- A landing page that shows the connected user\'s address, B3TR balance, and a "Send B3TR" button\n- A GitHub Pages deploy workflow ready to use\n\nName the project "my-vechain-dapp". When done, run `yarn dev` and tell me the URL.',
                 )}
-                hooks={['VeChainKitProvider']}
-                code={PROVIDER_SNIPPET}
+                aiSkills={['create-vechain-dapp', 'vechain-kit']}
             />
+
+            <Box opacity={0.95}>
+                <DemoSection
+                    title={t('Or: add VeChain Kit to an existing project')}
+                    description={t(
+                        'Already have a Next.js app? Install the package, then either follow the provider snippet below or use the AI prompt to wire it up automatically.',
+                    )}
+                    hooks={['VeChainKitProvider']}
+                    code={PROVIDER_SNIPPET}
+                    aiPrompt={t(
+                        'I already have a Next.js app and I want to add VeChain Kit to it.\n\n1. Install @vechain/vechain-kit and any required peer deps.\n2. Find my root layout (app/layout.tsx for App Router or pages/_app.tsx for Pages Router) and wrap it with VeChainKitProvider.\n3. Enable Privy social login (Google + email), VeWorld and WalletConnect.\n4. Read Privy keys from NEXT_PUBLIC_PRIVY_* and the WalletConnect projectId from NEXT_PUBLIC_WC_PROJECT_ID.\n5. Add a <WalletButton /> to my existing header.\n6. Don\'t change my existing Chakra theme.\n\nIf you hit peer-dependency conflicts, stop and tell me before applying any fix.',
+                    )}
+                    aiSkills={['vechain-kit']}
+                >
+                    <VStack align="stretch" spacing={4}>
+                        <Text fontSize="sm" opacity={0.7}>
+                            {t('Install the package manually:')}
+                        </Text>
+                        <InstallSnippet />
+                    </VStack>
+                </DemoSection>
+            </Box>
+
+            <Link href="/ai-skills" style={{ textDecoration: 'none' }}>
+                <Box
+                    p={5}
+                    borderRadius="lg"
+                    borderWidth="1px"
+                    borderColor="blue.200"
+                    bg="blue.50"
+                    _dark={{
+                        bg: 'whiteAlpha.50',
+                        borderColor: 'whiteAlpha.300',
+                    }}
+                    _hover={{
+                        transform: 'translateY(-2px)',
+                        transition: 'transform 0.2s, box-shadow 0.2s',
+                        shadow: 'md',
+                    }}
+                    cursor="pointer"
+                >
+                    <HStack spacing={4} align="flex-start">
+                        <Icon
+                            as={LuSparkles}
+                            boxSize={6}
+                            color="blue.500"
+                            mt={1}
+                            _dark={{ color: 'blue.300' }}
+                        />
+                        <VStack align="flex-start" spacing={1} flex={1}>
+                            <HStack>
+                                <Text fontWeight="semibold">
+                                    {t('Ship VeChain dApps with AI')}
+                                </Text>
+                                <Text
+                                    fontSize="xs"
+                                    fontWeight="bold"
+                                    letterSpacing="wider"
+                                    textTransform="uppercase"
+                                    px={2}
+                                    py={0.5}
+                                    borderRadius="full"
+                                    bg="pink.500"
+                                    color="white"
+                                >
+                                    {t('New')}
+                                </Text>
+                            </HStack>
+                            <Text fontSize="sm" opacity={0.8}>
+                                {t(
+                                    'Install 11 VeChain skills in Claude Code, Cursor or any agent — domain knowledge for wallet UX, smart contracts, VeBetterDAO and more.',
+                                )}
+                            </Text>
+                        </VStack>
+                        <Icon as={LuArrowRight} boxSize={5} mt={1} />
+                    </HStack>
+                </Box>
+            </Link>
 
             <HStack
                 p={4}
                 borderRadius="md"
-                bg="blue.50"
-                color="blue.800"
-                _dark={{ bg: 'whiteAlpha.100', color: 'blue.200' }}
+                bg="gray.100"
+                color="gray.700"
+                _dark={{ bg: 'whiteAlpha.100', color: 'gray.300' }}
                 spacing={3}
                 align="flex-start"
             >
