@@ -202,9 +202,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}
-            feeDelegation={{
-                delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
-            }}
         >
             <LanguageSync>{children}</LanguageSync>
         </VeChainKitProvider>

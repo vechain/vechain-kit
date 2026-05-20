@@ -28,6 +28,7 @@ import {
     TokenWithValue,
     useGasTokenSelection,
     useGenericDelegatorFeeEstimation,
+    useEstimateAllTokens,
 } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
@@ -73,6 +74,19 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
+
+    // VeWorld-style "amount adjusted to pay fee" salvage. Initially null.
+    // The auto-adjust useEffect below sets this when the user is trying
+    // to send (almost) their entire balance of a token that's also the
+    // only viable gas token. The effectiveAmount drives the actual
+    // transfer hooks and the gas estimation re-pass, so once we've
+    // dropped to maxSpendable the iteration finds the sending token as
+    // its winner and the tx goes through.
+    const [adjustedAmount, setAdjustedAmount] = React.useState<string | null>(
+        null,
+    );
+    const effectiveAmount = adjustedAmount ?? amount;
+
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
@@ -111,9 +125,12 @@ export const SendTokenSummaryContent = ({
                     description: t(
                         '{{amount}} {{symbol}} is on its way to {{recipient}}.',
                         {
-                            amount: Number(amount).toLocaleString(undefined, {
-                                maximumFractionDigits: 6,
-                            }),
+                            amount: Number(effectiveAmount).toLocaleString(
+                                undefined,
+                                {
+                                    maximumFractionDigits: 6,
+                                },
+                            ),
                             symbol: selectedToken.symbol,
                             recipient: recipientLabel,
                         },
@@ -134,7 +151,7 @@ export const SendTokenSummaryContent = ({
             t,
             isolatedView,
             closeAccountModal,
-            amount,
+            effectiveAmount,
             selectedToken.symbol,
             resolvedDomain,
             resolvedAddress,
@@ -154,7 +171,7 @@ export const SendTokenSummaryContent = ({
     } = useTransferERC20({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
-        amount,
+        amount: effectiveAmount,
         tokenAddress: selectedToken.address,
         tokenName: selectedToken.symbol,
         onError: (error) => {
@@ -172,7 +189,7 @@ export const SendTokenSummaryContent = ({
     } = useTransferVET({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
-        amount,
+        amount: effectiveAmount,
         onError: (error) => {
             handleError(error ?? '');
         },
@@ -256,8 +273,16 @@ export const SendTokenSummaryContent = ({
         tokens: selectedGasToken
             ? [selectedGasToken]
             : preferences.availableGasTokens, // Use selected token or all available
-        sendingAmount: amount,
+        sendingAmount: effectiveAmount,
         sendingTokenSymbol: selectedToken.symbol,
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
+    });
+
+    // Per-token gas costs (independent of which token the iteration picks),
+    // used by the auto-adjust salvage below.
+    const { data: allTokenCosts } = useEstimateAllTokens({
+        clauses: selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses,
+        tokens: preferences.availableGasTokens,
         enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
     });
     const usedGasToken = gasEstimation?.usedToken;
@@ -287,6 +312,46 @@ export const SendTokenSummaryContent = ({
             setSelectedGasToken(null);
         }
     }, [gasEstimationError, selectedGasToken]);
+
+    // VeWorld-style auto-adjust: when the iteration cannot find any gas
+    // token whose balance covers gas + the sending amount, AND the
+    // sending token is itself one of the available gas tokens with
+    // enough balance for the gas alone, drop the amount down to
+    // (balance - gas * SAFETY_FACTOR) so the tx goes through. Mirrors
+    // veworld-mobile's SummaryScreen.tsx co-spend handling.
+    const ADJUST_SAFETY_FACTOR = 1.05;
+    React.useEffect(() => {
+        // Don't loop: once adjusted, we stop re-evaluating.
+        if (adjustedAmount !== null) return;
+        if (!gasEstimationError) return;
+        if (!allTokenCosts) return;
+        const sendingSymbol = selectedToken.symbol as GasTokenType;
+        if (
+            !preferences.availableGasTokens.includes(sendingSymbol as never)
+        ) {
+            return;
+        }
+        const costEntry = allTokenCosts[sendingSymbol];
+        if (!costEntry || costEntry.loading || costEntry.cost <= 0) return;
+        const balance = Number(selectedToken.balance);
+        const gasReserve = costEntry.cost * ADJUST_SAFETY_FACTOR;
+        const maxSpendable = balance - gasReserve;
+        if (maxSpendable <= 0) return;
+        if (Number(amount) <= maxSpendable) return;
+        // Floor to 4 decimals so the displayed number doesn't show
+        // floating-point noise; the underlying parseUnits handles the
+        // rest at full precision.
+        const rounded = Math.floor(maxSpendable * 10000) / 10000;
+        if (rounded <= 0) return;
+        setAdjustedAmount(rounded.toString());
+    }, [
+        adjustedAmount,
+        gasEstimationError,
+        allTokenCosts,
+        selectedToken,
+        preferences.availableGasTokens,
+        amount,
+    ]);
 
     return (
         <>
@@ -346,6 +411,36 @@ export const SendTokenSummaryContent = ({
                             />
                         )}
 
+                        {adjustedAmount !== null && (
+                            <Box
+                                w="full"
+                                borderRadius="md"
+                                p={3}
+                                borderWidth="1px"
+                                borderColor="vechain-kit-border"
+                                bg="vechain-kit-card"
+                            >
+                                <Text fontSize="sm" color={textPrimary}>
+                                    {t(
+                                        'Amount adjusted from {{original}} to {{adjusted}} {{symbol}} to cover the transaction fee.',
+                                        {
+                                            original: Number(
+                                                amount,
+                                            ).toLocaleString(undefined, {
+                                                maximumFractionDigits: 4,
+                                            }),
+                                            adjusted: Number(
+                                                adjustedAmount,
+                                            ).toLocaleString(undefined, {
+                                                maximumFractionDigits: 4,
+                                            }),
+                                            symbol: selectedToken.symbol,
+                                        },
+                                    )}
+                                </Text>
+                            </Box>
+                        )}
+
                         <VStack
                             spacing={0}
                             w="full"
@@ -368,10 +463,13 @@ export const SendTokenSummaryContent = ({
                                     data-testid="send-summary-amount"
                                     color={textPrimary}
                                 >
-                                    {Number(amount).toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2,
-                                    })}{' '}
+                                    {Number(effectiveAmount).toLocaleString(
+                                        undefined,
+                                        {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        },
+                                    )}{' '}
                                     {selectedToken.symbol}
                                 </Text>
                                 <Text color={textSecondary}>

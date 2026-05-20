@@ -22,16 +22,47 @@ const NETWORK = {
     main: {
         nodeUrl: 'https://mainnet.vechain.org',
         accountFactoryAddress: '0xC06Ad8573022e2BE416CA89DA47E8c592971679A',
+        genericDelegatorUrl: 'https://mainnet.delegator.vechain.org/api/v1/',
     },
     test: {
         nodeUrl: 'https://testnet.vechain.org',
         accountFactoryAddress: '0x713b908Bcf77f3E00EFEf328E50b657a1A23AeaF',
+        genericDelegatorUrl: 'https://testnet.delegator.vechain.org/api/v1/',
     },
 } as const;
 
 export const networkType = NETWORK_TYPE;
 export const networkConfig = NETWORK[NETWORK_TYPE];
 export const thor = ThorClient.at(networkConfig.nodeUrl);
+
+// Fetch the generic delegator's current deposit account once per page load.
+// The recogniser in decoder.ts uses the result to re-label clauses sending
+// gas tokens to that address as "Pay transaction fee" instead of an opaque
+// "Send X VET to 0x86…fa", so the user understands what they're paying.
+let depositAccountPromise: Promise<string | null> | null = null;
+export async function fetchGenericDelegatorDepositAccount(): Promise<
+    string | null
+> {
+    if (!depositAccountPromise) {
+        depositAccountPromise = (async () => {
+            try {
+                const res = await fetch(
+                    new URL(
+                        'deposit/account',
+                        networkConfig.genericDelegatorUrl,
+                    ),
+                    { method: 'GET', headers: { 'Content-Type': 'application/json' } },
+                );
+                if (!res.ok) return null;
+                const data = (await res.json()) as { depositAccount?: string };
+                return data.depositAccount?.toLowerCase() ?? null;
+            } catch {
+                return null;
+            }
+        })();
+    }
+    return depositAccountPromise;
+}
 
 // Minimal ABI for SocialLoginSmartAccountFactory.getAccountAddress. Inlined
 // to avoid pulling the full `@vechain/vechain-contract-types` package; this

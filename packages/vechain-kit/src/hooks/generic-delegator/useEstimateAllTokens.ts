@@ -1,8 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { GasTokenType } from '@/types';
-import { useSmartAccount, useWallet, estimateGas } from '@/hooks';
+import {
+    useSmartAccount,
+    useWallet,
+    estimateGas,
+    useGetAccountVersion,
+    computeCorrectedTotalGasNoFeePayer,
+    convertGasToGasTokenAmount,
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TransactionClause } from '@vechain/sdk-core';
+import { ThorClient } from '@vechain/sdk-network';
+import { getConfig } from '@/config';
 
 export interface UseEstimateAllTokensParams {
     clauses: TransactionClause[];
@@ -19,7 +28,12 @@ export const useEstimateAllTokens = ({
     const { data: smartAccount } = useSmartAccount(
         connectedWallet?.address ?? '',
     );
-    const { feeDelegation } = useVeChainKitConfig();
+    const { data: smartAccountVersion } = useGetAccountVersion(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+    );
+    const { feeDelegation, network } = useVeChainKitConfig();
+    const thor = ThorClient.at(getConfig(network.type).nodeUrl);
 
     return useQuery({
         queryKey: [
@@ -33,6 +47,15 @@ export const useEstimateAllTokens = ({
                 { cost: number; loading: boolean; error?: string }
             > = {} as any;
 
+            // Local gas estimate is token-agnostic — compute once,
+            // bounded by a timeout so a slow node can't hang the UI.
+            const totalGasNoFeePayer = await computeCorrectedTotalGasNoFeePayer({
+                thor,
+                clauses,
+                smartAccountAddress: smartAccount?.address ?? '',
+                version: smartAccountVersion?.version ?? 0,
+            });
+
             await Promise.all(
                 tokens.map(async (token) => {
                     try {
@@ -43,8 +66,16 @@ export const useEstimateAllTokens = ({
                             token,
                             'medium',
                         );
+                        const correctedCost =
+                            totalGasNoFeePayer !== null
+                                ? convertGasToGasTokenAmount({
+                                      totalGasNoFeePayer,
+                                      gasToken: token,
+                                      estimationResponse: estimation,
+                                  })
+                                : (estimation.transactionCost ?? 0) * 2;
                         estimates[token] = {
-                            cost: estimation.transactionCost || 0,
+                            cost: correctedCost || 0,
                             loading: false,
                         };
                     } catch (error) {
