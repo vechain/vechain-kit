@@ -11,7 +11,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
-import { humanAddress } from '@/utils';
+import { getKitSponsoredDelegatorUrl, humanAddress } from '@/utils';
 import { ethers } from 'ethers';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
@@ -199,7 +199,12 @@ export const useClaimVeWorldSubdomain = ({
         ...result,
         clauses,
         sendTransaction: async () => {
-            return result.sendTransaction(clauses());
+            // Route through VeChain's sponsored delegator so new users
+            // without VTHO / B3TR can still claim a veworld.vet subdomain.
+            return result.sendTransaction(
+                clauses(),
+                getKitSponsoredDelegatorUrl(),
+            );
         },
     };
 };

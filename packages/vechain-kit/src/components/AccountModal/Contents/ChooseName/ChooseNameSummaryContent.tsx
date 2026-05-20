@@ -163,7 +163,13 @@ export const ChooseNameSummaryContent = ({
     const [userSelectedGasToken, setUserSelectedGasToken] =
         React.useState<GasTokenType | null>(null);
 
+    // VeChain pays gas for domain claims via the kit-sponsored delegator
+    // (see useClaimVetDomain). Skip the gas-token UI and "do you have
+    // enough VTHO" check so users with no gas tokens can still proceed.
+    const KIT_PAYS_GAS = true;
+
     const shouldEstimateGas =
+        !KIT_PAYS_GAS &&
         preferences.availableGasTokens.length > 0 &&
         (connection.isConnectedWithPrivy ||
             connection.isConnectedWithVeChain) &&
@@ -182,6 +188,7 @@ export const ChooseNameSummaryContent = ({
     });
     const usedGasToken = gasEstimation?.usedToken;
     const disableConfirmButtonDuringEstimation =
+        !KIT_PAYS_GAS &&
         (gasEstimationLoading || !gasEstimation) &&
         connection.isConnectedWithPrivy &&
         !feeDelegation?.delegatorUrl;
@@ -196,7 +203,8 @@ export const ChooseNameSummaryContent = ({
     );
 
     // hasEnoughBalance is now determined by the hook itself
-    const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
+    const hasEnoughBalance =
+        KIT_PAYS_GAS || (!!usedGasToken && !gasEstimationError);
 
     // Auto-fallback: if the selected token cannot cover fees (estimation error),
     // clear selection to re-estimate across all available tokens
@@ -256,7 +264,7 @@ export const ChooseNameSummaryContent = ({
                         </Text>
                     </VStack>
                 )}
-                {connection.isConnectedWithPrivy && (
+                {!KIT_PAYS_GAS && connection.isConnectedWithPrivy && (
                     <GasFeeSummary
                         estimation={gasEstimation}
                         isLoading={gasEstimationLoading}
@@ -291,6 +299,7 @@ export const ChooseNameSummaryContent = ({
                     hasEnoughGasBalance={hasEnoughBalance}
                     isLoadingGasEstimation={gasEstimationLoading}
                     showGasEstimationError={
+                        !KIT_PAYS_GAS &&
                         !feeDelegation?.delegatorUrl &&
                         connection.isConnectedWithPrivy
                     }
