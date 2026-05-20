@@ -8,7 +8,6 @@ on:
             - main
         paths:
             - 'cross-app-connect/**'
-            - 'packages/vechain-kit/**'
             - 'yarn.lock'
             - '.github/workflows/cross-app-connect-check.yaml'
 
