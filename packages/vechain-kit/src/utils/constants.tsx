@@ -11,6 +11,8 @@ import { getConfig } from '@/config';
 import {
     GENERIC_DELEGATOR_MAINNET_URL,
     GENERIC_DELEGATOR_TESTNET_URL,
+    KIT_SPONSORED_DELEGATOR_MAINNET_URL,
+    KIT_SPONSORED_DELEGATOR_TESTNET_URL,
     VECHAIN_KIT_WEBSITE_BASE_URL,
     COINMARKETCAP_STATIC_BASE_URL,
     VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL,
@@ -108,6 +110,21 @@ export const getGenericDelegatorUrl = () => {
     return env.isProduction
         ? `${GENERIC_DELEGATOR_MAINNET_URL}/api/v1/`
         : `${GENERIC_DELEGATOR_TESTNET_URL}/api/v1/`; // or url to your delegator
+};
+
+/**
+ * VeChain-sponsored fee-delegator endpoint used by kit-managed onboarding
+ * transactions (claim a VET domain, set a primary name, update profile
+ * text records, etc.) so first-time users with no gas tokens can still
+ * complete these flows. VeChain pays the gas via the configured
+ * sponsor.vechain.energy endpoint; consumer dApps don't need to set up
+ * their own fee delegation to support these kit features.
+ */
+export const getKitSponsoredDelegatorUrl = () => {
+    const env = getENV();
+    return env.isProduction
+        ? KIT_SPONSORED_DELEGATOR_MAINNET_URL
+        : KIT_SPONSORED_DELEGATOR_TESTNET_URL;
 };
 
 export type PrivyEcosystemApp = {

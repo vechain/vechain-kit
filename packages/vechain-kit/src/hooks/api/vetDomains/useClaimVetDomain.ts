@@ -11,7 +11,7 @@ import { getConfig } from '@/config';
 import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
 import { ethers } from 'ethers';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
-import { humanAddress } from '@/utils';
+import { getKitSponsoredDelegatorUrl, humanAddress } from '@/utils';
 import { Wallet } from '@/types';
 import { TransactionClause } from '@vechain/sdk-core';
 
@@ -147,7 +147,12 @@ export const useClaimVetDomain = ({
         ...result,
         clauses,
         sendTransaction: async () => {
-            return result.sendTransaction(clauses());
+            // Route through VeChain's sponsored delegator so new users without
+            // VTHO / B3TR can still claim a domain.
+            return result.sendTransaction(
+                clauses(),
+                getKitSponsoredDelegatorUrl(),
+            );
         },
     };
 };

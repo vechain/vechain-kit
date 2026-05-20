@@ -44,13 +44,20 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
     userSelectedToken,
 }: GasFeeSummaryProps) => {
     const { t } = useTranslation();
-    const { feeDelegation } = useVeChainKitConfig();
+    const { feeDelegation, darkMode: isDark } = useVeChainKitConfig();
     const { connection, account } = useWallet();
     const { preferences, reorderTokenPriority } = useGasTokenSelection();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+
+    // Subtle hover surface — lighten in dark mode, darken in light mode.
+    // Previously this used `textSecondary` as the hover bg, which matches
+    // the button's text color and made the label disappear on hover.
+    const hoverBg = isDark
+        ? 'rgba(255, 255, 255, 0.08)'
+        : 'rgba(0, 0, 0, 0.04)';
 
     const [tokenEstimations, setTokenEstimations] = useState<
         Record<GasTokenType, { cost: number; loading: boolean }>
@@ -281,7 +288,9 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                     color={textSecondary}
                     borderColor={textSecondary}
                     _hover={{
-                        bg: textSecondary,
+                        bg: hoverBg,
+                        color: textPrimary,
+                        borderColor: textPrimary,
                     }}
                     leftIcon={React.cloneElement(
                         TOKEN_LOGO_COMPONENTS[

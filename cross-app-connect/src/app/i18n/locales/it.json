@@ -53,6 +53,10 @@
             "native": "Invia {{amount}} VET",
             "token": "Invia {{amount}} {{symbol}}"
         },
+        "fee": {
+            "payTransactionFee": "Paga fee per transazione",
+            "amount": "{{amount}} {{symbol}} al pagatore del gas"
+        },
         "approve": {
             "unlimited": "Consenti spesa illimitata di {{symbol}}",
             "upTo": "Consenti spesa fino a {{amount}} {{symbol}}"

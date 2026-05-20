@@ -7,6 +7,7 @@ import {
     getCloseButtonTheme,
 } from './button';
 import { getPopoverTheme } from './popover';
+import { getInputTheme, getTextareaTheme } from './input';
 import {
     VechainKitThemeConfig,
     ThemeTokens,
@@ -55,6 +56,8 @@ const getThemeConfig = (
         IconButton: getIconButtonTheme(tokens),
         CloseButton: getCloseButtonTheme(tokens),
         Popover: getPopoverTheme(tokens),
+        Input: getInputTheme(),
+        Textarea: getTextareaTheme(),
     },
     // No global styles - fonts will be applied via component-level styles
     // to ensure they only affect VeChain Kit components, not the host app

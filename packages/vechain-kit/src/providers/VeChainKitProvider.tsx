@@ -290,29 +290,30 @@ const validateConfig = (
         };
     }
 
-    // Check if fee delegation is required based on conditions
-    const requiresFeeDelegation =
-        validatedProps.privy !== undefined ||
-        validatedProps.loginMethods?.some(
-            (method) =>
-                method.method === 'vechain' || method.method === 'ecosystem',
-        );
-
-    // Validate fee delegation
-    if (requiresFeeDelegation) {
-        if (!validatedProps.feeDelegation) {
-            validatedProps.feeDelegation = {
-                genericDelegatorUrl: getGenericDelegatorUrl(),
-            };
-        } else {
-            if (
-                !validatedProps.feeDelegation.delegatorUrl &&
-                !validatedProps.feeDelegation.genericDelegatorUrl
-            ) {
-                validatedProps.feeDelegation.genericDelegatorUrl =
-                    getGenericDelegatorUrl();
-            }
-        }
+    // Auto-inject the default generic-delegator endpoint whenever the
+    // consumer hasn't picked their own delegation strategy.
+    //
+    // We used to gate this on `privy !== undefined || loginMethods includes
+    // 'vechain'/'ecosystem'`, but after #620 every Google/Apple/Twitter/etc.
+    // button silently falls back to the VeChain whitelabel cross-app host
+    // when no host-supplied `privy` prop exists -- meaning users can land
+    // on a smart-account wallet without ever listing 'vechain' in
+    // loginMethods. The old gate then left `feeDelegation` undefined, and
+    // `useGenericDelegatorFeeEstimation` / `useEstimateAllTokens` stayed
+    // permanently disabled (their `enabled` depends on
+    // `feeDelegation?.genericDelegatorUrl`). Always seed the default so
+    // smart-account users have a working fee-delegation path; dapp-kit
+    // wallets simply ignore it.
+    if (!validatedProps.feeDelegation) {
+        validatedProps.feeDelegation = {
+            genericDelegatorUrl: getGenericDelegatorUrl(),
+        };
+    } else if (
+        !validatedProps.feeDelegation.delegatorUrl &&
+        !validatedProps.feeDelegation.genericDelegatorUrl
+    ) {
+        validatedProps.feeDelegation.genericDelegatorUrl =
+            getGenericDelegatorUrl();
     }
 
     // Validate network - always ensure we have a valid network configuration

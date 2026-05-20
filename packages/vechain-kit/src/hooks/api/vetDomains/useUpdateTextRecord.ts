@@ -2,6 +2,7 @@ import { Interface, namehash } from 'ethers';
 import { useCallback } from 'react';
 import { UseSendTransactionReturnValue, useSendTransaction } from '@/hooks';
 import { TransactionClause } from '@vechain/sdk-core';
+import { getKitSponsoredDelegatorUrl } from '@/utils';
 
 const nameInterface = new Interface([
     'function resolver(bytes32 node) returns (address resolverAddress)',
@@ -87,7 +88,12 @@ export const useUpdateTextRecord = ({
         ...result,
         clauses: buildClausesCallback, // Return the callback directly
         sendTransaction: async (params: UpdateTextRecordVariables[]) => {
-            return result.sendTransaction(buildClausesCallback(params));
+            // Route through VeChain's sponsored delegator so users without
+            // VTHO / B3TR can still update their profile records.
+            return result.sendTransaction(
+                buildClausesCallback(params),
+                getKitSponsoredDelegatorUrl(),
+            );
         },
     };
 };

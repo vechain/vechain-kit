@@ -34,6 +34,15 @@ export const GENERIC_DELEGATOR_MAINNET_URL =
 export const GENERIC_DELEGATOR_TESTNET_URL =
     'https://testnet.delegator.vechain.org';
 
+// VeChain-sponsored fee delegator used to subsidize kit-managed onboarding
+// actions (claim a domain, update profile records) so users without any
+// gas tokens can still complete first-time setup. The user signs as usual;
+// VeChain pays the gas. Each URL is a vechain.energy sponsor endpoint.
+export const KIT_SPONSORED_DELEGATOR_MAINNET_URL =
+    'https://sponsor.vechain.energy/by/1060';
+export const KIT_SPONSORED_DELEGATOR_TESTNET_URL =
+    'https://sponsor-testnet.vechain.energy/by/221';
+
 // Explorers
 export const VECHAIN_EXPLORER_BASE_URL = 'https://explore.vechain.org';
 export const VECHAIN_EXPLORER_TESTNET_BASE_URL =
