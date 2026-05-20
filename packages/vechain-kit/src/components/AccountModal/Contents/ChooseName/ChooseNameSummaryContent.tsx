@@ -163,10 +163,13 @@ export const ChooseNameSummaryContent = ({
     const [userSelectedGasToken, setUserSelectedGasToken] =
         React.useState<GasTokenType | null>(null);
 
-    // VeChain pays gas for domain claims via the kit-sponsored delegator
-    // (see useClaimVetDomain). Skip the gas-token UI and "do you have
-    // enough VTHO" check so users with no gas tokens can still proceed.
-    const KIT_PAYS_GAS = true;
+    // VeChain pays gas for domain CLAIMS via the kit-sponsored delegator
+    // (see useClaimVetDomain / useClaimVeWorldSubdomain). The unset path
+    // (useUnsetDomain) is NOT sponsored — the user pays — so we still
+    // need the gas-token UI and balance check for that case. Drives:
+    // skip estimation, hide GasFeeSummary, force hasEnoughGasBalance,
+    // and suppress gas-estimation errors.
+    const KIT_PAYS_GAS = !isUnsetting;
 
     const shouldEstimateGas =
         !KIT_PAYS_GAS &&
