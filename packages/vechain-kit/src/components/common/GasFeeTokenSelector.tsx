@@ -50,22 +50,28 @@ export const GasFeeTokenSelector = ({
 
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
-    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const errorColor = useToken('colors', 'vechain-kit-error');
 
-    // Subtle hover surface — lighten in dark mode, darken in light mode.
+    // Hover / selected surfaces — alpha overlays on the modal bg.
     // Chakra's whiteAlpha/blackAlpha tokens aren't wired to the kit's
     // custom darkMode flag (we don't use Chakra color mode), so we pick
-    // the alpha overlay manually.
+    // the alpha overlay manually. Selected sits a notch above hover so
+    // the active row reads as picked without yelling — previously this
+    // row used `textTertiary` (a text colour: a near-white at 50% in
+    // dark mode, mid-grey #718096 in light mode), which was way too
+    // strong as a background.
     const hoverBg = isDark
         ? 'rgba(255, 255, 255, 0.08)'
         : 'rgba(0, 0, 0, 0.04)';
     const hoverBorder = isDark
         ? 'rgba(255, 255, 255, 0.16)'
         : 'rgba(0, 0, 0, 0.12)';
+    const selectedBg = isDark
+        ? 'rgba(255, 255, 255, 0.12)'
+        : 'rgba(0, 0, 0, 0.06)';
 
     const itemBg = (selected: boolean) =>
-        selected ? textTertiary : 'transparent';
+        selected ? selectedBg : 'transparent';
     const itemBorderColor = (selected: boolean) =>
         selected ? textPrimary : 'transparent';
 
