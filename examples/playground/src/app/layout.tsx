@@ -33,10 +33,10 @@ export default function RootLayout({
             }}
         >
             <head>
-                <title>VeChain Kit</title>
+                <title>VeKit Playground · AI-first VeChain dApp toolkit</title>
                 <meta
                     name="description"
-                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                    content="VeKit Playground - Live demos, code snippets and ready-made AI prompts for building VeChain dApps with VeChain Kit, Privy social login and VeBetterDAO."
                 />
                 <meta
                     name="viewport"
@@ -58,7 +58,11 @@ export default function RootLayout({
                 />
 
                 {/* Open Graph Metadata */}
-                <meta name="title" property="og:title" content="VeChain Kit" />
+                <meta
+                    name="title"
+                    property="og:title"
+                    content="VeKit Playground · AI-first VeChain dApp toolkit"
+                />
                 <meta name="type" property="og:type" content="website" />
                 <meta
                     property="og:url"
@@ -66,9 +70,9 @@ export default function RootLayout({
                 />
                 <meta
                     property="og:description"
-                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                    content="Live demos, code snippets and ready-made AI prompts for building VeChain dApps with VeChain Kit, Privy social login and VeBetterDAO."
                 />
-                <meta property="og:site_name" content="VeChain Kit" />
+                <meta property="og:site_name" content="VeKit Playground" />
                 <meta
                     property="og:image"
                     content={`${basePath}/images/vechain-kit-long.png`}
@@ -76,20 +80,23 @@ export default function RootLayout({
                 <meta property="og:image:type" content="image/png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />
-                <meta property="og:image:alt" content="VeChain Kit" />
+                <meta property="og:image:alt" content="VeKit Playground" />
 
                 {/* Twitter Metadata */}
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="VeChain Kit" />
+                <meta
+                    name="twitter:title"
+                    content="VeKit Playground · AI-first VeChain dApp toolkit"
+                />
                 <meta
                     name="twitter:description"
-                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                    content="Live demos, code snippets and ready-made AI prompts for building VeChain dApps with VeChain Kit, Privy social login and VeBetterDAO."
                 />
                 <meta
                     name="twitter:image"
                     content={`${basePath}/images/vechain-kit-long.png`}
                 />
-                <meta name="twitter:image:alt" content="VeChain Kit" />
+                <meta name="twitter:image:alt" content="VeKit Playground" />
 
                 {/* Fonts */}
                 <link rel="preconnect" href="https://fonts.googleapis.com" />

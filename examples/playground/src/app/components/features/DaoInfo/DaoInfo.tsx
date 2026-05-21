@@ -1,58 +1,75 @@
 'use client';
 
-import { VStack, Text, SimpleGrid } from '@chakra-ui/react';
-import { LuBuilding2 } from 'react-icons/lu';
-import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
-    useWallet,
+    HStack,
+    SimpleGrid,
+    Tag,
+    Text,
+    useColorMode,
+    VStack,
+} from '@chakra-ui/react';
+import {
     useCurrentAllocationsRoundId,
     useIsPerson,
+    useWallet,
 } from '@vechain/vechain-kit';
+import { useTranslation } from 'react-i18next';
+
+interface DataRowProps {
+    label: string;
+    children: React.ReactNode;
+}
+
+function DataRow({ label, children }: DataRowProps) {
+    return (
+        <HStack justify="space-between" w="full" py={2}>
+            <Text fontSize="sm" opacity={0.7}>
+                {label}
+            </Text>
+            <HStack spacing={2}>{children}</HStack>
+        </HStack>
+    );
+}
 
 export function DaoInfo() {
+    const { t } = useTranslation();
+    const { colorMode } = useColorMode();
     const { account } = useWallet();
     const { data: currentAllocationsRoundId } = useCurrentAllocationsRoundId();
     const { data: isValidPassport } = useIsPerson(account?.address);
 
     return (
-        <CollapsibleCard
-            title="Contract Interactions"
-            icon={LuBuilding2}
-            style={{ bg: 'whiteAlpha.100' }}
+        <VStack
+            align="stretch"
+            spacing={2}
+            p={5}
+            borderRadius="md"
+            borderWidth="1px"
+            borderColor={
+                colorMode === 'light' ? 'gray.200' : 'whiteAlpha.200'
+            }
+            bg={colorMode === 'light' ? 'gray.50' : 'whiteAlpha.50'}
+            divider={undefined}
         >
-            <VStack spacing={6} align="stretch">
-                <Text textAlign="center">
-                    VeChain Kit provides hooks to easily interact with popular
-                    VeChain contracts. Here's how to use them in your
-                    application.
-                </Text>
-
-                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-                    {/* Current Implementation */}
-                    <VStack
-                        spacing={4}
-                        p={6}
-                        borderRadius="md"
-                        bg="whiteAlpha.50"
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacingX={6}>
+                <DataRow label={t('Current round')}>
+                    <Tag size="sm" colorScheme="blue">
+                        {currentAllocationsRoundId ?? '—'}
+                    </Tag>
+                </DataRow>
+                <DataRow label={t('Valid passport')}>
+                    <Tag
+                        size="sm"
+                        colorScheme={isValidPassport ? 'green' : 'gray'}
                     >
-                        <Text fontWeight="bold">Live VeBetterDAO Data</Text>
-                        <VStack spacing={3} align="start" w="full">
-                            <Text>
-                                <Text as="span" fontWeight="bold">
-                                    Current Round ID:{' '}
-                                </Text>
-                                {currentAllocationsRoundId}
-                            </Text>
-                            <Text>
-                                <Text as="span" fontWeight="bold">
-                                    Valid Passport:{' '}
-                                </Text>
-                                {isValidPassport?.toString()}
-                            </Text>
-                        </VStack>
-                    </VStack>
-                </SimpleGrid>
-            </VStack>
-        </CollapsibleCard>
+                        {isValidPassport === undefined
+                            ? '—'
+                            : isValidPassport
+                            ? t('Yes')
+                            : t('No')}
+                    </Tag>
+                </DataRow>
+            </SimpleGrid>
+        </VStack>
     );
 }

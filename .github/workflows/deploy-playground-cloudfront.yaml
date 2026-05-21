@@ -1,0 +1,65 @@
+# Deploys VeKit Playground (examples/playground) to CloudFront when the
+# kit or playground source changes on main.
+name: Deploy Playground to Cloudfront
+
+on:
+    push:
+        branches: ['main']
+        paths:
+            - 'examples/playground/**'
+            - 'packages/vechain-kit/**'
+            - 'yarn.lock'
+
+    workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+    group: 'playground-cloudfront-deploy'
+    cancel-in-progress: true
+
+jobs:
+    build-and-deploy:
+        permissions:
+            contents: read
+            id-token: write
+        runs-on: ubuntu-latest
+        env:
+            NEXT_PUBLIC_BASE_PATH: ''
+            NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
+            NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
+            NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
+            NEXT_PUBLIC_DELEGATOR_URL: ${{ secrets.NEXT_PUBLIC_DELEGATOR_URL }}
+            NEXT_PUBLIC_NETWORK_TYPE: 'main'
+            AWS_REGION: eu-west-1
+        steps:
+            - name: Checkout
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: Build App
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=8192'
+              run: |
+                  yarn install
+                  yarn install:all
+                  yarn build
+
+            - name: Fix permissions
+              run: |
+                  chmod -c -R +rX "./examples/playground/dist" | while read line; do
+                    echo "::warning title=Invalid file permissions automatically fixed::$line"
+                  done
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
+              with:
+                  role-to-assume: ${{ secrets.AWS_ACC_ROLE }}
+                  aws-region: ${{ env.AWS_REGION }}
+
+            - name: Deploy to S3
+              run: |
+                  aws s3 sync ./examples/playground/dist s3://${{ secrets.AWS_PLAYGROUND_BUCKET_NAME }} --delete
+
+            - name: Cloudfront Invalidation
+              run: |
+                  AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_PLAYGROUND_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
