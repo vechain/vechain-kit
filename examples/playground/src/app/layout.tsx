@@ -75,7 +75,7 @@ export default function RootLayout({
                 <meta property="og:site_name" content="VeKit Playground" />
                 <meta
                     property="og:image"
-                    content="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png"
+                    content="https://playground.vechainkit.vechain.org/images/banner-playground.png"
                 />
                 <meta property="og:image:type" content="image/png" />
                 <meta property="og:image:width" content="1200" />
@@ -94,7 +94,7 @@ export default function RootLayout({
                 />
                 <meta
                     name="twitter:image"
-                    content="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png"
+                    content="https://playground.vechainkit.vechain.org/images/banner-playground.png"
                 />
                 <meta name="twitter:image:alt" content="VeKit Playground" />
 
