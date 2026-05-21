@@ -6,7 +6,6 @@ import {
     VStack,
     HStack,
     Button,
-    IconButton,
     Icon,
     Text,
 } from '@chakra-ui/react';
@@ -146,7 +145,7 @@ export const ProfileContent = ({
                     {/* In VeWorld mobile we call switchWallet
                     on the desktop we call setCurrentContent to select-wallet
                     */}
-                    {canSwitchWallet && (
+                    {canSwitchWallet ? (
                         <Button
                             size="md"
                             flex={1}
@@ -162,31 +161,31 @@ export const ProfileContent = ({
                         >
                             {t('Switch')}
                         </Button>
-                    )}
-
-                    <IconButton
-                        size="md"
-                        height="40px"
-                        minW="40px"
-                        w="40px"
-                        variant="vechainKitLogout"
-                        icon={<Icon as={LuLogOut} />}
-                        onClick={() =>
-                            setCurrentContent({
-                                type: 'disconnect-confirm',
-                                props: {
-                                    onDisconnect: () => {
-                                        disconnect();
-                                        onLogoutSuccess?.();
+                    ) : (
+                        <Button
+                            size="md"
+                            flex={1}
+                            height="40px"
+                            variant="vechainKitSecondary"
+                            leftIcon={<Icon as={LuLogOut} />}
+                            onClick={() =>
+                                setCurrentContent({
+                                    type: 'disconnect-confirm',
+                                    props: {
+                                        onDisconnect: () => {
+                                            disconnect();
+                                            onLogoutSuccess?.();
+                                        },
+                                        onBack: () =>
+                                            setCurrentContent?.('profile'),
                                     },
-                                    onBack: () =>
-                                        setCurrentContent?.('profile'),
-                                },
-                            })
-                        }
-                        aria-label={t('Logout')}
-                        data-testid="logout-button"
-                    />
+                                })
+                            }
+                            data-testid="logout-button"
+                        >
+                            {t('Logout')}
+                        </Button>
+                    )}
                 </HStack>
             </ModalFooter>
         </>
