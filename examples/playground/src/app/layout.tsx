@@ -33,10 +33,10 @@ export default function RootLayout({
             }}
         >
             <head>
-                <title>VeKit Playground · AI-first VeChain dApp toolkit</title>
+                <title>VeKit Playground</title>
                 <meta
                     name="description"
-                    content="VeKit Playground - Live demos, code snippets and ready-made AI prompts for building VeChain dApps with VeChain Kit, Privy social login and VeBetterDAO."
+                    content="VeKit Playground - Live demos, code snippets and ready-made AI prompts for shipping VeChain dApps."
                 />
                 <meta
                     name="viewport"
@@ -61,21 +61,21 @@ export default function RootLayout({
                 <meta
                     name="title"
                     property="og:title"
-                    content="VeKit Playground · AI-first VeChain dApp toolkit"
+                    content="VeKit Playground"
                 />
                 <meta name="type" property="og:type" content="website" />
                 <meta
                     property="og:url"
-                    content="https://vechainkit.vechain.org/"
+                    content="https://playground.vechainkit.vechain.org/"
                 />
                 <meta
                     property="og:description"
-                    content="Live demos, code snippets and ready-made AI prompts for building VeChain dApps with VeChain Kit, Privy social login and VeBetterDAO."
+                    content="VeKit Playground - Live demos, code snippets and ready-made AI prompts for shipping VeChain dApps."
                 />
                 <meta property="og:site_name" content="VeKit Playground" />
                 <meta
                     property="og:image"
-                    content={`${basePath}/images/vechain-kit-long.png`}
+                    content="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png"
                 />
                 <meta property="og:image:type" content="image/png" />
                 <meta property="og:image:width" content="1200" />
@@ -86,15 +86,15 @@ export default function RootLayout({
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta
                     name="twitter:title"
-                    content="VeKit Playground · AI-first VeChain dApp toolkit"
+                    content="VeKit Playground"
                 />
                 <meta
                     name="twitter:description"
-                    content="Live demos, code snippets and ready-made AI prompts for building VeChain dApps with VeChain Kit, Privy social login and VeBetterDAO."
+                    content="VeKit Playground - Live demos, code snippets and ready-made AI prompts for shipping VeChain dApps."
                 />
                 <meta
                     name="twitter:image"
-                    content={`${basePath}/images/vechain-kit-long.png`}
+                    content="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png"
                 />
                 <meta name="twitter:image:alt" content="VeKit Playground" />
 
