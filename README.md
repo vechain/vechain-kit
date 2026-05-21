@@ -28,6 +28,7 @@ It offers:
 ## Demo & Examples
 
 -   [Live Demo](https://vechainkit.vechain.org/)
+-   [VeKit Playground](https://playground.vechainkit.vechain.org/) — interactive playground with live demos, code snippets and ready-made AI prompts for every kit feature
 -   [Sample Next.js App](https://github.com/vechain/vechain-kit/tree/main/examples/next-template)
 -   [Smart Account Factory](https://vechain.github.io/smart-accounts/)
 -   [Docs](https://docs.vechainkit.vechain.org/)
