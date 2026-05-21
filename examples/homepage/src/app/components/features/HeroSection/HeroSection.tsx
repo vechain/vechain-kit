@@ -1,7 +1,16 @@
 'use client';
 
-import { VStack, Text, Heading, useColorMode, Button } from '@chakra-ui/react';
+import {
+    Stack,
+    VStack,
+    Text,
+    Heading,
+    useColorMode,
+    Button,
+} from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+
+const PLAYGROUND_URL = 'https://playground.vechainkit.vechain.org';
 
 export function HeroSection() {
     const { colorMode } = useColorMode();
@@ -47,13 +56,29 @@ export function HeroSection() {
                 )}
             </Text>
 
-            <Button
-                onClick={scrollToQuickStart}
-                variant="homepagePrimary"
-                size="lg"
+            <Stack
+                direction={{ base: 'column', sm: 'row' }}
+                spacing={3}
+                align="center"
             >
-                {t('Get Started')} 🚀
-            </Button>
+                <Button
+                    onClick={scrollToQuickStart}
+                    variant="homepagePrimary"
+                    size="lg"
+                >
+                    {t('Get Started')} 🚀
+                </Button>
+                <Button
+                    as="a"
+                    href={PLAYGROUND_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="homepageSecondary"
+                    size="lg"
+                >
+                    {t('Try the playground')} ▸
+                </Button>
+            </Stack>
         </VStack>
     );
 }

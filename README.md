@@ -3,7 +3,7 @@
 #### An all-in-one library for building VeChain applications.
 
 <div align="center">
-    <img src="https://i.ibb.co/NgDN6XD3/kit-preview.png" alt="VeChain Kit Banner">
+    <img src="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/vechain-kit-v2-shocase.png" alt="VeChain Kit Banner">
 </div>
 
 ## Introduction
@@ -27,7 +27,8 @@ It offers:
 
 ## Demo & Examples
 
--   [Live Demo](https://vechainkit.vechain.org/)
+-   [Homepage](https://vechainkit.vechain.org/)
+-   [VeKit Playground](https://playground.vechainkit.vechain.org/) — interactive playground with live demos, code snippets and ready-made AI prompts for every kit feature
 -   [Sample Next.js App](https://github.com/vechain/vechain-kit/tree/main/examples/next-template)
 -   [Smart Account Factory](https://vechain.github.io/smart-accounts/)
 -   [Docs](https://docs.vechainkit.vechain.org/)
