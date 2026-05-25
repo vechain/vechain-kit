@@ -3,7 +3,6 @@
 import {
     HStack,
     Image,
-    Link,
     Text,
     Card,
     useMediaQuery,
@@ -13,7 +12,6 @@ import { LanguageDropdown } from './LanguageDropdown';
 import { useTranslation } from 'react-i18next';
 
 const basePath = process.env.basePath ?? '';
-const PLAYGROUND_URL = 'https://playground.vechainkit.vechain.org';
 
 export function Header() {
     // const { colorMode } = useColorMode();
@@ -129,28 +127,8 @@ export function Header() {
                         </HStack>
                     )} */}
 
-                    {/* Playground link, language dropdown and WalletButton at end */}
+                    {/* Language dropdown and WalletButton at end */}
                     <HStack spacing={3} flexShrink={0}>
-                        {!isMobile && (
-                            <Link
-                                href={PLAYGROUND_URL}
-                                isExternal
-                                fontSize="sm"
-                                fontWeight="medium"
-                                color="gray.700"
-                                px={3}
-                                py={2}
-                                borderRadius="md"
-                                _hover={{
-                                    bg: 'gray.100',
-                                    color: 'gray.900',
-                                    textDecoration: 'none',
-                                }}
-                                transition="all 0.2s"
-                            >
-                                {t('Playground')}
-                            </Link>
-                        )}
                         <WalletButton
                             mobileVariant="iconAndDomain"
                             desktopVariant="iconAndDomain"
