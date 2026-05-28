@@ -1,47 +1,72 @@
 'use client';
 
-import { VStack, Text } from '@chakra-ui/react';
+import {
+    HStack,
+    Tag,
+    Text,
+    useColorMode,
+    VStack,
+} from '@chakra-ui/react';
 import { useWallet } from '@vechain/vechain-kit';
-import { LuShield } from 'react-icons/lu';
-import { CollapsibleCard } from '../../ui/CollapsibleCard';
+import { useTranslation } from 'react-i18next';
 
 export function ConnectionInfo() {
     const { connection } = useWallet();
+    const { colorMode } = useColorMode();
+    const { t } = useTranslation();
 
-    const getConnectionDescription = () => {
+    if (!connection) return null;
+
+    const description = (() => {
         switch (connection.source.type) {
             case 'privy':
-                return "You're connected using Privy authentication, which provides a dedicated user management system for this application.";
+                return t(
+                    "You're connected using Privy authentication, which provides a dedicated user management system for this application.",
+                );
             case 'privy-cross-app':
-                return "You're connected through the VeChain cross-app ecosystem, sharing authentication with other VeChain apps like Cleanify or Mugshot.";
+                return t(
+                    "You're connected through the VeChain cross-app ecosystem, sharing authentication with other VeChain apps.",
+                );
             case 'wallet':
-                return "You're connected directly through a Web3 wallet (VeWorld, Sync2, or WalletConnect).";
+                return t(
+                    "You're connected directly through a Web3 wallet (VeWorld, Sync2, or WalletConnect).",
+                );
             default:
-                return 'Connection type not recognized.';
+                return t('Connection type not recognized.');
         }
-    };
+    })();
 
     return (
-        <CollapsibleCard
-            title="Your Connection Source"
-            icon={LuShield}
-            style={{ bg: 'whiteAlpha.100' }}
+        <VStack
+            align="stretch"
+            spacing={3}
+            p={5}
+            borderRadius="md"
+            borderWidth="1px"
+            borderColor={
+                colorMode === 'light' ? 'gray.200' : 'whiteAlpha.200'
+            }
+            bg={colorMode === 'light' ? 'gray.50' : 'whiteAlpha.50'}
         >
-            <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
-                <Text>
-                    <Text as="span" fontWeight="bold">
-                        Type:{' '}
+            <HStack spacing={4} flexWrap="wrap">
+                <HStack spacing={2}>
+                    <Text fontSize="sm" opacity={0.7}>
+                        {t('Source')}:
                     </Text>
-                    {connection.source.type}
-                </Text>
-                <Text>
-                    <Text as="span" fontWeight="bold">
-                        Network:{' '}
+                    <Tag size="sm" colorScheme="blue">
+                        {connection.source.type}
+                    </Tag>
+                </HStack>
+                <HStack spacing={2}>
+                    <Text fontSize="sm" opacity={0.7}>
+                        {t('Network')}:
                     </Text>
-                    {connection.network}
-                </Text>
-                <Text textAlign="center">{getConnectionDescription()}</Text>
-            </VStack>
-        </CollapsibleCard>
+                    <Tag size="sm" colorScheme="purple">
+                        {connection.network}
+                    </Tag>
+                </HStack>
+            </HStack>
+            <Text fontSize="sm">{description}</Text>
+        </VStack>
     );
 }

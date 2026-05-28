@@ -1,6 +1,12 @@
 'use client';
 
-import { HStack, Image, Text, Card, useMediaQuery } from '@chakra-ui/react';
+import {
+    HStack,
+    Image,
+    Text,
+    Card,
+    useMediaQuery,
+} from '@chakra-ui/react';
 import { WalletButton, useWallet } from '@vechain/vechain-kit';
 import { LanguageDropdown } from './LanguageDropdown';
 import { useTranslation } from 'react-i18next';

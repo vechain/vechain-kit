@@ -1,1 +1,1 @@
-export * from './SigningExample';
+export { SignatureOutput } from './SignatureOutput';

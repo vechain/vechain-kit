@@ -3,7 +3,7 @@
 #### An all-in-one library for building VeChain applications.
 
 <div align="center">
-    <img src="https://i.ibb.co/NgDN6XD3/kit-preview.png" alt="VeChain Kit Banner">
+    <img src="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/vechain-kit-v2-shocase.png" alt="VeChain Kit Banner">
 </div>
 
 ## Introduction
@@ -27,7 +27,8 @@ It offers:
 
 ## Demo & Examples
 
--   [Live Demo](https://vechainkit.vechain.org/)
+-   [Homepage](https://vechainkit.vechain.org/)
+-   [VeKit Playground](https://playground.vechainkit.vechain.org/) — interactive playground with live demos, code snippets and ready-made AI prompts for every kit feature
 -   [Sample Next.js App](https://github.com/vechain/vechain-kit/tree/main/examples/next-template)
 -   [Smart Account Factory](https://vechain.github.io/smart-accounts/)
 -   [Docs](https://docs.vechainkit.vechain.org/)
@@ -39,6 +40,16 @@ When a user picks "Continue with Google / Apple / VeChain / …" from a kit-usin
 The whitelabel popup is why your app can offer social login without owning a Privy account: users see VeChain chrome and get one identity across every kit-integrated dApp.
 
 See [`cross-app-connect/README.md`](./cross-app-connect/README.md) for the popup's architecture, the rationale behind dropping Chakra / TanStack Query / vechain-kit from that surface, deploy instructions (GitHub Pages workflow included), and how to add translation keys.
+
+## Infrastructure
+
+The hosted properties of VeChain Kit live across three repos:
+
+-   **[vechain/vechain-kit-infra](https://github.com/vechain/vechain-kit-infra)** — Terraform that provisions S3 + CloudFront + ACM + Route53 for `vechainkit.vechain.org`, `kit.vechain.org`, `preview.vechainkit.vechain.org`, and `playground.vechainkit.vechain.org`. Owns the `vechainkit.vechain.org` Route53 zone.
+-   **[vechain/vechain.org-domains](https://github.com/vechain/vechain.org-domains)** — Terraform-managed DNS records for the `vechain.org` zone. Holds the NS delegation that points `vechainkit.vechain.org` at the AWS nameservers managed by `vechain-kit-infra`.
+-   **This repo's `.github/workflows/`** — `deploy-cloudfront.yaml` (homepage on push to main), `deploy-preview.yaml` (per-PR homepage previews), `deploy-playground-cloudfront.yaml` (playground on push to main), `deploy-playground-preview.yaml` (per-PR playground previews at `preview.vechainkit.vechain.org/<branch>/playground`).
+
+Deploys are triggered by GitHub Actions; the infrastructure (S3 buckets, CloudFront distributions, IAM role for OIDC) is provisioned out-of-band by `terraform apply` against `vechain-kit-infra/terraform/frontend`.
 
 ## Table of Contents
 

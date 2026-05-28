@@ -1,12 +1,14 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import React from 'react';
-
-const Home = dynamic(() => import('./pages/Home'), {
-    ssr: false,
-});
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
-    return <Home />;
+    const router = useRouter();
+
+    useEffect(() => {
+        router.replace('/getting-started');
+    }, [router]);
+
+    return null;
 }

@@ -1,7 +1,7 @@
 import { WalletSource } from '@vechain/dapp-kit';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDAppKitWallet } from '@/hooks';
+import { useDAppKitWallet, useDAppKitWalletModal } from '@/hooks';
 import { isRejectionError } from '@/utils/stringUtils';
 import type { ConnectModalContentsTypes } from '@/components';
 
@@ -55,6 +55,7 @@ export const useConnectWithDappKitSource = (
         connect: connectV1,
         connectV2,
     } = useDAppKitWallet();
+    const { close: closeDappKitModal } = useDAppKitWalletModal();
 
     const connect = useCallback(async () => {
         const displayName = sourceDisplayName[source] ?? source;
@@ -100,13 +101,32 @@ export const useConnectWithDappKitSource = (
 
         try {
             setSource(source);
+            
+            // ConnectModal closes automatically when useWallet flips
+            // `connection.isConnected` to true.
             if (source === 'veworld') {
                 await connectV2(null);
             } else {
                 await connectV1();
             }
-            // ConnectModal closes automatically when useWallet flips
-            // `connection.isConnected` to true.
+           
+            // WalletConnect side-effect: setSource('wallet-connect') +
+            // connect() causes dapp-kit's signer to call
+            // CustomWalletConnectModal.openModal({uri}), which fires
+            // `vdk-open-wc-qrcode` and pops dapp-kit-ui's own
+            // <vdk-connect-modal> with the QR. That modal only
+            // auto-closes when the user clicks through dapp-kit-ui's
+            // source picker — since we drive connect from here, we have
+            // to close it ourselves. If we don't, the QR modal stays up
+            // post-handshake and the user's only out (clicking X) hits
+            // dapp-kit-ui's `handleClose`, which calls `wallet.disconnect()`
+            // whenever `walletConnectQRcode` is set — i.e. closing the
+            // stuck modal disconnects the user we just connected.
+            if (source === 'wallet-connect') {
+                closeDappKitModal();
+            }
+            // Our own ConnectModal closes automatically when useWallet
+            // flips `connection.isConnected` to true.
         } catch (err) {
             const errorMsg = extractErrorMessage(err);
             if (isRejectionError(errorMsg)) {
@@ -124,7 +144,15 @@ export const useConnectWithDappKitSource = (
                 },
             });
         }
-    }, [source, setSource, connectV1, connectV2, setCurrentContent, t]);
+    }, [
+        source,
+        setSource,
+        connectV1, 
+        connectV2,
+        closeDappKitModal,
+        setCurrentContent,
+        t,
+    ]);
 
     return { connect };
 };
