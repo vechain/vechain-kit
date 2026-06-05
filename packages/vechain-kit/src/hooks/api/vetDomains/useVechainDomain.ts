@@ -11,9 +11,10 @@ interface VeChainDomainResult {
 }
 
 
+// Lowercase the key so mixed-case and lowercase callers share the cache.
 export const getVechainDomainQueryKey = (addressOrDomain?: string | null) => [
     'VECHAIN_KIT_DOMAIN',
-    addressOrDomain,
+    addressOrDomain?.toLowerCase() ?? addressOrDomain,
 ];
 
 export const useVechainDomain = (addressOrDomain?: string | null) => {
@@ -59,20 +60,22 @@ export const useVechainDomain = (addressOrDomain?: string | null) => {
                 
                 // Check if this domain is the primary domain for the address
                 if (address) {
-                    isPrimary = await isPrimaryDomain(addressOrDomain, address, {
+                    isPrimary = await isPrimaryDomain(addressOrDomain, address.toLowerCase(), {
                         networkUrl: network.nodeUrl,
                     });
                 }
             } else {
-                // Input is an address, get the corresponding domain
-                domain = await getAddressDomain(addressOrDomain, {
+                // Lowercase to bypass ethers' strict EIP-55 check in
+                // `@vechain/contract-getters` (fails on mixed-case input).
+                const normalizedAddress = addressOrDomain.toLowerCase();
+                domain = await getAddressDomain(normalizedAddress, {
                     networkUrl: network.nodeUrl,
                 });
                 address = addressOrDomain;
                 
                 // If we found a domain, check if it's the primary domain
                 if (domain) {
-                    isPrimary = await isPrimaryDomain(domain, addressOrDomain, {
+                    isPrimary = await isPrimaryDomain(domain, normalizedAddress, {
                         networkUrl: network.nodeUrl,
                     });
                 }

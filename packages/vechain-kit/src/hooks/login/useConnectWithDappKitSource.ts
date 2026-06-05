@@ -44,19 +44,17 @@ const extractErrorMessage = (err: unknown): string => {
 /**
  * Drives a dapp-kit wallet connection (setSource + connect) while reflecting
  * progress in the ConnectModal's local sub-content state (loading/error).
- *
- * Uses the legacy `connect()` API rather than `connectV2()` because:
- *   - WalletConnect's signer throws "not implemented" for V2.
- *   - The VeWorld desktop extension also rejects V2 ("Attempt failed").
- * V2 is only reliable inside the VeWorld mobile in-app browser, which is
- * handled separately in ModalProvider.
  */
 export const useConnectWithDappKitSource = (
     source: WalletSource,
     setCurrentContent: SetCurrentContent,
 ) => {
     const { t } = useTranslation();
-    const { setSource, connect: dappKitConnect } = useDAppKitWallet();
+    const {
+        setSource,
+        connect: connectV1,
+        connectV2,
+    } = useDAppKitWallet();
     const { close: closeDappKitModal } = useDAppKitWalletModal();
 
     const connect = useCallback(async () => {
@@ -76,7 +74,9 @@ export const useConnectWithDappKitSource = (
             !window.vechain
         ) {
             window.open(
-                `${VEWORLD_UNIVERSAL_LINK}${encodeURIComponent(window.location.href)}`,
+                `${VEWORLD_UNIVERSAL_LINK}${encodeURIComponent(
+                    window.location.href,
+                )}`,
                 '_self',
             );
             return;
@@ -101,7 +101,15 @@ export const useConnectWithDappKitSource = (
 
         try {
             setSource(source);
-            await dappKitConnect();
+            
+            // ConnectModal closes automatically when useWallet flips
+            // `connection.isConnected` to true.
+            if (source === 'veworld') {
+                await connectV2(null);
+            } else {
+                await connectV1();
+            }
+           
             // WalletConnect side-effect: setSource('wallet-connect') +
             // connect() causes dapp-kit's signer to call
             // CustomWalletConnectModal.openModal({uri}), which fires
@@ -139,7 +147,8 @@ export const useConnectWithDappKitSource = (
     }, [
         source,
         setSource,
-        dappKitConnect,
+        connectV1, 
+        connectV2,
         closeDappKitModal,
         setCurrentContent,
         t,

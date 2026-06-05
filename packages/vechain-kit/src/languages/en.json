@@ -501,5 +501,6 @@
   "{{amount}} {{symbol}} is on its way to {{recipient}}.": "{{amount}} {{symbol}} is on its way to {{recipient}}.",
   "NFT sent": "NFT sent",
   "{{nft}} is now in {{recipient}}’s wallet.": "{{nft}} is now in {{recipient}}’s wallet.",
-  "Amount adjusted from {{original}} to {{adjusted}} {{symbol}} to cover the transaction fee.": "Amount adjusted from {{original}} to {{adjusted}} {{symbol}} to cover the transaction fee."
+  "Amount adjusted from {{original}} to {{adjusted}} {{symbol}} to cover the transaction fee.": "Amount adjusted from {{original}} to {{adjusted}} {{symbol}} to cover the transaction fee.",
+  "Change connected accounts": "Change connected accounts"
 }

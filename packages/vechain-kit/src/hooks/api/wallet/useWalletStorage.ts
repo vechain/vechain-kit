@@ -30,28 +30,48 @@ export const useWalletStorage = () => {
         const keys = getStorageKeys(network.type);
         const cached = getLocalStorageItem(keys.wallets);
         if (!cached) return [];
-        return JSON.parse(cached) as StoredWallet[];
+        try {
+            const parsed = JSON.parse(cached) as StoredWallet[];
+            // Migrate legacy mixed-case entries on read so every consumer
+            // (including older vechain-kit versions on the same origin)
+            // works with lowercase.
+            return parsed.map((w) => ({
+                ...w,
+                address:
+                    typeof w.address === 'string'
+                        ? w.address.toLowerCase()
+                        : w.address,
+            }));
+        } catch {
+            return [];
+        }
     }, [network.type, getStorageKeys]);
 
     const getActiveWallet = useCallback((): string | null => {
         if (!isBrowser()) return null;
 
         const keys = getStorageKeys(network.type);
-        return getLocalStorageItem(keys.activeWallet);
+        const stored = getLocalStorageItem(keys.activeWallet);
+        return stored ? stored.toLowerCase() : null;
     }, [network.type, getStorageKeys]);
 
+    // Normalize at the storage boundary: older vechain-kit consumers on the
+    // same origin pass these addresses to `ethers.isAddress()` (strict
+    // EIP-55) — mixed-case input there silently fails avatar/domain/balance
+    // fetches. Persisting lowercase keeps cross-version reads safe.
     const saveWallet = useCallback(
         (address: string) => {
             if (!isBrowser()) return;
 
+            const normalized = address.toLowerCase();
             const keys = getStorageKeys(network.type);
             const wallets = getStoredWallets();
             const existingIndex = wallets.findIndex(
-                (w) => w.address.toLowerCase() === address.toLowerCase(),
+                (w) => w.address.toLowerCase() === normalized,
             );
 
             const walletToSave: StoredWallet = {
-                address: address,
+                address: normalized,
                 connectedAt:
                     existingIndex >= 0
                         ? wallets[existingIndex].connectedAt
@@ -74,17 +94,18 @@ export const useWalletStorage = () => {
         (address: string) => {
             if (!isBrowser()) return;
 
+            const normalized = address.toLowerCase();
             const keys = getStorageKeys(network.type);
             const wallets = getStoredWallets();
 
-            // Update all wallets to set isActive
             const updatedWallets = wallets.map((w) => ({
                 ...w,
-                isActive: w.address.toLowerCase() === address.toLowerCase(),
+                address: w.address.toLowerCase(),
+                isActive: w.address.toLowerCase() === normalized,
             }));
 
             setLocalStorageItem(keys.wallets, JSON.stringify(updatedWallets));
-            setLocalStorageItem(keys.activeWallet, address);
+            setLocalStorageItem(keys.activeWallet, normalized);
         },
         [network.type, getStorageKeys, getStoredWallets],
     );

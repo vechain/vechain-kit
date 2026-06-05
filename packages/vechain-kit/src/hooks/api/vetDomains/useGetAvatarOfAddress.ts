@@ -43,11 +43,12 @@ const getCrossAppAvatar = (): string | null => {
     }
 };
 
+// Lowercase the key so mixed-case and lowercase callers share the cache.
 export const getAvatarOfAddressQueryKey = (address?: string) => [
     'VECHAIN_KIT',
     'VET_DOMAINS',
     'AVATAR_OF_ADDRESS',
-    address,
+    address?.toLowerCase() ?? address,
 ];
 
 /**
@@ -72,7 +73,8 @@ export const useGetAvatarOfAddress = (address?: string) => {
                 return crossAppAvatar ?? getPicassoImage(address);
             }
 
-            const addressDomain = await getAddressDomain(address, {
+            // Lowercase to bypass ethers' strict EIP-55 check.
+            const addressDomain = await getAddressDomain(address.toLowerCase(), {
                 networkUrl: network.nodeUrl,
             });
             if (!addressDomain) {
