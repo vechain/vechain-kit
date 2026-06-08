@@ -4,7 +4,6 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? process.env.BASE_PATH ?? '
 const nextConfig = {
     basePath,
     assetPrefix: basePath,
-    allowedDevOrigins: ['observe-devices-sara-handhelds.trycloudflare.com'],
     output: 'export',
     distDir: 'dist',
 
