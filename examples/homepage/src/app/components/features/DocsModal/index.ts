@@ -1,1 +1,0 @@
-export { DocsModal } from './DocsModal';

@@ -3,6 +3,7 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
+import Script from 'next/script';
 import { darkTheme } from './theme';
 
 const VechainKitProviderWrapper = dynamic(
@@ -84,10 +85,7 @@ export default function RootLayout({
 
                 {/* Twitter Metadata */}
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta
-                    name="twitter:title"
-                    content="VeKit Playground"
-                />
+                <meta name="twitter:title" content="VeKit Playground" />
                 <meta
                     name="twitter:description"
                     content="VeKit Playground - Live demos, code snippets and ready-made AI prompts for shipping VeChain dApps."
@@ -123,6 +121,13 @@ export default function RootLayout({
                 <ChakraProvider theme={darkTheme}>
                     <AppContent>{children}</AppContent>
                 </ChakraProvider>
+                <Script
+                    src="https://app.agent.veworld.ai/embed.js"
+                    data-handle="dan"
+                    data-agent="8f6b1d2e-4e0c-489b-abf1-bc8be68bd58a"
+                    data-embed-key="am_embed_0v9q4uNohBrxupBgveikJBUibN-s4vwpdN8Jc7NSpdY"
+                    strategy="afterInteractive"
+                />
             </body>
         </html>
     );
