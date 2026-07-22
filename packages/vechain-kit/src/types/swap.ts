@@ -71,9 +71,25 @@ export interface SwapParams {
      */
     fromTokenAddress: string;
     /**
+     * Symbol of the input token
+     */
+    fromTokenSymbol: string;
+    /**
+     * Decimals of the input token
+     */
+    fromTokenDecimals: number;
+    /**
      * Address of the token to swap to
      */
     toTokenAddress: string;
+    /**
+     * Symbol of the output token
+     */
+    toTokenSymbol: string;
+    /**
+     * Decimals of the output token
+     */
+    toTokenDecimals: number;
     /**
      * Amount of input token (in raw format, e.g., Wei)
      */
@@ -130,4 +146,3 @@ export interface SwapAggregator {
      */
     getIcon: (boxSize?: string) => React.ReactElement;
 }
-

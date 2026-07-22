@@ -56,7 +56,7 @@ export const useSwapQuotes = (
     }, [toTokenAddress, toTokenInfo?.decimals]);
 
     const params: SwapParams | null = useMemo(() => {
-        if (!fromTokenAddress || !toTokenAddress || !amountIn || !userAddress) return null;
+        if (!fromToken || !toToken || !fromTokenAddress || !toTokenAddress || !amountIn || !userAddress) return null;
 
 
         let amountInRaw: bigint;
@@ -71,12 +71,16 @@ export const useSwapQuotes = (
 
         return {
             fromTokenAddress,
+            fromTokenSymbol: fromToken.symbol,
+            fromTokenDecimals,
             toTokenAddress,
+            toTokenSymbol: toToken.symbol,
+            toTokenDecimals,
             amountIn: amountInRaw.toString(),
             userAddress,
             slippageTolerance,
         };
-    }, [fromTokenAddress, toTokenAddress, amountIn, userAddress, slippageTolerance, fromTokenDecimals]);
+    }, [fromTokenAddress, fromToken?.symbol, toTokenAddress, toToken?.symbol, amountIn, userAddress, slippageTolerance, fromTokenDecimals, toTokenDecimals]);
 
     const { data, isLoading, error } = useQuery<{ quotes: SwapQuote[]; best: SwapQuote | null }>({
         queryKey: ['unified-swap-quotes', params, connection.network],
@@ -153,5 +157,4 @@ export const useSwapQuotes = (
         } : null,
     };
 };
-
 
