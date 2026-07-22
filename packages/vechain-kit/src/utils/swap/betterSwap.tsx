@@ -21,6 +21,7 @@ import React from 'react';
 import {
     decodeAbiParameters,
     decodeFunctionData,
+    isAddress,
     parseAbi,
     zeroAddress,
     type Hex,
@@ -31,6 +32,8 @@ const BETTERSWAP_TARGETS = {
     aggregator: '0xda5a60c8559a37eab5950a4ace9b77c25f6fde80',
     sor: '0x07cf4ef7044f5f290e0fe066ee1067c75d5bc478',
 } as const;
+const BETTERSWAP_AGGREGATOR_NATIVE_TOKEN =
+    '0x45429a2255e7248e57fce99e7239aed3f84b7a53';
 const SOR_EXACT_INPUT_SELECTOR = '0x2ccd2459';
 const MAX_QUOTE_LIFETIME_SECONDS = 30 * 60;
 const AGGREGATOR_ABI = parseAbi([
@@ -113,6 +116,8 @@ interface ValidatedBetterSwapQuote {
 
 const isVET = (address: string) => address === '0x' || address === zeroAddress;
 const sameAddress = (left: string, right: string) =>
+    isAddress(left, { strict: false }) &&
+    isAddress(right, { strict: false }) &&
     left.toLowerCase() === right.toLowerCase();
 const toApiAddress = (address: string) => (isVET(address) ? '' : address);
 const toSorAddress = (address: string) =>
@@ -160,6 +165,19 @@ const validateAggregatorClause = (
     const offset = expectedFunction === 'swapExactETHForTokens' ? 0 : 1;
     if (offset === 1 && BigInt(args[0] as bigint) !== BigInt(params.amountIn))
         throw new Error('Invalid BetterSwap input amount');
+    const path = args[offset + 1] as readonly string[];
+    const expectedPathStart = isVET(params.fromTokenAddress)
+        ? BETTERSWAP_AGGREGATOR_NATIVE_TOKEN
+        : params.fromTokenAddress;
+    const expectedPathEnd = isVET(params.toTokenAddress)
+        ? BETTERSWAP_AGGREGATOR_NATIVE_TOKEN
+        : params.toTokenAddress;
+    if (
+        path.length < 2 ||
+        !sameAddress(path[0], expectedPathStart) ||
+        !sameAddress(path[path.length - 1], expectedPathEnd)
+    )
+        throw new Error('Invalid BetterSwap swap path');
     if (BigInt(args[offset] as bigint) !== minimumOutputAmount)
         throw new Error('Invalid BetterSwap minimum output');
     if (!sameAddress(args[offset + 2] as string, params.userAddress))
@@ -196,6 +214,39 @@ const validateSorClause = (
         throw new Error('Invalid BetterSwap SOR recipient');
     if (decoded.deadline !== BigInt(deadline))
         throw new Error('Invalid BetterSwap SOR deadline');
+};
+
+const validateExecutionClause = (
+    source: 'aggregator' | 'sor',
+    target: string,
+    deadline: number,
+    executionClause: Pick<TransactionClause, 'to' | 'value' | 'data'>,
+    params: SwapParams,
+    minimumOutputAmount: bigint,
+) => {
+    if (!executionClause.to || !sameAddress(executionClause.to, target))
+        throw new Error('Invalid BetterSwap execution target');
+    const expectedValue = isVET(params.fromTokenAddress)
+        ? BigInt(params.amountIn)
+        : 0n;
+    if (BigInt(executionClause.value) !== expectedValue)
+        throw new Error('Invalid BetterSwap execution value');
+
+    if (source === 'aggregator') {
+        validateAggregatorClause(
+            executionClause.data as Hex,
+            params,
+            minimumOutputAmount,
+            deadline,
+        );
+    } else {
+        validateSorClause(
+            executionClause.data as Hex,
+            params,
+            minimumOutputAmount,
+            deadline,
+        );
+    }
 };
 
 const validateQuote = (
@@ -236,29 +287,14 @@ const validateQuote = (
         validateApprovalClause(quote.clauses[0], params, target);
 
     const executionClause = quote.clauses[quote.clauses.length - 1];
-    if (!sameAddress(executionClause.to, target))
-        throw new Error('Invalid BetterSwap execution clause target');
-    const expectedValue = isVET(params.fromTokenAddress)
-        ? BigInt(params.amountIn)
-        : 0n;
-    if (BigInt(executionClause.value) !== expectedValue)
-        throw new Error('Invalid BetterSwap execution value');
-
-    if (quote.source === 'aggregator') {
-        validateAggregatorClause(
-            executionClause.data as Hex,
-            params,
-            minimumOutputAmount,
-            quote.deadline,
-        );
-    } else {
-        validateSorClause(
-            executionClause.data as Hex,
-            params,
-            minimumOutputAmount,
-            quote.deadline,
-        );
-    }
+    validateExecutionClause(
+        quote.source,
+        target,
+        quote.deadline,
+        executionClause,
+        params,
+        minimumOutputAmount,
+    );
 
     return {
         outputAmount,
@@ -384,35 +420,21 @@ export const createBetterSwapAggregator = (
             )
                 throw new Error('Expired or invalid BetterSwap quote');
             const executionClause = executionClauses[0];
-            if (!executionClause.to || !sameAddress(executionClause.to, target))
-                throw new Error('Invalid BetterSwap execution target');
-            const expectedValue = isVET(params.fromTokenAddress)
-                ? BigInt(params.amountIn)
-                : 0n;
-            if (BigInt(executionClause.value) !== expectedValue)
-                throw new Error('Invalid BetterSwap execution value');
             const minimumOutputAmount = quote.minimumOutputAmount ?? 0n;
-            if (source === 'aggregator') {
-                validateAggregatorClause(
-                    executionClause.data as Hex,
-                    params,
-                    minimumOutputAmount,
-                    deadline,
-                );
-            } else {
-                validateSorClause(
-                    executionClause.data as Hex,
-                    params,
-                    minimumOutputAmount,
-                    deadline,
-                );
-            }
+            validateExecutionClause(
+                source,
+                target,
+                deadline,
+                executionClause,
+                params,
+                minimumOutputAmount,
+            );
             if (isVET(params.fromTokenAddress)) return executionClauses;
 
             const tokenABI = ABIContract.ofAbi(IERC20__factory.abi);
             const approval = Clause.callFunction(
-                VeChainAddress.of(params.fromTokenAddress),
-                tokenABI.getFunction('approve'),
+                VeChainAddress.of(params.fromTokenAddress as `0x${string}`),
+                tokenABI.getFunction('approve' as const),
                 [target, params.amountIn],
                 VET.of(0n, Units.wei),
                 {
