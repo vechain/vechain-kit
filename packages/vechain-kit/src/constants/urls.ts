@@ -54,6 +54,7 @@ export const VEBETTERDAO_GOVERNANCE_BASE_URL =
     'https://governance.vebetterdao.org';
 export const VECHAIN_ENERGY_SWAP_BASE_URL = 'https://swap.vechain.energy';
 export const VETRADE_BASE_URL = 'https://vetrade.vet';
+export const BETTERSWAP_BASE_URL = 'http://localhost:3000';
 
 // Ecosystem app websites
 export const CLEANIFY_APP_BASE_URL = 'https://app.cleanify.vet';
