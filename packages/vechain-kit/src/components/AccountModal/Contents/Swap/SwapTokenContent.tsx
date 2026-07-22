@@ -83,12 +83,7 @@ export const SwapTokenContent = ({
     const { t } = useTranslation();
     const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
-    const {
-        network,
-        feeDelegation,
-        darkMode: isDark,
-        appConfig,
-    } = useVeChainKitConfig();
+    const { network, feeDelegation, darkMode: isDark, appConfig } = useVeChainKitConfig();
     const { isolatedView, closeAccountModal } = useAccountModalOptions();
 
     const cardBg = useToken('colors', 'vechain-kit-card');
@@ -291,14 +286,7 @@ export const SwapTokenContent = ({
 
     // Simulate swap to get gas estimate
     const swapParams = useMemo(() => {
-        if (
-            !fromToken ||
-            !toToken ||
-            !from ||
-            !to ||
-            !account?.address ||
-            amountInRaw === 0n
-        ) {
+        if (!fromToken || !toToken || !from || !to || !account?.address || amountInRaw === 0n) {
             return null;
         }
         return {
@@ -312,15 +300,7 @@ export const SwapTokenContent = ({
             userAddress: account.address,
             slippageTolerance,
         };
-    }, [
-        fromToken,
-        toToken,
-        from?.decimals,
-        to?.decimals,
-        account?.address,
-        amountInRaw,
-        slippageTolerance,
-    ]);
+    }, [fromToken, toToken, from?.decimals, to?.decimals, account?.address, amountInRaw, slippageTolerance]);
 
     // Use gas cost from quote if available, otherwise from simulation hook
     const gasCostVTHO = quote?.gasCostVTHO ?? 0;
@@ -689,7 +669,9 @@ export const SwapTokenContent = ({
                 <ModalHeader>{t('Swap')}</ModalHeader>
                 {!isolatedView && (
                     <ModalBackButton
-                        onClick={onBack ?? (() => setCurrentContent('main'))}
+                        onClick={
+                            onBack ?? (() => setCurrentContent('main'))
+                        }
                         isDisabled={
                             isTransactionPending ||
                             isWaitingForWalletConfirmation

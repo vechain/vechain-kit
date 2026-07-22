@@ -14,8 +14,8 @@ const aggregators = getSwapAggregators(networkType);
 
 The `getSwapAggregators` function returns an array of configured aggregators for the specified network (main, test, or solo). Currently supported aggregators:
 
--   **VeTrade.vet**: API-based aggregator that returns complex swap instructions
--   **BetterSwap.io**: API-based aggregator that selects between BetterSwap's AggregatorRouter and Smart Order Router
+- **VeTrade.vet**: API-based aggregator that returns complex swap instructions
+- **BetterSwap.io**: API-based aggregator that selects between BetterSwap's AggregatorRouter and Smart Order Router
 
 ### 2. Quote Fetching
 
@@ -26,21 +26,19 @@ const quote = await aggregator.getQuote(params, thor);
 ```
 
 **Input Parameters (`SwapParams`):**
-
--   `fromTokenAddress`: Source token address (use `0x` or zero address for native VET)
--   `toTokenAddress`: Destination token address
--   `amountIn`: Input amount in raw format (Wei)
--   `userAddress`: Address of the user making the swap
--   `slippageTolerance`: Optional slippage percentage (default: 1%)
+- `fromTokenAddress`: Source token address (use `0x` or zero address for native VET)
+- `toTokenAddress`: Destination token address
+- `amountIn`: Input amount in raw format (Wei)
+- `userAddress`: Address of the user making the swap
+- `slippageTolerance`: Optional slippage percentage (default: 1%)
 
 **Output (`SwapQuote`):**
-
--   `aggregatorName`: Name of the aggregator
--   `aggregator`: Reference to the aggregator instance
--   `outputAmount`: Expected output amount (bigint)
--   `minimumOutputAmount`: Minimum output considering slippage (bigint)
--   `priceImpact`: Optional price impact percentage
--   `data`: Aggregator-specific data (clauses, paths, etc.)
+- `aggregatorName`: Name of the aggregator
+- `aggregator`: Reference to the aggregator instance
+- `outputAmount`: Expected output amount (bigint)
+- `minimumOutputAmount`: Minimum output considering slippage (bigint)
+- `priceImpact`: Optional price impact percentage
+- `data`: Aggregator-specific data (clauses, paths, etc.)
 
 ### 3. Transaction Simulation
 
@@ -51,7 +49,6 @@ const simulation = await aggregator.simulateSwap(params, quote, thor);
 ```
 
 **Simulation Process:**
-
 1. Builds transaction clauses using `buildSwapTransaction()`
 2. Simulates the transaction on the VeChain network
 3. Calculates gas costs (converted to VTHO)
@@ -59,18 +56,16 @@ const simulation = await aggregator.simulateSwap(params, quote, thor);
 5. Checks for transaction reverts
 
 **Output (`SwapSimulation`):**
-
--   `gasCostVTHO`: Estimated gas cost in VTHO
--   `success`: Whether simulation succeeded
--   `error`: Error message if simulation failed
+- `gasCostVTHO`: Estimated gas cost in VTHO
+- `success`: Whether simulation succeeded
+- `error`: Error message if simulation failed
 
 ### 4. Quote Selection
 
 The system filters and ranks quotes:
-
--   Filters out quotes with zero output amounts
--   Filters out quotes that reverted during simulation
--   Selects the quote with the highest `outputAmount` among non-reverted quotes
+- Filters out quotes with zero output amounts
+- Filters out quotes that reverted during simulation
+- Selects the quote with the highest `outputAmount` among non-reverted quotes
 
 ### 5. Transaction Execution
 
@@ -92,39 +87,33 @@ Each aggregator implements `buildSwapTransaction()` to construct VeChain transac
 Use direct contract calls to a Uniswap V2 compatible router.
 
 **For VET-to-Token swaps:**
-
 1. Single clause: `swapExactETHForTokens`
-    - Sends VET as `value` in the clause
-    - Parameters: `amountOutMin`, `path`, `recipient`, `deadline`
+   - Sends VET as `value` in the clause
+   - Parameters: `amountOutMin`, `path`, `recipient`, `deadline`
 
 **For Token → VET swaps:**
-
 1. Approve clause: `approve` on the ERC20 token
-    - Approves router to spend `amountIn`
+   - Approves router to spend `amountIn`
 2. Swap clause: `swapExactTokensForETH`
-    - Parameters: `amountIn`, `amountOutMin`, `path`, `recipient`, `deadline`
+   - Parameters: `amountIn`, `amountOutMin`, `path`, `recipient`, `deadline`
 
 **For Token → Token swaps:**
-
 1. Approve clause: `approve` on the ERC20 token
 2. Swap clause: `swapExactTokensForTokens`
-    - Parameters: `amountIn`, `amountOutMin`, `path`, `recipient`, `deadline`
+   - Parameters: `amountIn`, `amountOutMin`, `path`, `recipient`, `deadline`
 
 **Path Construction:**
-
--   Native VET is replaced with wrapped VET (WVET) address in paths
--   Path: `[fromToken, toToken]` (direct swap) or multi-hop paths
+- Native VET is replaced with wrapped VET (WVET) address in paths
+- Path: `[fromToken, toToken]` (direct swap) or multi-hop paths
 
 **Deadline:**
-
--   Set to 20 minutes from current time (Unix timestamp)
+- Set to 20 minutes from current time (Unix timestamp)
 
 ### API-Based
 
 Fetches interface and parameters from an API and encodes function calls locally.
 
 **Process:**
-
 1. Fetches quote from API endpoint
 2. Receives clauses with function call specifications (ABI, function name, args)
 3. Encodes function calls locally using viem's `encodeFunctionData`
@@ -134,14 +123,12 @@ Fetches interface and parameters from an API and encodes function calls locally.
 BetterSwap returns pre-encoded execution calldata. Its adapter rejects the full quote unless the source and target match the configured AggregatorRouter or Smart Order Router, validates the exact-input calldata and quote deadline, and rebuilds ERC20 approvals locally. The complete transaction is then simulated with the same token-flow checks as other aggregators.
 
 **Clause Structure:**
-
--   Each clause contains: `to`, `value`, `data` (encoded function call), `comment`
--   Function calls are encoded using the ABI and arguments provided by the API
+- Each clause contains: `to`, `value`, `data` (encoded function call), `comment`
+- Function calls are encoded using the ABI and arguments provided by the API
 
 **Approve Clause Addition:**
-
--   If `fromTokenAddress` is not VET, an approve clause is prepended
--   Approves the router (first supported address) to spend `amountIn`
+- If `fromTokenAddress` is not VET, an approve clause is prepended
+- Approves the router (first supported address) to spend `amountIn`
 
 ## Expected API Output
 
@@ -156,13 +143,12 @@ GET https://vetrade.vet/api/quote/vck?fromAddress={tokenAddress}&toAddress={toke
 ```
 
 **Query Parameters:**
-
--   `fromAddress`: Source token address (hex string)
--   `toAddress`: Destination token address (hex string)
--   `amountIn`: Input amount as decimal string
--   `recipient`: User address receiving output tokens
--   `slippageBps`: Slippage in basis points (e.g., 100 = 1%)
--   `network`: Network type (`main`, `test`, or `solo`)
+- `fromAddress`: Source token address (hex string)
+- `toAddress`: Destination token address (hex string)
+- `amountIn`: Input amount as decimal string
+- `recipient`: User address receiving output tokens
+- `slippageBps`: Slippage in basis points (e.g., 100 = 1%)
+- `network`: Network type (`main`, `test`, or `solo`)
 
 ### Response
 
@@ -194,48 +180,48 @@ interface APIQuoteResponse {
 
 ```json
 {
-    "amountOut": "1000000000000000000",
-    "amountOutMin": "990000000000000000",
-    "clauses": [
-        {
-            "to": "0xE5fA980a6EfE5B79C2150a529da06AeF455963b6",
-            "value": "0",
-            "comment": "Swap on VeTrade",
-            "functionCall": {
-                "functionName": "swapExactTokensForTokens",
-                "abi": [
-                    {
-                        "name": "amountIn",
-                        "type": "uint256"
-                    },
-                    {
-                        "name": "amountOutMin",
-                        "type": "uint256"
-                    },
-                    {
-                        "name": "path",
-                        "type": "address[]"
-                    },
-                    {
-                        "name": "to",
-                        "type": "address"
-                    },
-                    {
-                        "name": "deadline",
-                        "type": "uint256"
-                    }
-                ],
-                "args": [
-                    "1000000000000000000",
-                    "990000000000000000",
-                    ["0xTokenA", "0xTokenB"],
-                    "0xUserAddress",
-                    "1234567890"
-                ]
-            }
-        }
-    ],
-    "path": ["0xTokenA", "0xTokenB"]
+  "amountOut": "1000000000000000000",
+  "amountOutMin": "990000000000000000",
+  "clauses": [
+    {
+      "to": "0xE5fA980a6EfE5B79C2150a529da06AeF455963b6",
+      "value": "0",
+      "comment": "Swap on VeTrade",
+      "functionCall": {
+        "functionName": "swapExactTokensForTokens",
+        "abi": [
+          {
+            "name": "amountIn",
+            "type": "uint256"
+          },
+          {
+            "name": "amountOutMin",
+            "type": "uint256"
+          },
+          {
+            "name": "path",
+            "type": "address[]"
+          },
+          {
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "args": [
+          "1000000000000000000",
+          "990000000000000000",
+          ["0xTokenA", "0xTokenB"],
+          "0xUserAddress",
+          "1234567890"
+        ]
+      }
+    }
+  ],
+  "path": ["0xTokenA", "0xTokenB"]
 }
 ```
 
@@ -257,61 +243,55 @@ Only clauses targeting addresses in `supportedAddresses` are used. This ensures 
 To add a new aggregator:
 
 1. **Create aggregator module** in `packages/vechain-kit/src/utils/swap/`
-
-    - Implement the `SwapAggregator` interface
-    - Export a factory function (e.g., `createMyAggregator`)
+   - Implement the `SwapAggregator` interface
+   - Export a factory function (e.g., `createMyAggregator`)
 
 2. **Import and register** in `swapAggregators.ts`:
-
-    ```typescript
-    import { createMyAggregator } from '@/utils/swap/myAggregator';
-
-    export const getSwapAggregators = (
-        networkType: NETWORK_TYPE,
-    ): SwapAggregator[] => [
-        createVeTradeAggregator(networkType),
-        createBetterSwapAggregator(networkType),
-        createMyAggregator(networkType), // Add here
-    ];
-    ```
+   ```typescript
+   import { createMyAggregator } from '@/utils/swap/myAggregator';
+   
+   export const getSwapAggregators = (networkType: NETWORK_TYPE): SwapAggregator[] => [
+       createVeTradeAggregator(networkType),
+       createBetterSwapAggregator(networkType),
+       createMyAggregator(networkType), // Add here
+   ];
+   ```
 
 3. **Implement required methods:**
-    - `getQuote()`: Fetch or calculate swap quote
-    - `simulateSwap()`: Simulate transaction execution
-    - `buildSwapTransaction()`: Build transaction clauses
-    - `name`: Display name
-    - `getIcon()`: React icon component
+   - `getQuote()`: Fetch or calculate swap quote
+   - `simulateSwap()`: Simulate transaction execution
+   - `buildSwapTransaction()`: Build transaction clauses
+   - `name`: Display name
+   - `getIcon()`: React icon component
 
 ## Network Configuration
 
 Each aggregator must handle three network types:
 
--   **main**: VeChain mainnet
--   **test**: VeChain testnet
--   **solo**: Local VeChain Solo network
+- **main**: VeChain mainnet
+- **test**: VeChain testnet
+- **solo**: Local VeChain Solo network
 
 Network-specific addresses and endpoints are configured within each aggregator module.
 
 ## Error Handling
 
--   **Quote failures**: Return quote with `outputAmount: 0n` (filtered out)
--   **Simulation failures**: Quote marked with `reverted: true` and `revertReason`
--   **Transaction building failures**: Throw error to prevent execution
--   **API failures**: Log error and return empty quote
+- **Quote failures**: Return quote with `outputAmount: 0n` (filtered out)
+- **Simulation failures**: Quote marked with `reverted: true` and `revertReason`
+- **Transaction building failures**: Throw error to prevent execution
+- **API failures**: Log error and return empty quote
 
 ## Gas Estimation
 
 Gas costs are calculated during simulation:
-
--   Base gas: 200,000 units (VeChain transaction base cost)
--   Additional gas per clause: `gasUsed` from simulation result
--   Conversion: `gasCostVTHO = totalGas / 1e5`
+- Base gas: 200,000 units (VeChain transaction base cost)
+- Additional gas per clause: `gasUsed` from simulation result
+- Conversion: `gasCostVTHO = totalGas / 1e5`
 
 ## Token Flow Verification
 
 During simulation, the system verifies:
-
--   **Outflow**: User's token outflow matches `amountIn`
--   **Inflow**: User's token inflow meets `minimumOutputAmount` (if specified)
+- **Outflow**: User's token outflow matches `amountIn`
+- **Inflow**: User's token inflow meets `minimumOutputAmount` (if specified)
 
 This verification works for both ERC20 tokens and native VET, ensuring swap integrity.

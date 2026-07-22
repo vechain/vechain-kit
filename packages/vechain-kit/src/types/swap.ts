@@ -116,7 +116,7 @@ export interface SwapAggregator {
      * @returns Promise resolving to a swap quote
      */
     getQuote(params: SwapParams, thor: ThorClient): Promise<SwapQuote>;
-
+    
     /**
      * Simulate the swap transaction to estimate gas
      * @param params Swap parameters
@@ -124,28 +124,21 @@ export interface SwapAggregator {
      * @param thor Thor client instance for transaction simulation
      * @returns Promise resolving to simulation result
      */
-    simulateSwap(
-        params: SwapParams,
-        quote: SwapQuote,
-        thor: ThorClient,
-    ): Promise<SwapSimulation>;
-
+    simulateSwap(params: SwapParams, quote: SwapQuote, thor: ThorClient): Promise<SwapSimulation>;
+    
     /**
      * Build transaction clauses for the swap
      * @param params Swap parameters
      * @param quote The quote from getQuote
      * @returns Promise resolving to transaction clauses
      */
-    buildSwapTransaction(
-        params: SwapParams,
-        quote: SwapQuote,
-    ): Promise<TransactionClause[]>;
-
+    buildSwapTransaction(params: SwapParams, quote: SwapQuote): Promise<TransactionClause[]>;
+    
     /**
      * Display name of the aggregator
      */
     name: string;
-
+    
     /**
      * Icon component for the aggregator
      * @param boxSize Size of the icon (e.g., "20px", "24px")

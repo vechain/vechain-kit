@@ -13,18 +13,14 @@ export type UnifiedSwapQuotesResult = {
     quotes: SwapQuote[];
     isLoading: boolean;
     error: unknown;
-    from:
-        | (TokenWithValue & {
-              address: string;
-              decimals: number;
-          })
-        | null;
-    to:
-        | (TokenWithValue & {
-              address: string;
-              decimals: number;
-          })
-        | null;
+    from: TokenWithValue & {
+        address: string;
+        decimals: number;
+    } | null;
+    to: TokenWithValue & {
+        address: string;
+        decimals: number;
+    } | null;
 };
 
 /**
@@ -46,57 +42,26 @@ export const useSwapQuotes = (
     // Use on-chain token decimals for correct parsing of amountIn, pass empty string to not let it fetch details for VET
     const fromTokenAddress = fromToken?.address ?? null;
     const toTokenAddress = toToken?.address ?? null;
-    const { data: fromTokenInfo } = useGetCustomTokenInfo(
-        fromTokenAddress === '0x' ||
-            fromTokenAddress === zeroAddress ||
-            !fromTokenAddress
-            ? ''
-            : fromTokenAddress,
-    );
-    const { data: toTokenInfo } = useGetCustomTokenInfo(
-        toTokenAddress === '0x' ||
-            toTokenAddress === zeroAddress ||
-            !toTokenAddress
-            ? ''
-            : toTokenAddress,
-    );
+    const { data: fromTokenInfo } = useGetCustomTokenInfo(fromTokenAddress === '0x' || fromTokenAddress === zeroAddress || !fromTokenAddress ? '' : fromTokenAddress);
+    const { data: toTokenInfo } = useGetCustomTokenInfo(toTokenAddress === '0x' || toTokenAddress === zeroAddress || !toTokenAddress ? '' : toTokenAddress);
 
     const fromTokenDecimals = useMemo(() => {
-        if (
-            !fromTokenAddress ||
-            fromTokenAddress === '0x' ||
-            fromTokenAddress === zeroAddress ||
-            !fromTokenInfo
-        )
-            return 18;
+        if (!fromTokenAddress || fromTokenAddress === '0x' || fromTokenAddress === zeroAddress || !fromTokenInfo) return 18;
         return Number(fromTokenInfo?.decimals ?? 18);
     }, [fromTokenAddress, fromTokenInfo?.decimals]);
 
     const toTokenDecimals = useMemo(() => {
-        if (
-            !toTokenAddress ||
-            toTokenAddress === '0x' ||
-            toTokenAddress === zeroAddress ||
-            !toTokenInfo
-        )
-            return 18;
+        if (!toTokenAddress || toTokenAddress === '0x' || toTokenAddress === zeroAddress || !toTokenInfo) return 18;
         return Number(toTokenInfo?.decimals ?? 18);
     }, [toTokenAddress, toTokenInfo?.decimals]);
 
     const params: SwapParams | null = useMemo(() => {
-        if (
-            !fromToken ||
-            !toToken ||
-            !fromTokenAddress ||
-            !toTokenAddress ||
-            !amountIn ||
-            !userAddress
-        )
-            return null;
+        if (!fromToken || !toToken || !fromTokenAddress || !toTokenAddress || !amountIn || !userAddress) return null;
+
 
         let amountInRaw: bigint;
         try {
-            amountInRaw = parseUnits(amountIn, fromTokenDecimals);
+            amountInRaw = parseUnits(amountIn, fromTokenDecimals)
         } catch (error) {
             console.error('Failed to parse amount:', amountIn, error);
             return null;
@@ -115,37 +80,19 @@ export const useSwapQuotes = (
             userAddress,
             slippageTolerance,
         };
-    }, [
-        fromTokenAddress,
-        fromToken?.symbol,
-        toTokenAddress,
-        toToken?.symbol,
-        amountIn,
-        userAddress,
-        slippageTolerance,
-        fromTokenDecimals,
-        toTokenDecimals,
-    ]);
+    }, [fromTokenAddress, fromToken?.symbol, toTokenAddress, toToken?.symbol, amountIn, userAddress, slippageTolerance, fromTokenDecimals, toTokenDecimals]);
 
-    const { data, isLoading, error } = useQuery<{
-        quotes: SwapQuote[];
-        best: SwapQuote | null;
-    }>({
+    const { data, isLoading, error } = useQuery<{ quotes: SwapQuote[]; best: SwapQuote | null }>({
         queryKey: ['unified-swap-quotes', params, connection.network],
         queryFn: async () => {
-            if (!params || !thor || !connection.network)
-                return { quotes: [], best: null };
+            if (!params || !thor || !connection.network) return { quotes: [], best: null };
 
             const aggregators = getSwapAggregators(connection.network);
             const quotePromises = aggregators.map(async (aggregator) => {
                 try {
                     const quote = await aggregator.getQuote(params, thor);
                     try {
-                        const simulation = await aggregator.simulateSwap(
-                            params,
-                            quote,
-                            thor,
-                        );
+                        const simulation = await aggregator.simulateSwap(params, quote, thor);
                         const enrichedQuote: SwapQuote = {
                             ...quote,
                             aggregator,
@@ -155,27 +102,18 @@ export const useSwapQuotes = (
                         };
                         return enrichedQuote;
                     } catch (simError) {
-                        console.error(
-                            `Failed to simulate swap for ${aggregator.name}:`,
-                            simError,
-                        );
+                        console.error(`Failed to simulate swap for ${aggregator.name}:`, simError);
                         const enrichedQuote: SwapQuote = {
                             ...quote,
                             aggregator,
                             reverted: true,
-                            revertReason:
-                                simError instanceof Error
-                                    ? simError.message
-                                    : 'Simulation failed',
+                            revertReason: simError instanceof Error ? simError.message : 'Simulation failed',
                             gasCostVTHO: 0,
                         };
                         return enrichedQuote;
                     }
                 } catch (error) {
-                    console.error(
-                        `Failed to get quote from ${aggregator.name}:`,
-                        error,
-                    );
+                    console.error(`Failed to get quote from ${aggregator.name}:`, error);
                     return null;
                 }
             });
@@ -187,11 +125,8 @@ export const useSwapQuotes = (
             // Decide best quote with revert-aware filtering
             let best: SwapQuote | null = null;
             if (quotes.length > 0) {
-                const nonReverted = quotes.filter(
-                    (q) => !(q.reverted ?? false),
-                );
-                const candidates =
-                    nonReverted.length > 0 ? nonReverted : quotes;
+                const nonReverted = quotes.filter((q) => !(q.reverted ?? false));
+                const candidates = nonReverted.length > 0 ? nonReverted : quotes;
                 best = candidates.reduce((acc, cur) => {
                     const a = BigInt(acc.outputAmount || '0');
                     const b = BigInt(cur.outputAmount || '0');
@@ -201,8 +136,7 @@ export const useSwapQuotes = (
 
             return { quotes, best };
         },
-        enabled:
-            enabled && params !== null && thor !== null && thor !== undefined,
+        enabled: enabled && params !== null && thor !== null && thor !== undefined,
         refetchInterval: 10000,
     });
 
@@ -211,19 +145,16 @@ export const useSwapQuotes = (
         quotes: data?.quotes ?? [],
         isLoading,
         error,
-        from: fromToken
-            ? {
-                  ...fromToken,
-                  address: fromTokenAddress ?? '',
-                  decimals: fromTokenDecimals,
-              }
-            : null,
-        to: toToken
-            ? {
-                  ...toToken,
-                  address: toTokenAddress ?? '',
-                  decimals: toTokenDecimals,
-              }
-            : null,
+        from: fromToken ? {
+            ...fromToken,
+            address: fromTokenAddress ?? '',
+            decimals: fromTokenDecimals,
+        } : null,
+        to: toToken ? {
+            ...toToken,
+            address: toTokenAddress ?? '',
+            decimals: toTokenDecimals,
+        } : null,
     };
 };
+
