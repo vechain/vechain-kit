@@ -3,6 +3,7 @@
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
+import Script from 'next/script';
 import { theme } from './theme';
 // Initialize i18n
 import '../../i18n';
@@ -154,6 +155,13 @@ export default function RootLayout({
                 <ChakraProvider theme={theme}>
                     <AppContent>{children}</AppContent>
                 </ChakraProvider>
+                <Script
+                    src="https://app.agent.veworld.ai/embed.js"
+                    data-handle="dan"
+                    data-agent="8f6b1d2e-4e0c-489b-abf1-bc8be68bd58a"
+                    data-embed-key="am_embed_0v9q4uNohBrxupBgveikJBUibN-s4vwpdN8Jc7NSpdY"
+                    strategy="afterInteractive"
+                />
             </body>
         </html>
     );

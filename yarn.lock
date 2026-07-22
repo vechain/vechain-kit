@@ -3352,22 +3352,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-common-types@npm:7.2.0, @fortawesome/fontawesome-common-types@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "@fortawesome/fontawesome-common-types@npm:7.2.0"
-  checksum: 10c0/991ca1390c078d973e92034cf7dbae2fc3aa50cd7ff322b7b23e4c54ec84dae12979bada9a782bdaea11a1577ae74d802aa651c590f41d2e1b1126c17e6cd413
-  languageName: node
-  linkType: hard
-
-"@fortawesome/fontawesome-svg-core@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "@fortawesome/fontawesome-svg-core@npm:7.2.0"
-  dependencies:
-    "@fortawesome/fontawesome-common-types": "npm:7.2.0"
-  checksum: 10c0/5c6655b030254804999eb87b96111cdcc42c0789e6e9ea13bc1e37d5ebf9fb982c79a618b68272cc59c23c4e1abf73d487e747a17a61499eac5f9f528fc54ad4
-  languageName: node
-  linkType: hard
-
 "@gemini-wallet/core@npm:0.3.1":
   version: 0.3.1
   resolution: "@gemini-wallet/core@npm:0.3.1"
@@ -3377,52 +3361,6 @@ __metadata:
   peerDependencies:
     viem: ">=2.0.0"
   checksum: 10c0/9df388baa7c948700ac8914ccf844eb874e86cffde59716b81180cec8dfaf8e4388e0177c727974d0d0cc48c14367b6da9956470ec1fcbda20657947eb58f9ef
-  languageName: node
-  linkType: hard
-
-"@gitbook/api@npm:0.167.0":
-  version: 0.167.0
-  resolution: "@gitbook/api@npm:0.167.0"
-  dependencies:
-    event-iterator: "npm:^2.0.0"
-    eventsource-parser: "npm:^3.0.0"
-  checksum: 10c0/002c6ebd48fd15fd5a1c58a41ebe850d82660327c005b88cfef099905abd65bd6feb81a0ad75f2181d363b42a5b71dc19aeeb60818f17a4e297c6a903bd77065
-  languageName: node
-  linkType: hard
-
-"@gitbook/embed@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "@gitbook/embed@npm:0.4.0"
-  dependencies:
-    "@gitbook/api": "npm:0.167.0"
-    "@gitbook/icons": "npm:"
-    bidc: "npm:^0.0.2"
-  peerDependencies:
-    react: "*"
-  checksum: 10c0/701ca3d094461c2c31ce65c10775e53b618853afb164b878b85c8fcb0b7c1a7dea80017f89459dceefe1ef359c5aa34434a513e8d0360155c397d15baa1df109
-  languageName: node
-  linkType: hard
-
-"@gitbook/fontawesome-pro@npm:1.0.23":
-  version: 1.0.23
-  resolution: "@gitbook/fontawesome-pro@npm:1.0.23"
-  dependencies:
-    "@fortawesome/fontawesome-common-types": "npm:^7.2.0"
-  checksum: 10c0/cdc671aa9ce32c6a6144929cdffd1918c40afdb761df190c336300ba2257092e07a7afeab3721a22c5d39c1406016083fa6fcde6f51076a5f25224c4f53aba51
-  languageName: node
-  linkType: hard
-
-"@gitbook/icons@npm:":
-  version: 0.4.6
-  resolution: "@gitbook/icons@npm:0.4.6"
-  dependencies:
-    "@fortawesome/fontawesome-svg-core": "npm:^7.2.0"
-    "@gitbook/fontawesome-pro": "npm:1.0.23"
-  peerDependencies:
-    react: "*"
-  bin:
-    gitbook-icons: bin/gitbook-icons.js
-  checksum: 10c0/da6a3c915d7bdb02f5755fc023e8c6199b1f2a5d65e1a5372a125a89b000a52a3f8994a307bdc444ef36971b9cc935db20a8240300ef4891b0bffa82098cc6c8
   languageName: node
   linkType: hard
 
@@ -10500,13 +10438,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bidc@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "bidc@npm:0.0.2"
-  checksum: 10c0/65684d4074b1492ac7b2a92d41475f5dc53462f825b8448ee9dddb1daa3cf92014be3dafd90f657e9ea14b9c2af3e87ebb42fec32fe15f9315e64039a8bbb06d
-  languageName: node
-  linkType: hard
-
 "big.js@npm:6.2.2":
   version: 6.2.2
   resolution: "big.js@npm:6.2.2"
@@ -12635,13 +12566,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"event-iterator@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "event-iterator@npm:2.0.0"
-  checksum: 10c0/fc1ca17a003cc7c2489ab1448f6b7cb2c34924a82de6f8b2faf189af4bc66cd3469ecd9ccdac493233a74dee63df2a753238d60d80a8936b1756bd78863bfe74
-  languageName: node
-  linkType: hard
-
 "event-target-shim@npm:^5.0.0":
   version: 5.0.1
   resolution: "event-target-shim@npm:5.0.1"
@@ -12674,13 +12598,6 @@ __metadata:
   version: 3.3.0
   resolution: "events@npm:3.3.0"
   checksum: 10c0/d6b6f2adbccbcda74ddbab52ed07db727ef52e31a61ed26db9feb7dc62af7fc8e060defa65e5f8af9449b86b52cc1a1f6a79f2eafcf4e62add2b7a1fa4a432f6
-  languageName: node
-  linkType: hard
-
-"eventsource-parser@npm:^3.0.0":
-  version: 3.0.8
-  resolution: "eventsource-parser@npm:3.0.8"
-  checksum: 10c0/3a73eee85311f33b12fa558381a477c1bdcf8c024a429a9d48f87b043e328c26d24ed280fd7ca92e2fdd4c8c37f749b758420c1533778aaca2beabf895024efa
   languageName: node
   linkType: hard
 
@@ -20070,7 +19987,6 @@ __metadata:
     "@chakra-ui/react": "npm:2.8.2"
     "@emotion/react": "npm:^11.13.5"
     "@emotion/styled": "npm:^11.13.5"
-    "@gitbook/embed": "npm:^0.4.0"
     "@next/eslint-plugin-next": "npm:^14.1.4"
     "@tanstack/react-query": "npm:^5.64.2"
     "@types/node": "npm:^20"

@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-07-17T11:28:18.689Z",
+  "sourceSnapshots": {
+    "vechainKitCommit": "f8f32209bf76b08a0e459f534c9fb488a9e5fd00",
+    "vechainAiSkillsCommit": "b0d8b8f0dbb97cf4224840f7ee7a2eaadea677f2"
+  },
+  "documents": [
+    {
+      "file": "10-project-documentation.md",
+      "bytes": 54180,
+      "sources": 11,
+      "sha256": "054d5e627fb5eae09318685f4583948c6403a9c4281221a6a6503f46d0ae86d6"
+    },
+    {
+      "file": "20-public-api-provider-config-theme.md",
+      "bytes": 157999,
+      "sources": 111,
+      "sha256": "c9a246f221092de6298a1fa0868e54dc41ffe73e25efee799a5c0e0441125179"
+    },
+    {
+      "file": "30-wallet-login-social-signing.md",
+      "bytes": 205024,
+      "sources": 40,
+      "sha256": "0a170ddbdd0813a7961b8a96d8cfec8343a8aefacb46508f24cec702e01d2c2f"
+    },
+    {
+      "file": "40-transactions-smart-accounts-blockchain.md",
+      "bytes": 85537,
+      "sources": 27,
+      "sha256": "763940a485042f34e810bbbcdee0f6d1efd3c6799c1dccf86b5b96c45ac350df"
+    },
+    {
+      "file": "50-data-hooks-domains-nfts-swap-staking.md",
+      "bytes": 259066,
+      "sources": 67,
+      "sha256": "42cf77115aad975a32d3e41fac4f9812e6866c07abbc7fded17ab95dd27774b2"
+    },
+    {
+      "file": "60-components-modals-localization.md",
+      "bytes": 796737,
+      "sources": 155,
+      "sha256": "e7f49b1561173e87dbb3e0afc25eb4cc0715a3594fd5db021d4f119419d084b0"
+    },
+    {
+      "file": "70-utilities-assets-and-remaining-api.md",
+      "bytes": 168148,
+      "sources": 65,
+      "sha256": "465bd0fac0b07544971d3b5b54c6247c32d6919d386868ffd39e8f234e4111b9"
+    },
+    {
+      "file": "75-vechain-ai-skills.md",
+      "bytes": 192743,
+      "sources": 20,
+      "sha256": "f98bb9d785320064a4f4dc8f443fc8bd53db5cd45ab0442a8488aa09ae5f35b4"
+    },
+    {
+      "file": "80-working-examples.md",
+      "bytes": 560136,
+      "sources": 202,
+      "sha256": "5bd27dd69bfc7254fcfb2f4005dd9d4ce44a506e68997b5cdf1b8d7c012ef261"
+    },
+    {
+      "file": "85-cross-app-social-login-host.md",
+      "bytes": 239786,
+      "sources": 41,
+      "sha256": "7d34d065eb65701973693082a36591a73ff27cbe6725bac64a858c20c9f4831a"
+    },
+    {
+      "file": "90-tests-and-edge-cases.md",
+      "bytes": 64691,
+      "sources": 21,
+      "sha256": "5512e6edf9d72ade2664aea8963ff926365f0d1b0a12dcf0cb2cea7866d23ac3"
+    }
+  ]
+}
