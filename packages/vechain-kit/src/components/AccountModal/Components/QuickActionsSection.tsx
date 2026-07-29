@@ -14,6 +14,7 @@ import {
     LuArrowDownToLine,
     LuArrowLeftRight,
     LuArrowUpFromLine,
+    LuCreditCard,
 } from 'react-icons/lu';
 import { AccountQuickAction, useVeChainKitConfig } from '@/providers';
 
@@ -61,6 +62,14 @@ const QUICK_ACTIONS: QuickAction[] = [
         label: 'Receive',
         onClick: (setCurrentContent) => {
             setCurrentContent('receive-token');
+        },
+    },
+    {
+        id: 'buy',
+        icon: LuCreditCard,
+        label: 'Buy',
+        onClick: (setCurrentContent) => {
+            setCurrentContent({ type: 'fiat-onramp', props: { setCurrentContent } });
         },
     },
 ];

@@ -7,3 +7,7 @@ export * from './common';
 export { WalletButton as DAppKitWalletButton } from '@vechain/dapp-kit-react';
 export * from './UpgradeSmartAccountModal';
 export * from './LegalDocumentsModal';
+export * from './FiatCheckoutModal';
+export * from './PayWithFiatButton';
+export * from './SubscriptionCheckoutModal';
+export * from './SubscribeButton';
