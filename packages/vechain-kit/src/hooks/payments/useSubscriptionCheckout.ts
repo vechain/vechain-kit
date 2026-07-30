@@ -5,6 +5,7 @@ import { useDisclosure } from '@chakra-ui/react';
 import { useSubscription } from './useSubscription';
 import { useSendTransaction } from '@/hooks/thor/transactions/useSendTransaction';
 import { useWallet } from '@/hooks/api/wallet/useWallet';
+import { useVeChainKitConfig } from '@/providers';
 import { SubscriptionPlan, UserSubscription } from '@/types';
 import { parseEther, parseUnits } from 'viem';
 
@@ -39,6 +40,8 @@ export type UseSubscriptionCheckoutReturn = {
     isLoading: boolean;
     isTransactionPending: boolean;
     isWaitingForWalletConfirmation: boolean;
+    /** True when a fiat onramp (Privy/Stripe) is configured on VeChainKitProvider. */
+    hasFiat: boolean;
 };
 
 // ERC-20 / VIP-180 transfer function selector
@@ -63,6 +66,8 @@ export const useSubscriptionCheckout = (
     } = useSubscription();
 
     const { account } = useWallet();
+    const { fiatOnramp } = useVeChainKitConfig();
+    const hasFiat = !!fiatOnramp;
 
     const [plan, setPlan] = useState<SubscriptionPlan | null>(null);
     const [status, setStatus] = useState<SubscriptionCheckoutStatus>('idle');
@@ -139,26 +144,36 @@ export const useSubscriptionCheckout = (
         setCryptoSubscription(null);
     }, []);
 
-    const selectPlan = useCallback((p: SubscriptionPlan) => {
-        setPlan(p);
-        setStatus('selecting');
-        setError(null);
-        setPaymentMethod(p.cryptoPayment ? 'crypto' : 'fiat');
-    }, []);
+    const selectPlan = useCallback(
+        (p: SubscriptionPlan) => {
+            setPlan(p);
+            setStatus('selecting');
+            setError(null);
+            setPaymentMethod(
+                p.cryptoPayment ? 'crypto' : hasFiat ? 'fiat' : 'crypto',
+            );
+        },
+        [hasFiat],
+    );
 
     const selectPaymentMethod = useCallback((pm: PaymentMethod) => {
         setPaymentMethod(pm);
     }, []);
 
-    const open = useCallback((p?: SubscriptionPlan) => {
-        reset();
-        if (p) {
-            setPlan(p);
-            setStatus('selecting');
-            setPaymentMethod(p.cryptoPayment ? 'crypto' : 'fiat');
-        }
-        onOpen();
-    }, [reset, onOpen]);
+    const open = useCallback(
+        (p?: SubscriptionPlan) => {
+            reset();
+            if (p) {
+                setPlan(p);
+                setStatus('selecting');
+                setPaymentMethod(
+                    p.cryptoPayment ? 'crypto' : hasFiat ? 'fiat' : 'crypto',
+                );
+            }
+            onOpen();
+        },
+        [reset, onOpen, hasFiat],
+    );
 
     const close = useCallback(() => {
         onClose();
@@ -231,5 +246,6 @@ export const useSubscriptionCheckout = (
         isLoading,
         isTransactionPending,
         isWaitingForWalletConfirmation,
+        hasFiat,
     };
 };

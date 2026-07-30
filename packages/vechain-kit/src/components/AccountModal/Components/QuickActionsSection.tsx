@@ -130,7 +130,7 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
-    const { hiddenQuickActions = [] } = useVeChainKitConfig();
+    const { hiddenQuickActions = [], fiatOnramp } = useVeChainKitConfig();
     const { hasAnyBalance } = useTotalBalance({
         address: account?.address ?? '',
     });
@@ -142,8 +142,11 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     );
 
     const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
+    const hasFiatOnramp = !!fiatOnramp;
     const visibleQuickActions = QUICK_ACTIONS.filter(
-        (action) => !hiddenQuickActions.includes(action.id),
+        (action) =>
+            !hiddenQuickActions.includes(action.id) &&
+            (action.id !== 'buy' || hasFiatOnramp),
     );
 
     if (!visibleQuickActions.length) {
