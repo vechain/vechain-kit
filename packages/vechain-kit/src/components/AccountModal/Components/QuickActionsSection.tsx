@@ -130,7 +130,7 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
-    const { hiddenQuickActions = [] } = useVeChainKitConfig();
+    const { hiddenQuickActions = [], transak } = useVeChainKitConfig();
     const { hasAnyBalance } = useTotalBalance({
         address: account?.address ?? '',
     });
@@ -142,9 +142,11 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     );
 
     const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
-    const visibleQuickActions = QUICK_ACTIONS.filter(
-        (action) => !hiddenQuickActions.includes(action.id),
-    );
+    const visibleQuickActions = QUICK_ACTIONS.filter((action) => {
+        if (hiddenQuickActions.includes(action.id)) return false;
+        if (action.id === 'buy' && !transak?.apiKey) return false;
+        return true;
+    });
 
     if (!visibleQuickActions.length) {
         return null;
