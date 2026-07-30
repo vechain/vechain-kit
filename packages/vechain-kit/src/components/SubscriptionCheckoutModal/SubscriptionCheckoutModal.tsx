@@ -33,22 +33,26 @@ const PaymentMethodToggle = ({
     value,
     onChange,
     hasCrypto,
+    hasFiat,
 }: {
     value: PaymentMethod;
     onChange: (v: PaymentMethod) => void;
     hasCrypto: boolean;
+    hasFiat: boolean;
 }) => (
     <HStack spacing={2} w="full">
-        <Button
-            size="sm"
-            variant={value === 'fiat' ? 'solid' : 'outline'}
-            colorScheme={value === 'fiat' ? 'blue' : 'gray'}
-            leftIcon={<Icon as={LuCreditCard} />}
-            onClick={() => onChange('fiat')}
-            flex={1}
-        >
-            Pay with Card
-        </Button>
+        {hasFiat && (
+            <Button
+                size="sm"
+                variant={value === 'fiat' ? 'solid' : 'outline'}
+                colorScheme={value === 'fiat' ? 'blue' : 'gray'}
+                leftIcon={<Icon as={LuCreditCard} />}
+                onClick={() => onChange('fiat')}
+                flex={1}
+            >
+                Pay with Card
+            </Button>
+        )}
         {hasCrypto && (
             <Button
                 size="sm"
@@ -82,6 +86,7 @@ export const SubscriptionCheckoutModal = ({
         isLoading,
         error,
         selectPlan,
+        hasFiat,
     } = useSubscriptionCheckout({ onSuccess, onError });
 
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
@@ -105,6 +110,8 @@ export const SubscriptionCheckoutModal = ({
 
     const effectivePlan = plan ?? externalPlan ?? null;
     const hasCrypto = !!effectivePlan?.cryptoPayment;
+    const hasToggle = hasFiat || hasCrypto;
+    const hasAnyPaymentMethod = hasFiat || hasCrypto;
 
     return (
         <BaseModal isOpen={isOpen} onClose={handleClose} closeOnOverlayClick={status !== 'processing'}>
@@ -117,11 +124,12 @@ export const SubscriptionCheckoutModal = ({
                 {status === 'idle' || status === 'selecting' ? (
                     effectivePlan ? (
                         <VStack spacing={6} py={4}>
-                            {(status === 'idle' || status === 'selecting') && (
+                            {(status === 'idle' || status === 'selecting') && hasToggle && (
                                 <PaymentMethodToggle
                                     value={paymentMethod}
                                     onChange={selectPaymentMethod}
                                     hasCrypto={hasCrypto}
+                                    hasFiat={hasFiat}
                                 />
                             )}
 
@@ -283,29 +291,35 @@ export const SubscriptionCheckoutModal = ({
 
             {(status === 'idle' || status === 'selecting') && effectivePlan && (
                 <ModalFooter>
-                    <Button
-                        variant="vechainKitPrimary"
-                        onClick={subscribe}
-                        w="full"
-                        size="lg"
-                        isLoading={isLoading}
-                        loadingText={
-                            paymentMethod === 'crypto'
-                                ? t('Confirm subscription in your wallet')
-                                : t('Processing...')
-                        }
-                    >
-                        {paymentMethod === 'crypto' && effectivePlan.cryptoPayment
-                            ? t('Send {{amount}} {{token}}', {
-                                  amount: effectivePlan.cryptoPayment.amount,
-                                  token: effectivePlan.cryptoPayment.tokenAddress
-                                      ? 'B3TR'
-                                      : 'VET',
-                              })
-                            : t('Subscribe {{amount}}', {
-                                  amount: `$${Number(effectivePlan.amount).toFixed(2)}/${effectivePlan.interval === 'month' ? t('month') : t('year')}`,
-                              })}
-                    </Button>
+                    {hasAnyPaymentMethod ? (
+                        <Button
+                            variant="vechainKitPrimary"
+                            onClick={subscribe}
+                            w="full"
+                            size="lg"
+                            isLoading={isLoading}
+                            loadingText={
+                                paymentMethod === 'crypto'
+                                    ? t('Confirm subscription in your wallet')
+                                    : t('Processing...')
+                            }
+                        >
+                            {paymentMethod === 'crypto' && effectivePlan.cryptoPayment
+                                ? t('Send {{amount}} {{token}}', {
+                                      amount: effectivePlan.cryptoPayment.amount,
+                                      token: effectivePlan.cryptoPayment.tokenAddress
+                                          ? 'B3TR'
+                                          : 'VET',
+                                  })
+                                : t('Subscribe {{amount}}', {
+                                      amount: `$${Number(effectivePlan.amount).toFixed(2)}/${effectivePlan.interval === 'month' ? t('month') : t('year')}`,
+                                  })}
+                        </Button>
+                    ) : (
+                        <Text fontSize="sm" color={textSecondary} textAlign="center" w="full">
+                            {t('No payment method available for this plan.')}
+                        </Text>
+                    )}
                 </ModalFooter>
             )}
         </BaseModal>

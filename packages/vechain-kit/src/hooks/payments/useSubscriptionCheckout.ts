@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo, useRef } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 import { useSubscription } from './useSubscription';
 import { useTransakCheckout } from './useTransakCheckout';
+import { useVeChainKitConfig } from '@/providers';
 import { useSendTransaction } from '@/hooks/thor/transactions/useSendTransaction';
 import { useWallet } from '@/hooks/api/wallet/useWallet';
 import { SubscriptionPlan, UserSubscription } from '@/types';
@@ -46,6 +47,9 @@ export type UseSubscriptionCheckoutReturn = {
         fiatCurrency?: string;
     }) => void;
     transakStatus: 'idle' | 'processing' | 'success' | 'error';
+    /** True when a Transak API key is configured on VeChainKitProvider. UI uses
+     * this to decide whether to surface the "Pay with Card" option. */
+    hasFiat: boolean;
 };
 
 // ERC-20 / VIP-180 transfer function selector
@@ -70,6 +74,8 @@ export const useSubscriptionCheckout = (
     } = useSubscription();
 
     const { account } = useWallet();
+    const { transak: transakConfig } = useVeChainKitConfig();
+    const hasFiat = !!transakConfig?.apiKey;
 
     const [plan, setPlan] = useState<SubscriptionPlan | null>(null);
     const [status, setStatus] = useState<SubscriptionCheckoutStatus>('idle');
@@ -188,26 +194,36 @@ export const useSubscriptionCheckout = (
         setCryptoSubscription(null);
     }, []);
 
-    const selectPlan = useCallback((p: SubscriptionPlan) => {
-        setPlan(p);
-        setStatus('selecting');
-        setError(null);
-        setPaymentMethod(p.cryptoPayment ? 'crypto' : 'fiat');
-    }, []);
+    const selectPlan = useCallback(
+        (p: SubscriptionPlan) => {
+            setPlan(p);
+            setStatus('selecting');
+            setError(null);
+            setPaymentMethod(
+                p.cryptoPayment ? 'crypto' : hasFiat ? 'fiat' : 'crypto',
+            );
+        },
+        [hasFiat],
+    );
 
     const selectPaymentMethod = useCallback((pm: PaymentMethod) => {
         setPaymentMethod(pm);
     }, []);
 
-    const open = useCallback((p?: SubscriptionPlan) => {
-        reset();
-        if (p) {
-            setPlan(p);
-            setStatus('selecting');
-            setPaymentMethod(p.cryptoPayment ? 'crypto' : 'fiat');
-        }
-        onOpen();
-    }, [reset, onOpen]);
+    const open = useCallback(
+        (p?: SubscriptionPlan) => {
+            reset();
+            if (p) {
+                setPlan(p);
+                setStatus('selecting');
+                setPaymentMethod(
+                    p.cryptoPayment ? 'crypto' : hasFiat ? 'fiat' : 'crypto',
+                );
+            }
+            onOpen();
+        },
+        [reset, onOpen, hasFiat],
+    );
 
     const close = useCallback(() => {
         onClose();
@@ -278,5 +294,6 @@ export const useSubscriptionCheckout = (
         isWaitingForWalletConfirmation,
         transakOpen,
         transakStatus,
+        hasFiat,
     };
 };

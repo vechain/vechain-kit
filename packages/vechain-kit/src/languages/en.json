@@ -552,5 +552,6 @@
   "Transaction confirmed": "Transaction confirmed",
   "Crypto payment": "Crypto payment",
   "Confirm subscription in your wallet": "Confirm subscription in your wallet",
-  "Subscription confirmed on-chain": "Subscription confirmed on-chain"
+  "Subscription confirmed on-chain": "Subscription confirmed on-chain",
+  "No payment method available for this plan.": "No payment method available for this plan."
 }
