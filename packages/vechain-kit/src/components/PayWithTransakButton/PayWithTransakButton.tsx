@@ -40,7 +40,7 @@ export const PayWithTransakButton = ({
             </Button>
 
             <TransakCheckoutModal
-                isOpen={status !== 'idle' && status !== 'success'}
+                isOpen={status !== 'idle'}
                 onClose={close}
                 status={status}
                 fiatAmount={fiatAmount}

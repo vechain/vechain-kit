@@ -245,23 +245,11 @@ export const useSubscriptionCheckout = (
             return;
         }
 
-        try {
-            await createSubscription(plan.id, 'transak');
-            setStatus('success');
-            options?.onSuccess?.();
-        } catch (err) {
-            const error =
-                err instanceof Error
-                    ? err
-                    : new Error('Subscription failed');
-            setError(error);
-            setStatus('error');
-            options?.onError?.(error);
-        }
+        setError(new Error('Unsupported payment method'));
+        setStatus('error');
     }, [
         plan,
         paymentMethod,
-        createSubscription,
         sendTransaction,
         cryptoClauses,
         options,
