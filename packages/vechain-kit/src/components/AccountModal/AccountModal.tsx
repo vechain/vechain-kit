@@ -39,7 +39,7 @@ import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
 import { FailedOperationContent } from './Contents/FailedOperation/FailedOperationContent';
 import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
-import { FiatOnrampContent } from './Contents/FiatOnramp';
+import { TransakOnrampContent } from './Contents/TransakOnramp';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
@@ -164,8 +164,8 @@ export const AccountModal = ({
                             }
                         />
                     );
-                case 'fiat-onramp':
-                    return <FiatOnrampContent {...currentContent.props} />;
+                case 'transak-onramp':
+                    return <TransakOnrampContent {...currentContent.props} />;
                 case 'select-wallet':
                     return (
                         <SelectWalletContent

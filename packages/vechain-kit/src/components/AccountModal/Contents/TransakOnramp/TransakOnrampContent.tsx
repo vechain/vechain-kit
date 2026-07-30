@@ -17,7 +17,6 @@ import {
     Select,
     Icon,
     Spinner,
-    useToast,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -25,13 +24,12 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
-import { useBuyCrypto } from '@/hooks/payments/useBuyCrypto';
+import { useTransakCheckout } from '@/hooks/payments/useTransakCheckout';
 import { useState } from 'react';
 import { LuDollarSign, LuCircleCheck, LuCircleX } from 'react-icons/lu';
 
-export type FiatOnrampContentProps = {
+export type TransakOnrampContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -39,50 +37,27 @@ export type FiatOnrampContentProps = {
 
 type OnrampStep = 'form' | 'processing' | 'success' | 'error';
 
-export const FiatOnrampContent = ({
+export const TransakOnrampContent = ({
     setCurrentContent,
-}: FiatOnrampContentProps) => {
+}: TransakOnrampContentProps) => {
     const { t } = useTranslation();
-    const { fiatOnramp } = useVeChainKitConfig();
     const { isolatedView } = useAccountModalOptions();
-    const { buyCrypto, isBuying } = useBuyCrypto();
-    const toast = useToast();
 
     const [step, setStep] = useState<OnrampStep>('form');
-    const [amount, setAmount] = useState(fiatOnramp?.defaultAmount ?? '50');
-    const [currency, setCurrency] = useState<'usd' | 'eur' | 'gbp'>(
-        fiatOnramp?.defaultFiat ?? 'usd',
+    const [amount, setAmount] = useState('50');
+    const [currency, setCurrency] = useState<'usd' | 'eur' | 'gbp'>('usd');
+
+    const { open: startCheckout, status } = useTransakCheckout(
+        () => setStep('success'),
+        () => setStep('error'),
     );
 
     const handleBuy = async () => {
         setStep('processing');
-
-        try {
-            const result = await buyCrypto({ amount, currency });
-
-            if (result.status === 'confirmed') {
-                setStep('success');
-                toast({
-                    title: t('Crypto purchased successfully'),
-                    status: 'success',
-                    duration: 5000,
-                });
-            } else {
-                setStep('success');
-                toast({
-                    title: t('Purchase submitted'),
-                    status: 'info',
-                    duration: 5000,
-                });
-            }
-        } catch {
-            setStep('error');
-            toast({
-                title: t('Purchase failed'),
-                status: 'error',
-                duration: 5000,
-            });
-        }
+        startCheckout({
+            fiatAmount: amount,
+            fiatCurrency: currency.toUpperCase(),
+        });
     };
 
     const handleBack = () => {
@@ -92,7 +67,7 @@ export const FiatOnrampContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Buy crypto')}</ModalHeader>
+                <ModalHeader>{t('Buy VET')}</ModalHeader>
                 {!isolatedView && (
                     <ModalBackButton
                         onClick={
@@ -109,7 +84,7 @@ export const FiatOnrampContent = ({
                         <VStack spacing={6} align="stretch" w="full">
                             <Text fontSize="sm" textAlign="center">
                                 {t(
-                                    'Buy crypto with your preferred payment method. Powered by Privy and Stripe.',
+                                    'Buy VET with your preferred payment method. Powered by Transak.',
                                 )}
                             </Text>
 
@@ -162,7 +137,7 @@ export const FiatOnrampContent = ({
                             </Text>
                             <Text fontSize="sm" textAlign="center">
                                 {t(
-                                    'Please complete the payment in the Privy modal.',
+                                    'Please complete the purchase in the Transak window.',
                                 )}
                             </Text>
                         </VStack>
@@ -174,11 +149,11 @@ export const FiatOnrampContent = ({
                         <VStack spacing={4} align="center" py={8}>
                             <Icon as={LuCircleCheck} boxSize={12} color="green.400" />
                             <Text fontWeight="bold" fontSize="lg">
-                                {t('Crypto purchased successfully')}
+                                {t('VET purchased successfully')}
                             </Text>
                             <Text fontSize="sm" textAlign="center">
                                 {t(
-                                    'Your crypto will arrive in your wallet shortly.',
+                                    'Your VET will arrive in your wallet shortly.',
                                 )}
                             </Text>
                         </VStack>
@@ -207,7 +182,7 @@ export const FiatOnrampContent = ({
                     <Button
                         variant="vechainKitPrimary"
                         onClick={handleBuy}
-                        isLoading={isBuying}
+                        isLoading={status === 'processing'}
                         loadingText={t('Processing...')}
                         w="full"
                     >

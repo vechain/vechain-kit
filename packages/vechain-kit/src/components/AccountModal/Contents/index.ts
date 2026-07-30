@@ -17,4 +17,4 @@ export * from './NftDetail';
 export * from './NftCollection';
 export * from './SendNft';
 export * from './TransactionHistory';
-export * from './FiatOnramp';
+export * from './TransakOnramp';

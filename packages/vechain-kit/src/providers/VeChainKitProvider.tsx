@@ -1,6 +1,6 @@
 import { AppConfig, getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { CURRENCY, FiatOnrampConfig, SubscriptionsConfig, PrivyLoginMethod } from '@/types';
+import { CURRENCY, TransakConfig, SubscriptionsConfig, PrivyLoginMethod } from '@/types';
 import { isValidUrl } from '@/utils';
 import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 import { initializeI18n } from '@/utils/i18n';
@@ -187,7 +187,7 @@ export type VechainKitProviderProps = {
     legalDocuments?: LegalDocumentOptions;
     hiddenQuickActions?: AccountQuickAction[];
     defaultCurrency?: CURRENCY;
-    fiatOnramp?: FiatOnrampConfig;
+    transak?: TransakConfig;
     subscriptions?: SubscriptionsConfig;
     theme?: VechainKitThemeConfig;
     onLanguageChange?: (language: string) => void;
@@ -225,7 +225,7 @@ export type VeChainKitConfig = {
     hiddenQuickActions?: AccountQuickAction[];
     /** Current runtime currency value. Reflects the active currency in VeChainKit. */
     currentCurrency: CURRENCY;
-    fiatOnramp?: FiatOnrampConfig;
+    transak?: TransakConfig;
     subscriptions?: SubscriptionsConfig;
     theme?: VechainKitThemeConfig;
     /** Function to change the language from the host app. Changes will sync to VeChainKit. */
@@ -446,7 +446,7 @@ export const VeChainKitProvider = (
         onLanguageChange,
         onCurrencyChange,
         contractAddresses,
-        fiatOnramp,
+        transak,
         subscriptions,
     } = validatedProps;
 
@@ -749,7 +749,7 @@ export const VeChainKitProvider = (
                         legalDocuments,
                         hiddenQuickActions,
                         currentCurrency,
-                        fiatOnramp,
+                        transak,
                         subscriptions,
                         theme: customTheme,
                         setLanguage,

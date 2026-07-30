@@ -14,43 +14,33 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { BaseModal, StatusScreen, StickyHeaderContainer } from '@/components/common';
-import { useFiatCheckout, FiatCheckoutProduct } from '@/hooks/payments/useFiatCheckout';
-import type { CURRENCY } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { LuCreditCard, LuCircleCheck, LuCircleX } from 'react-icons/lu';
+import type { TransakCheckoutStatus } from '@/hooks/payments/useTransakCheckout';
 
-export type FiatCheckoutModalProps = {
+export type TransakCheckoutModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    amount: string;
-    product?: FiatCheckoutProduct;
-    currency?: CURRENCY;
-    onSuccess?: () => void;
-    onError?: (error: Error) => void;
+    status: TransakCheckoutStatus;
+    fiatAmount?: string;
+    error: Error | null;
+    onStart: () => void;
+    onReset: () => void;
 };
 
-export const FiatCheckoutModal = ({
+export const TransakCheckoutModal = ({
     isOpen,
     onClose,
-    amount,
-    product,
-    currency,
-    onSuccess,
-    onError,
-}: FiatCheckoutModalProps) => {
+    status,
+    fiatAmount = '50',
+    error,
+    onStart,
+    onReset,
+}: TransakCheckoutModalProps) => {
     const { t } = useTranslation();
-    const effectiveCurrency = currency ?? 'usd';
-
-    const { checkout, status, error, reset } = useFiatCheckout({
-        amount,
-        product,
-        currency: effectiveCurrency,
-        onSuccess,
-        onError,
-    });
 
     const handleClose = () => {
-        reset();
+        onReset();
         onClose();
     };
 
@@ -59,7 +49,7 @@ export const FiatCheckoutModal = ({
     return (
         <BaseModal isOpen={isOpen} onClose={handleClose} closeOnOverlayClick={status !== 'processing'}>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Checkout')}</ModalHeader>
+                <ModalHeader>{t('Buy VET')}</ModalHeader>
                 <ModalCloseButton isDisabled={status === 'processing'} />
             </StickyHeaderContainer>
 
@@ -75,25 +65,14 @@ export const FiatCheckoutModal = ({
                         >
                             <VStack spacing={3} align="center">
                                 <Icon as={LuCreditCard} boxSize={8} color="blue.400" />
-                                {product?.name && (
-                                    <Text fontWeight="bold" fontSize="lg" textAlign="center">
-                                        {product.name}
-                                    </Text>
-                                )}
-                                {product?.description && (
-                                    <Text fontSize="sm" color={textSecondary} textAlign="center">
-                                        {product.description}
-                                    </Text>
-                                )}
                                 <Text fontSize="3xl" fontWeight="bold">
-                                    {amount}
+                                    ${fiatAmount}
+                                </Text>
+                                <Text fontSize="sm" color={textSecondary} textAlign="center">
+                                    {t('You will be redirected to Transak to complete your purchase.')}
                                 </Text>
                             </VStack>
                         </Box>
-
-                        <Text fontSize="xs" color={textSecondary} textAlign="center">
-                            {t('Secured by Privy and Stripe')}
-                        </Text>
                     </VStack>
                 )}
 
@@ -101,10 +80,10 @@ export const FiatCheckoutModal = ({
                     <VStack spacing={4} align="center" py={8}>
                         <Spinner size="xl" />
                         <Text fontWeight="bold" fontSize="lg">
-                            {t('Processing payment...')}
+                            {t('Opening Transak...')}
                         </Text>
                         <Text fontSize="sm" color={textSecondary} textAlign="center">
-                            {t('Please complete the payment in the Privy window.')}
+                            {t('Please complete the purchase in the Transak window.')}
                         </Text>
                     </VStack>
                 )}
@@ -112,8 +91,8 @@ export const FiatCheckoutModal = ({
                 {status === 'success' && (
                     <StatusScreen
                         status="success"
-                        title={t('Payment successful')}
-                        description={t('Your payment has been processed successfully.')}
+                        title={t('Purchase successful')}
+                        description={t('Your VET will arrive in your wallet shortly.')}
                         icon={LuCircleCheck}
                         actions={
                             <Button variant="vechainKitPrimary" onClick={onClose} w="full">
@@ -126,12 +105,12 @@ export const FiatCheckoutModal = ({
                 {status === 'error' && (
                     <StatusScreen
                         status="error"
-                        title={t('Payment failed')}
+                        title={t('Purchase failed')}
                         description={error?.message ?? t('Something went wrong. Please try again.')}
                         icon={LuCircleX}
                         actions={
                             <VStack spacing={3} w="full">
-                                <Button variant="vechainKitPrimary" onClick={checkout} w="full">
+                                <Button variant="vechainKitPrimary" onClick={onStart} w="full">
                                     {t('Try again')}
                                 </Button>
                                 <Button variant="vechainKitSecondary" onClick={handleClose} w="full">
@@ -145,8 +124,13 @@ export const FiatCheckoutModal = ({
 
             {status === 'idle' && (
                 <ModalFooter>
-                    <Button variant="vechainKitPrimary" onClick={checkout} w="full" size="lg">
-                        {t('Pay {{amount}}', { amount })}
+                    <Button
+                        variant="vechainKitPrimary"
+                        onClick={onStart}
+                        w="full"
+                        size="lg"
+                    >
+                        {t('Buy ${{amount}} VET', { amount: fiatAmount })}
                     </Button>
                 </ModalFooter>
             )}

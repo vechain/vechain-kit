@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 import { useSubscription } from './useSubscription';
+import { useTransakCheckout } from './useTransakCheckout';
 import { useSendTransaction } from '@/hooks/thor/transactions/useSendTransaction';
 import { useWallet } from '@/hooks/api/wallet/useWallet';
 import { SubscriptionPlan, UserSubscription } from '@/types';
@@ -39,6 +40,12 @@ export type UseSubscriptionCheckoutReturn = {
     isLoading: boolean;
     isTransactionPending: boolean;
     isWaitingForWalletConfirmation: boolean;
+    /** Re-initialized every render — call to open Transak widget for fiat funding */
+    transakOpen: (params?: {
+        fiatAmount?: string;
+        fiatCurrency?: string;
+    }) => void;
+    transakStatus: 'idle' | 'processing' | 'success' | 'error';
 };
 
 // ERC-20 / VIP-180 transfer function selector
@@ -70,6 +77,48 @@ export const useSubscriptionCheckout = (
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('fiat');
     const [cryptoSubscription, setCryptoSubscription] =
         useState<UserSubscription | null>(null);
+
+    const planRef = useRef(plan);
+    planRef.current = plan;
+    const optionsRef = useRef(options);
+    optionsRef.current = options;
+
+    const {
+        open: transakOpen,
+        status: transakStatus,
+        error: transakError,
+    } = useTransakCheckout(
+        // onSuccess
+        useCallback(() => {
+            const currentPlan = planRef.current;
+            const currentOptions = optionsRef.current;
+            if (!currentPlan) return;
+
+            createSubscription(currentPlan.id, 'transak')
+                .then(() => {
+                    setStatus('success');
+                    currentOptions?.onSuccess?.();
+                })
+                .catch((err) => {
+                    const error =
+                        err instanceof Error
+                            ? err
+                            : new Error('Subscription failed');
+                    setError(error);
+                    setStatus('error');
+                    currentOptions?.onError?.(error);
+                });
+        }, [createSubscription]),
+        // onError
+        useCallback(
+            (err: Error) => {
+                setError(err);
+                setStatus('error');
+                optionsRef.current?.onError?.(err);
+            },
+            [],
+        ),
+    );
 
     const cryptoClauses = useMemo(() => {
         if (!plan?.cryptoPayment || !account?.address) return [];
@@ -189,8 +238,15 @@ export const useSubscriptionCheckout = (
             return;
         }
 
+        if (paymentMethod === 'fiat') {
+            transakOpen({
+                fiatAmount: plan.amount,
+            });
+            return;
+        }
+
         try {
-            await createSubscription(plan.id, 'stripe_payment_method');
+            await createSubscription(plan.id, 'transak');
             setStatus('success');
             options?.onSuccess?.();
         } catch (err) {
@@ -209,6 +265,7 @@ export const useSubscriptionCheckout = (
         sendTransaction,
         cryptoClauses,
         options,
+        transakOpen,
     ]);
 
     const currentSubscription = cryptoSubscription ?? apiSubscription;
@@ -226,10 +283,12 @@ export const useSubscriptionCheckout = (
         selectPaymentMethod,
         availablePlans,
         currentSubscription,
-        error: error ?? subError,
+        error: error ?? subError ?? transakError,
         reset,
         isLoading,
         isTransactionPending,
         isWaitingForWalletConfirmation,
+        transakOpen,
+        transakStatus,
     };
 };

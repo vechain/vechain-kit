@@ -1,12 +1,12 @@
 'use client';
 
-import { Box, Button, Heading, VStack } from '@chakra-ui/react';
+import { Box, Button, Heading, VStack, Text, useToken } from '@chakra-ui/react';
 import {
-    PayWithFiatButton,
+    PayWithTransakButton,
     SubscribeButton,
-    useFiatCheckout,
-    FiatCheckoutModal,
 } from '@vechain/vechain-kit';
+import { useTranslation } from 'react-i18next';
+
 const DEMO_PLAN = {
     id: 'premium-monthly',
     name: 'Premium Plan',
@@ -29,61 +29,42 @@ const DEMO_PLAN = {
 };
 
 export function PaymentsDemo() {
-    const {
-        isOpen: isCheckoutOpen,
-        open: openCheckout,
-        close: closeCheckout,
-        status: checkoutStatus,
-    } = useFiatCheckout({
-        amount: '29.99',
-        product: { name: 'Pro Access Pass', description: 'One-time payment for lifetime Pro Access' },
-        onSuccess: () => console.log('Checkout completed!'),
-    });
+    const { t } = useTranslation();
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     return (
-        <>
-            <Box>
-                <Heading size="md" mb={4}>
-                    <b>Fiat Payments Demo</b>
-                </Heading>
+        <Box>
+            <Heading size="md" mb={4}>
+                <b>{t('Fiat & Crypto Payments Demo')}</b>
+            </Heading>
 
-                <VStack spacing={6} align="stretch">
-                    <Box borderWidth="1px" borderRadius="lg" p={4}>
-                        <PayWithFiatButton
-                            amount="29.99"
-                            productName="Pro Access Pass"
-                            productDescription="One-time payment for lifetime Pro Access"
-                            onSuccess={() => console.log('Purchase successful!')}
-                        />
-                    </Box>
+            <VStack spacing={6} align="stretch">
+                <Box borderWidth="1px" borderRadius="lg" p={4}>
+                    <Text fontWeight="bold" mb={2}>
+                        {t('Buy VET with Transak')}
+                    </Text>
+                    <Text fontSize="sm" color={textSecondary} mb={4}>
+                        {t('Buy VET with your preferred payment method. Powered by Transak.')}
+                    </Text>
+                    <PayWithTransakButton
+                        fiatAmount="50"
+                        onSuccess={() => console.log('Purchase successful!')}
+                    />
+                </Box>
 
-                    <Box borderWidth="1px" borderRadius="lg" p={4}>
-                        <Button
-                            onClick={openCheckout}
-                            variant="vechainKitSecondary"
-                            isLoading={checkoutStatus === 'processing'}
-                            w="full"
-                        >
-                            Open Checkout Modal ($29.99)
-                        </Button>
-                    </Box>
-
-                    <Box borderWidth="1px" borderRadius="lg" p={4}>
-                        <SubscribeButton
-                            plan={DEMO_PLAN}
-                            onSuccess={() => console.log('Subscription created!')}
-                        />
-                    </Box>
-                </VStack>
-            </Box>
-
-            <FiatCheckoutModal
-                isOpen={isCheckoutOpen}
-                onClose={closeCheckout}
-                amount="29.99"
-                product={{ name: 'Pro Access Pass', description: 'One-time payment for lifetime Pro Access' }}
-                onSuccess={() => console.log('Checkout completed via hook!')}
-            />
-        </>
+                <Box borderWidth="1px" borderRadius="lg" p={4}>
+                    <Text fontWeight="bold" mb={2}>
+                        {t('Subscription with Crypto')}
+                    </Text>
+                    <Text fontSize="sm" color={textSecondary} mb={4}>
+                        {t('Subscribe to a plan and pay with VET or B3TR on-chain.')}
+                    </Text>
+                    <SubscribeButton
+                        plan={DEMO_PLAN}
+                        onSuccess={() => console.log('Subscription created!')}
+                    />
+                </Box>
+            </VStack>
+        </Box>
     );
 }

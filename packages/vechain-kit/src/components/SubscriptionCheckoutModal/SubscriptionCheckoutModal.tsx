@@ -238,7 +238,7 @@ export const SubscriptionCheckoutModal = ({
                         <Text fontSize="sm" color={textSecondary} textAlign="center">
                             {paymentMethod === 'crypto'
                                 ? t('Confirm the transaction in your wallet')
-                                : t('Please complete the payment in the Stripe window.')}
+                                : t('Please complete the purchase in the Transak window.')}
                         </Text>
                     </VStack>
                 )}

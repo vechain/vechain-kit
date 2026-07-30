@@ -50,7 +50,7 @@ export const SubscriptionModal = ({ isOpen, onClose }: Props) => {
 
     const handleSelectPlan = async (plan: SubscriptionPlan) => {
         try {
-            await createSubscription(plan.id, 'stripe_payment_method');
+            await createSubscription(plan.id, 'fiat');
             toast({
                 title: t('Subscription created'),
                 status: 'success',

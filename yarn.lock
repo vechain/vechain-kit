@@ -8101,6 +8101,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@transak/ui-js-sdk@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@transak/ui-js-sdk@npm:1.0.0"
+  dependencies:
+    events: "npm:^3.3.0"
+    query-string: "npm:^9.3.0"
+  checksum: 10c0/16db242c16e0be9963b6128d162010f849b99c9c47b191231888ad15dd2b8fdf0e647d8828a4076e17de339c5c630791452ffacc09f98eae018ec10dbc64e31a
+  languageName: node
+  linkType: hard
+
 "@tsconfig/node10@npm:^1.0.7":
   version: 1.0.11
   resolution: "@tsconfig/node10@npm:1.0.11"
@@ -9147,6 +9157,7 @@ __metadata:
     "@solana/web3.js": "npm:^1.98.0"
     "@tanstack/react-query": "npm:^5.64.2"
     "@tanstack/react-query-devtools": "npm:^5.64.1"
+    "@transak/ui-js-sdk": "npm:^1.0.0"
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
     "@vechain/contract-getters": "npm:1.3.0"
@@ -9183,7 +9194,6 @@ __metadata:
     "@chakra-ui/react": ^2.8.2
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
-    "@stripe/crypto": "*"
     "@tanstack/react-query": ^5.64.2
     "@vechain/dapp-kit-react": 2.3.2
     framer-motion: ^11.0.0
@@ -9195,8 +9205,6 @@ __metadata:
     "@emotion/react":
       optional: true
     "@emotion/styled":
-      optional: true
-    "@stripe/crypto":
       optional: true
     "@tanstack/react-query":
       optional: true
@@ -12697,6 +12705,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"decode-uri-component@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "decode-uri-component@npm:0.4.1"
+  checksum: 10c0/a180bbdb5398ec8270d236a3ac07cb988bbf6097428481780b85840f088951dc0318a8d8f9d56796e1a322b55b29859cea29982f22f9b03af0bc60974c54e591
+  languageName: node
+  linkType: hard
+
 "dedent@npm:^1.0.0":
   version: 1.7.1
   resolution: "dedent@npm:1.7.1"
@@ -14124,6 +14139,13 @@ __metadata:
   version: 1.1.0
   resolution: "filter-obj@npm:1.1.0"
   checksum: 10c0/071e0886b2b50238ca5026c5bbf58c26a7c1a1f720773b8c7813d16ba93d0200de977af14ac143c5ac18f666b2cfc83073f3a5fe6a4e996c49e0863d5500fccf
+  languageName: node
+  linkType: hard
+
+"filter-obj@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "filter-obj@npm:5.1.0"
+  checksum: 10c0/716e8ad2bc352e206556b3e5695b3cdff8aab80c53ea4b00c96315bbf467b987df3640575100aef8b84e812cf5ea4251db4cd672bbe33b1e78afea88400c67dd
   languageName: node
   linkType: hard
 
@@ -18353,6 +18375,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"query-string@npm:^9.3.0":
+  version: 9.4.1
+  resolution: "query-string@npm:9.4.1"
+  dependencies:
+    decode-uri-component: "npm:^0.4.1"
+    filter-obj: "npm:^5.1.0"
+    split-on-first: "npm:^3.0.0"
+  checksum: 10c0/ee6e7f549e14c51ae958b4ff01f23d41e21315743422248d460ba4184c1c920343807e44e071ef685842244913218c1aadc50668ab8f2811b7cfc353fb225685
+  languageName: node
+  linkType: hard
+
 "queue-microtask@npm:^1.2.2":
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
@@ -19591,6 +19624,13 @@ __metadata:
   version: 1.1.0
   resolution: "split-on-first@npm:1.1.0"
   checksum: 10c0/56df8344f5a5de8521898a5c090023df1d8b8c75be6228f56c52491e0fc1617a5236f2ac3a066adb67a73231eac216ccea7b5b4a2423a543c277cb2f48d24c29
+  languageName: node
+  linkType: hard
+
+"split-on-first@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "split-on-first@npm:3.0.0"
+  checksum: 10c0/a1262eae12b68de235e1a08e011bf5b42c42621985ddf807e6221fb1e2b3304824913ae7019f18436b96b8fab8aef5f1ad80dedd2385317fdc51b521c3882cd0
   languageName: node
   linkType: hard
 

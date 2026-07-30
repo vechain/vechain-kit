@@ -173,15 +173,22 @@ export enum VePassportUserStatus {
 
 
 
-export type FiatOnrampProvider = 'privy' | 'moonpay' | 'transak';
+export type TransakConfig = {
+    apiKey: string;
+    environment?: 'staging' | 'production';
+    /** When provided, the kit calls this function to obtain a fresh widget URL instead
+     * of building a deprecated direct URL. Use this in production to avoid exposing
+     * the API secret on the client. The function receives the same widget parameters
+     * the kit would otherwise encode in the URL. */
+    widgetUrlBuilder?: (params: TransakWidgetParams) => Promise<string>;
+};
 
-export type FiatOnrampConfig = {
-    defaultProvider?: FiatOnrampProvider;
-    defaultAmount?: string;
-    defaultFiat?: 'usd' | 'eur' | 'gbp';
-    environment?: 'sandbox' | 'production';
-    moonpay?: { apiKey: string };
-    transak?: { apiKey: string };
+export type TransakWidgetParams = {
+    walletAddress: string;
+    fiatAmount: string;
+    fiatCurrency: string;
+    cryptoCurrency: string;
+    network: string;
 };
 
 export type SubscriptionPlan = {

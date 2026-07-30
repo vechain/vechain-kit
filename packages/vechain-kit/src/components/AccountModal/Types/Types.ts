@@ -24,7 +24,7 @@ import { TransactionDetailContentProps } from '../Contents/TransactionHistory/Tr
 import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
 import { FailedOperationContentProps } from '../Contents/FailedOperation/FailedOperationContent';
 import { TermsAndPrivacyContentProps } from '../Contents/TermsAndPrivacy/TermsAndPrivacyContent';
-import { FiatOnrampContentProps } from '../Contents/FiatOnramp/FiatOnrampContent';
+import { TransakOnrampContentProps } from '../Contents/TransakOnramp/TransakOnrampContent';
 
 export type SwitchFeedback = {
     showFeedback: boolean;
@@ -165,6 +165,6 @@ export type AccountModalContentTypes =
           props: TermsAndPrivacyContentProps;
       }
     | {
-          type: 'fiat-onramp';
-          props: FiatOnrampContentProps;
+          type: 'transak-onramp';
+          props: TransakOnrampContentProps;
       };

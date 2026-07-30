@@ -69,7 +69,7 @@ const QUICK_ACTIONS: QuickAction[] = [
         icon: LuCreditCard,
         label: 'Buy',
         onClick: (setCurrentContent) => {
-            setCurrentContent({ type: 'fiat-onramp', props: { setCurrentContent } });
+            setCurrentContent({ type: 'transak-onramp', props: { setCurrentContent } });
         },
     },
 ];
