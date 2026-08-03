@@ -30,13 +30,50 @@ const cachedTokens: Record<TransakEnvironment, { accessToken: string; expiresAt:
     production: null,
 };
 
+// Simple in-memory rate limit so unauthenticated callers cannot mint
+// unlimited Transak sessions against the server credentials.
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 20;
+const requestLog: Record<string, number[]> = {};
+
+function rateLimited(ip: string): boolean {
+    const now = Date.now();
+    const hits = (requestLog[ip] ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+    if (hits.length >= RATE_LIMIT_MAX) {
+        requestLog[ip] = hits;
+        return true;
+    }
+    hits.push(now);
+    requestLog[ip] = hits;
+    return false;
+}
+
+async function fetchWithTimeout(
+    url: string,
+    init: RequestInit,
+    timeoutMs = 10_000,
+): Promise<Response> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        return await fetch(url, { ...init, signal: controller.signal });
+    } catch (err) {
+        if (controller.signal.aborted) {
+            throw new Error(`Transak request timed out after ${timeoutMs}ms`);
+        }
+        throw err;
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
 async function getAccessToken(environment: TransakEnvironment): Promise<string> {
     const cached = cachedTokens[environment];
     if (cached && cached.expiresAt * 1000 > Date.now() + 60_000) {
         return cached.accessToken;
     }
 
-    const res = await fetch(ENV_URLS[environment].refreshToken, {
+    const res = await fetchWithTimeout(ENV_URLS[environment].refreshToken, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -89,10 +126,17 @@ export async function POST(req: NextRequest) {
     const forwardedFor = req.headers.get('x-forwarded-for');
     const userIp = forwardedFor?.split(',')[0]?.trim() ?? req.headers.get('x-real-ip') ?? '';
 
+    if (rateLimited(userIp)) {
+        return NextResponse.json(
+            { error: 'Too many requests. Please try again later.' },
+            { status: 429 },
+        );
+    }
+
     try {
         const accessToken = await getAccessToken(environment);
 
-        const res = await fetch(ENV_URLS[environment].createWidget, {
+        const res = await fetchWithTimeout(ENV_URLS[environment].createWidget, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

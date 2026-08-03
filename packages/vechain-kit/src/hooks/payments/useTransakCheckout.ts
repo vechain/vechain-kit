@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { isAddress } from 'viem';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 
@@ -113,7 +114,7 @@ export const useTransakCheckout = (
             }
 
             const walletAddress = params?.walletAddress ?? account?.address;
-            if (!walletAddress) {
+            if (!walletAddress || !isAddress(walletAddress)) {
                 const err = new Error('No wallet address available');
                 setError(err);
                 setStatus('error');
@@ -170,6 +171,13 @@ export const useTransakCheckout = (
                         );
                     },
                 });
+
+                if (genRef.current !== gen) {
+                    // A newer open() call has superseded this one -- do not
+                    // let a stale widget overwrite the active instance.
+                    instance.cleanup();
+                    return;
+                }
 
                 instanceRef.current = instance;
             } catch (err) {

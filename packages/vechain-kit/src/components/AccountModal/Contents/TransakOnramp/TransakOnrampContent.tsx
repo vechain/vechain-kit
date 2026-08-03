@@ -29,7 +29,7 @@ import {
     TRANSAK_WIDGET_CONTAINER_ID,
     useTransakCheckout,
 } from '@/hooks/payments/useTransakCheckout';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LuDollarSign, LuCircleCheck, LuCircleX } from 'react-icons/lu';
 
 export type TransakOnrampContentProps = {
@@ -54,6 +54,15 @@ export const TransakOnrampContent = ({
         () => setStep('success'),
         () => setStep('error'),
     );
+
+    // When the Transak widget closes without completing, status returns to
+    // idle -- bring the user back to the form instead of leaving them on the
+    // processing step with no widget.
+    useEffect(() => {
+        if (step === 'processing' && status === 'idle') {
+            setStep('form');
+        }
+    }, [status, step]);
 
     const handleBuy = async () => {
         setStep('processing');

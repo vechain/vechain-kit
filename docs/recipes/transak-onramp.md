@@ -8,7 +8,7 @@ Transak deprecated direct widget URLs (API key in the query string). Widgets now
 
 The flow is:
 
-```
+```text
 Browser (vechain-kit)          Your backend                 Transak
 ┌──────────────────┐   POST   ┌──────────────────┐   POST  ┌──────────────────┐
 │ widgetUrlBuilder │ ───────► │ /api/transak/    │ ──────► │ /api/v2/         │
@@ -46,7 +46,7 @@ Browser (vechain-kit)          Your backend                 Transak
 **Request:**
 ```json
 {
-  "environment": "staging" | "production",
+  "environment": "staging",
   "widgetParams": {
     "apiKey": "your_transak_api_key",
     "referrerDomain": "https://yourapp.com",
