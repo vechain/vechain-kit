@@ -42,9 +42,7 @@ export function PrivyProviderWrapper({ children }: Props) {
                     logo: coloredLogo,
                 },
                 embeddedWallets: {
-                    ethereum: {
-                        createOnLogin: 'all-users',
-                    },
+                    createOnLogin: 'all-users',
                 },
                 passkeys: {
                     shouldUnlinkOnUnenrollMfa: false,

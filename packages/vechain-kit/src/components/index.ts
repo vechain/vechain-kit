@@ -9,5 +9,3 @@ export * from './UpgradeSmartAccountModal';
 export * from './LegalDocumentsModal';
 export * from './TransakCheckoutModal';
 export * from './PayWithTransakButton';
-export * from './SubscriptionCheckoutModal';
-export * from './SubscribeButton';

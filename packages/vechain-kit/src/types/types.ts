@@ -208,37 +208,6 @@ export type TransakWidgetParams = {
     environment: 'staging' | 'production';
 };
 
-export type SubscriptionPlan = {
-    id: string;
-    name: string;
-    description: string;
-    amount: string;
-    currency: string;
-    interval: 'month' | 'year';
-    features: string[];
-    cryptoPayment?: {
-        recipientAddress: string;
-        tokenAddress?: `0x${string}`;
-        amount: string;
-        chainType?: 'main' | 'test' | 'solo';
-    };
-};
-
-export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'incomplete' | 'trialing';
-
-export type UserSubscription = {
-    id: string;
-    planId: string;
-    status: SubscriptionStatus;
-    currentPeriodStart: string;
-    currentPeriodEnd: string;
-    cancelAtPeriodEnd: boolean;
-};
-
-export type SubscriptionsConfig = {
-    apiBaseUrl: string;
-};
-
 export type CURRENCY = 'usd' | 'gbp' | 'eur';
 
 export const CURRENCY_SYMBOLS: Record<CURRENCY, string> = {

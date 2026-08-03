@@ -1,6 +1,6 @@
 # Transak On-Ramp Backend API
 
-This document describes the backend required by vechain-kit's fiat on-ramp feature (`PayWithTransakButton`, `TransakCheckoutModal`, `SubscriptionCheckoutModal`).
+This document describes the backend required by vechain-kit's fiat on-ramp feature (`PayWithTransakButton`, `TransakCheckoutModal`).
 
 ## Why a backend is required
 

@@ -1,6 +1,6 @@
 import { AppConfig, getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { CURRENCY, TransakConfig, SubscriptionsConfig, PrivyLoginMethod } from '@/types';
+import { CURRENCY, TransakConfig, PrivyLoginMethod } from '@/types';
 import { isValidUrl } from '@/utils';
 import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 import { initializeI18n } from '@/utils/i18n';
@@ -188,7 +188,6 @@ export type VechainKitProviderProps = {
     hiddenQuickActions?: AccountQuickAction[];
     defaultCurrency?: CURRENCY;
     transak?: TransakConfig;
-    subscriptions?: SubscriptionsConfig;
     theme?: VechainKitThemeConfig;
     onLanguageChange?: (language: string) => void;
     onCurrencyChange?: (currency: CURRENCY) => void;
@@ -226,7 +225,6 @@ export type VeChainKitConfig = {
     /** Current runtime currency value. Reflects the active currency in VeChainKit. */
     currentCurrency: CURRENCY;
     transak?: TransakConfig;
-    subscriptions?: SubscriptionsConfig;
     theme?: VechainKitThemeConfig;
     /** Function to change the language from the host app. Changes will sync to VeChainKit. */
     setLanguage: (language: string) => void;
@@ -447,7 +445,6 @@ export const VeChainKitProvider = (
         onCurrencyChange,
         contractAddresses,
         transak,
-        subscriptions,
     } = validatedProps;
 
     // After validation, network and dappKit are guaranteed to be defined
@@ -514,9 +511,8 @@ export const VeChainKitProvider = (
         );
     }, [validatedLoginMethods]);
 
-    let privyAppId: string;
-    let privyClientId: string | undefined;
-    if (!privy || !privy.appId) {
+    let privyAppId: string, privyClientId: string;
+    if (!privy) {
         // No host-supplied Privy config -- fall back to VeChain's own
         // Privy app so PrivyProvider mounts cleanly. The previous dummy
         // (`clzdb5k0b02b9qvzjm6jpknsc`) only allowed a handful of origins,
@@ -529,10 +525,10 @@ export const VeChainKitProvider = (
         // prop, not on which app id is mounted, so logging in via this
         // path still routes through the whitelabel host.
         privyAppId = VECHAIN_PRIVY_APP_ID;
-        privyClientId = undefined;
+        privyClientId = '';
     } else {
         privyAppId = privy.appId;
-        privyClientId = privy.clientId || undefined;
+        privyClientId = privy.clientId;
     }
 
     // Initialize i18n with stored language or prop, and merge translations
@@ -750,7 +746,6 @@ export const VeChainKitProvider = (
                         hiddenQuickActions,
                         currentCurrency,
                         transak,
-                        subscriptions,
                         theme: customTheme,
                         setLanguage,
                         setCurrency,
@@ -788,11 +783,9 @@ export const VeChainKitProvider = (
                                 logo: privy?.appearance.logo,
                             },
                             embeddedWallets: {
-                                ethereum: {
-                                    createOnLogin:
-                                        privy?.embeddedWallets?.createOnLogin ??
-                                        'all-users',
-                                },
+                                createOnLogin:
+                                    privy?.embeddedWallets?.createOnLogin ??
+                                    'all-users',
                             },
                             passkeys: {
                                 shouldUnlinkOnUnenrollMfa: false,
