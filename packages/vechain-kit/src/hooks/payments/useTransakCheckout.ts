@@ -20,31 +20,6 @@ export type UseTransakCheckoutResult = {
     reset: () => void;
 };
 
-const buildDirectUrl = (
-    apiKey: string,
-    environment: 'staging' | 'production',
-    params: {
-        walletAddress: string;
-        fiatAmount: string;
-        fiatCurrency: string;
-    },
-): string => {
-    const base =
-        environment === 'production'
-            ? 'https://global.transak.com'
-            : 'https://global-stg.transak.com';
-    const query = new URLSearchParams({
-        apiKey,
-        walletAddress: params.walletAddress,
-        defaultCryptoCurrency: 'VET',
-        network: 'vechain',
-        fiatAmount: params.fiatAmount,
-        fiatCurrency: params.fiatCurrency,
-        disableWalletAddressForm: 'true',
-    });
-    return `${base}?${query.toString()}`;
-};
-
 const setupTransak = (
     TransakSDK: any,
     widgetUrl: string,
@@ -110,9 +85,9 @@ export const useTransakCheckout = (
             fiatCurrency?: string;
             walletAddress?: string;
         }) => {
-            if (!transakConfig?.apiKey) {
+            if (!transakConfig?.widgetUrlBuilder) {
                 const err = new Error(
-                    'Transak is not configured. Provide a `transak` config to VeChainKitProvider.',
+                    'Transak is not configured. Provide a `transak.widgetUrlBuilder` to VeChainKitProvider that returns a Secure Widget URL from your backend.',
                 );
                 setError(err);
                 setStatus('error');
@@ -142,23 +117,13 @@ export const useTransakCheckout = (
                     '@transak/ui-js-sdk'
                 );
 
-                const widgetUrl = transakConfig.widgetUrlBuilder
-                    ? await transakConfig.widgetUrlBuilder({
-                          walletAddress,
-                          fiatAmount: params?.fiatAmount ?? '50',
-                          fiatCurrency: params?.fiatCurrency ?? 'USD',
-                          cryptoCurrency: 'VET',
-                          network: 'vechain',
-                      })
-                    : buildDirectUrl(
-                          transakConfig.apiKey,
-                          transakConfig.environment ?? 'staging',
-                          {
-                              walletAddress,
-                              fiatAmount: params?.fiatAmount ?? '50',
-                              fiatCurrency: params?.fiatCurrency ?? 'USD',
-                          },
-                      );
+                const widgetUrl = await transakConfig.widgetUrlBuilder({
+                    walletAddress,
+                    fiatAmount: params?.fiatAmount ?? '50',
+                    fiatCurrency: params?.fiatCurrency ?? 'USD',
+                    cryptoCurrency: 'VET',
+                    network: 'vechain',
+                });
 
                 const { instance } = setupTransak(TransakSDK, widgetUrl, {
                     onOrderSuccessful: (data) => {

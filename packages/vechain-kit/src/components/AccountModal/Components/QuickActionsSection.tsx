@@ -144,7 +144,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
     const visibleQuickActions = QUICK_ACTIONS.filter((action) => {
         if (hiddenQuickActions.includes(action.id)) return false;
-        if (action.id === 'buy' && !transak?.apiKey) return false;
+        if (action.id === 'buy' && !transak?.widgetUrlBuilder) return false;
         return true;
     });
 

@@ -174,13 +174,17 @@ export enum VePassportUserStatus {
 
 
 export type TransakConfig = {
-    apiKey: string;
+    /** API key from the Transak Partner Dashboard for the respective environment. */
+    apiKey?: string;
     environment?: 'staging' | 'production';
-    /** When provided, the kit calls this function to obtain a fresh widget URL instead
-     * of building a deprecated direct URL. Use this in production to avoid exposing
-     * the API secret on the client. The function receives the same widget parameters
-     * the kit would otherwise encode in the URL. */
-    widgetUrlBuilder?: (params: TransakWidgetParams) => Promise<string>;
+    /**
+     * Required. Transak deprecated direct widget URLs (apiKey in the query
+     * string) — widgets now only load from a sessionId-based Secure Widget URL
+     * minted by the Create Widget URL API (POST /api/v2/auth/session), which
+     * must be called from your backend with your API secret. Provide an async
+     * function that obtains a fresh Secure Widget URL from your backend.
+     */
+    widgetUrlBuilder: (params: TransakWidgetParams) => Promise<string>;
 };
 
 export type TransakWidgetParams = {

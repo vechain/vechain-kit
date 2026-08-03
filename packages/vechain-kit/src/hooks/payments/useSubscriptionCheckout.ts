@@ -75,7 +75,7 @@ export const useSubscriptionCheckout = (
 
     const { account } = useWallet();
     const { transak: transakConfig } = useVeChainKitConfig();
-    const hasFiat = !!transakConfig?.apiKey;
+    const hasFiat = !!transakConfig?.widgetUrlBuilder;
 
     const [plan, setPlan] = useState<SubscriptionPlan | null>(null);
     const [status, setStatus] = useState<SubscriptionCheckoutStatus>('idle');

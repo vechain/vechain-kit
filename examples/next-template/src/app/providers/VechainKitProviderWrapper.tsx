@@ -121,6 +121,49 @@ export function VechainKitProviderWrapper({ children }: Props) {
             // }}
             allowCustomTokens={true}
             allowCommunityTokens={true}
+            transak={
+                process.env.NEXT_PUBLIC_TRANSAK_API_KEY
+                    ? {
+                          apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
+                          environment: 'staging',
+                          widgetUrlBuilder: async ({
+                              walletAddress,
+                              fiatAmount,
+                              fiatCurrency,
+                              cryptoCurrency,
+                              network,
+                          }) => {
+                              const res = await fetch('/api/transak/widget-url', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({
+                                      widgetParams: {
+                                          apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
+                                          referrerDomain:
+                                              typeof window !== 'undefined'
+                                                  ? window.location.origin
+                                                  : '',
+                                          walletAddress,
+                                          fiatAmount,
+                                          fiatCurrency,
+                                          cryptoCurrencyCode: cryptoCurrency,
+                                          network,
+                                          defaultCryptoCurrency: 'VET',
+                                          disableWalletAddressForm: true,
+                                      },
+                                  }),
+                              });
+                              const json = await res.json();
+                              if (!res.ok) {
+                                  throw new Error(
+                                      json?.error ?? 'Failed to create Transak widget URL',
+                                  );
+                              }
+                              return json.data.widgetUrl as string;
+                          },
+                      }
+                    : undefined
+            }
             legalDocuments={{
                 termsAndConditions: [
                     {
