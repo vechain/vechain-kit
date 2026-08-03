@@ -6,6 +6,11 @@ import { useWallet } from '@/hooks';
 
 export type TransakCheckoutStatus = 'idle' | 'processing' | 'success' | 'error';
 
+/** DOM id of the container the Transak iframe is embedded into. Rendering the
+ * widget inside the host modal (instead of the SDK's own full-screen overlay)
+ * avoids focus-trap conflicts that make the widget flicker/unfocus on click. */
+export const TRANSAK_WIDGET_CONTAINER_ID = 'vechain-kit-transak-widget-container';
+
 export type UseTransakCheckoutResult = {
     isOpen: boolean;
     open: (params?: {
@@ -29,7 +34,10 @@ const setupTransak = (
         onWidgetClose: () => void;
     },
 ): { instance: any } => {
-    const instance = new TransakSDK({ widgetUrl });
+    const instance = new TransakSDK({
+        widgetUrl,
+        containerId: TRANSAK_WIDGET_CONTAINER_ID,
+    });
 
     TransakSDK.on(
         TransakSDK.EVENTS.TRANSAK_ORDER_SUCCESSFUL,
@@ -72,12 +80,21 @@ export const useTransakCheckout = (
         setError(null);
     }, []);
 
+    // Remove the embedded iframe from its container when the widget is closed
+    // so repeated opens don't leave stale iframes behind. Uses the SDK's
+    // `cleanup()` (not `close()`), which actually removes the iframe element in
+    // container mode.
+    const removeEmbeddedWidget = useCallback(() => {
+        instanceRef.current?.cleanup();
+        instanceRef.current = null;
+        document.getElementById(TRANSAK_WIDGET_CONTAINER_ID)?.replaceChildren();
+    }, []);
+
     useEffect(() => {
         return () => {
-            instanceRef.current?.close();
-            instanceRef.current = null;
+            removeEmbeddedWidget();
         };
-    }, []);
+    }, [removeEmbeddedWidget]);
 
     const open = useCallback(
         async (params?: {
@@ -108,8 +125,7 @@ export const useTransakCheckout = (
             setIsOpen(true);
 
             try {
-                instanceRef.current?.close();
-                instanceRef.current = null;
+                removeEmbeddedWidget();
                 genRef.current += 1;
                 const gen = genRef.current;
 
@@ -165,11 +181,10 @@ export const useTransakCheckout = (
     );
 
     const close = useCallback(() => {
-        instanceRef.current?.close();
-        instanceRef.current = null;
+        removeEmbeddedWidget();
         setIsOpen(false);
         setTimeout(reset, 300);
-    }, [reset]);
+    }, [removeEmbeddedWidget, reset]);
 
     return {
         isOpen,

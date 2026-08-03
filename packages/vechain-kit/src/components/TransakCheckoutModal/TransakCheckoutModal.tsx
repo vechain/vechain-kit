@@ -10,13 +10,15 @@ import {
     Text,
     VStack,
     Icon,
-    Spinner,
     useToken,
 } from '@chakra-ui/react';
 import { BaseModal, StatusScreen, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { LuCreditCard, LuCircleCheck, LuCircleX } from 'react-icons/lu';
-import type { TransakCheckoutStatus } from '@/hooks/payments/useTransakCheckout';
+import {
+    TRANSAK_WIDGET_CONTAINER_ID,
+    type TransakCheckoutStatus,
+} from '@/hooks/payments/useTransakCheckout';
 
 export type TransakCheckoutModalProps = {
     isOpen: boolean;
@@ -47,7 +49,12 @@ export const TransakCheckoutModal = ({
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     return (
-        <BaseModal isOpen={isOpen} onClose={handleClose} closeOnOverlayClick={status !== 'processing'}>
+        <BaseModal
+            isOpen={isOpen}
+            onClose={handleClose}
+            closeOnOverlayClick={status !== 'processing'}
+            allowExternalFocus={status === 'processing'}
+        >
             <StickyHeaderContainer>
                 <ModalHeader>{t('Buy VET')}</ModalHeader>
                 <ModalCloseButton isDisabled={status === 'processing'} />
@@ -77,15 +84,14 @@ export const TransakCheckoutModal = ({
                 )}
 
                 {status === 'processing' && (
-                    <VStack spacing={4} align="center" py={8}>
-                        <Spinner size="xl" />
-                        <Text fontWeight="bold" fontSize="lg">
-                            {t('Opening Transak...')}
-                        </Text>
-                        <Text fontSize="sm" color={textSecondary} textAlign="center">
-                            {t('Please complete the purchase in the Transak window.')}
-                        </Text>
-                    </VStack>
+                    <Box
+                        id={TRANSAK_WIDGET_CONTAINER_ID}
+                        w="full"
+                        h="600px"
+                        borderRadius="xl"
+                        overflow="hidden"
+                        position="relative"
+                    />
                 )}
 
                 {status === 'success' && (
