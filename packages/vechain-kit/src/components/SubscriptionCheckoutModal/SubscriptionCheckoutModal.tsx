@@ -16,6 +16,8 @@ import {
 } from '@chakra-ui/react';
 import { BaseModal, StatusScreen, StickyHeaderContainer } from '@/components/common';
 import { useSubscriptionCheckout, PaymentMethod } from '@/hooks/payments/useSubscriptionCheckout';
+import { TRANSAK_WIDGET_CONTAINER_ID } from '@/hooks/payments/useTransakCheckout';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { useTranslation } from 'react-i18next';
 import { LuCircleCheck, LuCircleX, LuWallet, LuCreditCard } from 'react-icons/lu';
 import type { SubscriptionPlan } from '@/types';
@@ -76,6 +78,7 @@ export const SubscriptionCheckoutModal = ({
     onError,
 }: SubscriptionCheckoutModalProps) => {
     const { t } = useTranslation();
+    const { darkMode, theme } = useVeChainKitConfig();
     const {
         plan,
         subscribe,
@@ -97,14 +100,16 @@ export const SubscriptionCheckoutModal = ({
 
     if (isLoading && !availablePlans.length) {
         return (
-            <BaseModal isOpen={isOpen} onClose={handleClose}>
-                <ModalBody py={10}>
-                    <VStack spacing={4} align="center">
-                        <Spinner size="xl" />
-                        <Text>{t('Processing...')}</Text>
-                    </VStack>
-                </ModalBody>
-            </BaseModal>
+            <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
+                <BaseModal isOpen={isOpen} onClose={handleClose}>
+                    <ModalBody py={10}>
+                        <VStack spacing={4} align="center">
+                            <Spinner size="xl" />
+                            <Text>{t('Processing...')}</Text>
+                        </VStack>
+                    </ModalBody>
+                </BaseModal>
+            </VechainKitThemeProvider>
         );
     }
 
@@ -114,6 +119,7 @@ export const SubscriptionCheckoutModal = ({
     const hasAnyPaymentMethod = hasFiat || hasCrypto;
 
     return (
+        <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
         <BaseModal isOpen={isOpen} onClose={handleClose} closeOnOverlayClick={status !== 'processing'}>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Complete Subscription')}</ModalHeader>
@@ -236,19 +242,28 @@ export const SubscriptionCheckoutModal = ({
                 ) : null}
 
                 {status === 'processing' && (
+                    paymentMethod === 'fiat' ? (
+                        <Box
+                            id={TRANSAK_WIDGET_CONTAINER_ID}
+                            w="full"
+                            h="calc(100vh - 240px)"
+                            minH="420px"
+                            maxH="620px"
+                            borderRadius="xl"
+                            overflow="hidden"
+                            position="relative"
+                        />
+                    ) : (
                     <VStack spacing={4} align="center" py={8}>
                         <Spinner size="xl" />
                         <Text fontWeight="bold" fontSize="lg">
-                            {paymentMethod === 'crypto'
-                                ? t('Confirm subscription in your wallet')
-                                : t('Processing subscription...')}
+                            {t('Confirm subscription in your wallet')}
                         </Text>
                         <Text fontSize="sm" color={textSecondary} textAlign="center">
-                            {paymentMethod === 'crypto'
-                                ? t('Confirm the transaction in your wallet')
-                                : t('Please complete the purchase in the Transak window.')}
+                            {t('Confirm the transaction in your wallet')}
                         </Text>
                     </VStack>
+                    )
                 )}
 
                 {status === 'success' && (
@@ -323,5 +338,6 @@ export const SubscriptionCheckoutModal = ({
                 </ModalFooter>
             )}
         </BaseModal>
+        </VechainKitThemeProvider>
     );
 };

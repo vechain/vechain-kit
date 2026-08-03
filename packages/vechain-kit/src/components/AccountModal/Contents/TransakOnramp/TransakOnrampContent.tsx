@@ -16,7 +16,7 @@ import {
     FormLabel,
     Select,
     Icon,
-    Spinner,
+    Box,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -25,7 +25,10 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
-import { useTransakCheckout } from '@/hooks/payments/useTransakCheckout';
+import {
+    TRANSAK_WIDGET_CONTAINER_ID,
+    useTransakCheckout,
+} from '@/hooks/payments/useTransakCheckout';
 import { useState } from 'react';
 import { LuDollarSign, LuCircleCheck, LuCircleX } from 'react-icons/lu';
 
@@ -130,17 +133,16 @@ export const TransakOnrampContent = ({
 
                 {step === 'processing' && (
                     <ModalBody>
-                        <VStack spacing={4} align="center" py={8}>
-                            <Spinner size="xl" />
-                            <Text fontWeight="bold" fontSize="lg">
-                                {t('Processing...')}
-                            </Text>
-                            <Text fontSize="sm" textAlign="center">
-                                {t(
-                                    'Please complete the purchase in the Transak window.',
-                                )}
-                            </Text>
-                        </VStack>
+                        <Box
+                            id={TRANSAK_WIDGET_CONTAINER_ID}
+                            w="full"
+                            h="calc(100vh - 240px)"
+                            minH="420px"
+                            maxH="620px"
+                            borderRadius="xl"
+                            overflow="hidden"
+                            position="relative"
+                        />
                     </ModalBody>
                 )}
 

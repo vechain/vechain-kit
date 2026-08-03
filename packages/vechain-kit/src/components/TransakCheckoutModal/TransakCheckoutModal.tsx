@@ -15,6 +15,7 @@ import {
 import { BaseModal, StatusScreen, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { LuCreditCard, LuCircleCheck, LuCircleX } from 'react-icons/lu';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import {
     TRANSAK_WIDGET_CONTAINER_ID,
     type TransakCheckoutStatus,
@@ -40,6 +41,7 @@ export const TransakCheckoutModal = ({
     onReset,
 }: TransakCheckoutModalProps) => {
     const { t } = useTranslation();
+    const { darkMode, theme } = useVeChainKitConfig();
 
     const handleClose = () => {
         onReset();
@@ -49,7 +51,8 @@ export const TransakCheckoutModal = ({
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     return (
-        <BaseModal
+        <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
+            <BaseModal
             isOpen={isOpen}
             onClose={handleClose}
             closeOnOverlayClick={status !== 'processing'}
@@ -144,6 +147,7 @@ export const TransakCheckoutModal = ({
                     </Button>
                 </ModalFooter>
             )}
-        </BaseModal>
+            </BaseModal>
+        </VechainKitThemeProvider>
     );
 };

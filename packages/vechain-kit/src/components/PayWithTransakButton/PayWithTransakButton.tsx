@@ -3,6 +3,7 @@
 import { Button, ButtonProps } from '@chakra-ui/react';
 import { TransakCheckoutModal } from '@/components/TransakCheckoutModal';
 import { useTransakCheckout } from '@/hooks/payments/useTransakCheckout';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { useTranslation } from 'react-i18next';
 
 export type PayWithTransakButtonProps = {
@@ -21,6 +22,7 @@ export const PayWithTransakButton = ({
     buttonProps,
 }: PayWithTransakButtonProps) => {
     const { t } = useTranslation();
+    const { darkMode, theme } = useVeChainKitConfig();
 
     const { open, close, status, error, reset } = useTransakCheckout(
         onSuccess,
@@ -28,7 +30,7 @@ export const PayWithTransakButton = ({
     );
 
     return (
-        <>
+        <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
             <Button
                 variant="vechainKitPrimary"
                 onClick={() => open({ fiatAmount, fiatCurrency })}
@@ -48,6 +50,6 @@ export const PayWithTransakButton = ({
                 onStart={() => open({ fiatAmount, fiatCurrency })}
                 onReset={reset}
             />
-        </>
+        </VechainKitThemeProvider>
     );
 };
