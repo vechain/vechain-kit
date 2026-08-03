@@ -3,21 +3,40 @@ import { NextRequest, NextResponse } from 'next/server';
 const API_KEY = process.env.TRANSAK_API_KEY;
 const API_SECRET = process.env.TRANSAK_API_SECRET;
 
+type TransakEnvironment = 'staging' | 'production';
+
 // Refresh Access Token API -- backend only, cached for its 7-day validity
 // https://docs.transak.com/api/public/refresh-access-token
-const REFRESH_TOKEN_URL = 'https://api-stg.transak.com/partners/api/v2/refresh-token';
 // Create Widget URL API -- backend only
 // https://docs.transak.com/api/public/create-widget-url
-const CREATE_WIDGET_URL = 'https://api-gateway-stg.transak.com/api/v2/auth/session';
+const ENV_URLS: Record<
+    TransakEnvironment,
+    { refreshToken: string; createWidget: string }
+> = {
+    staging: {
+        refreshToken: 'https://api-stg.transak.com/partners/api/v2/refresh-token',
+        createWidget: 'https://api-gateway-stg.transak.com/api/v2/auth/session',
+    },
+    production: {
+        refreshToken: 'https://api.transak.com/partners/api/v2/refresh-token',
+        createWidget: 'https://api-gateway.transak.com/api/v2/auth/session',
+    },
+};
 
-let cachedToken: { accessToken: string; expiresAt: number } | null = null;
+// Access tokens are environment-specific -- cache per environment so a staging
+// token is never replayed against production endpoints.
+const cachedTokens: Record<TransakEnvironment, { accessToken: string; expiresAt: number } | null> = {
+    staging: null,
+    production: null,
+};
 
-async function getAccessToken(): Promise<string> {
-    if (cachedToken && cachedToken.expiresAt * 1000 > Date.now() + 60_000) {
-        return cachedToken.accessToken;
+async function getAccessToken(environment: TransakEnvironment): Promise<string> {
+    const cached = cachedTokens[environment];
+    if (cached && cached.expiresAt * 1000 > Date.now() + 60_000) {
+        return cached.accessToken;
     }
 
-    const res = await fetch(REFRESH_TOKEN_URL, {
+    const res = await fetch(ENV_URLS[environment].refreshToken, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -32,11 +51,11 @@ async function getAccessToken(): Promise<string> {
     }
 
     const json = await res.json();
-    cachedToken = {
+    cachedTokens[environment] = {
         accessToken: json.data.accessToken as string,
         expiresAt: json.data.expiresAt as number,
     };
-    return cachedToken.accessToken;
+    return cachedTokens[environment]!.accessToken;
 }
 
 export async function POST(req: NextRequest) {
@@ -47,7 +66,7 @@ export async function POST(req: NextRequest) {
         );
     }
 
-    let body: { widgetParams?: Record<string, unknown> };
+    let body: { widgetParams?: Record<string, unknown>; environment?: unknown };
     try {
         body = await req.json();
     } catch {
@@ -59,13 +78,21 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'widgetParams is required.' }, { status: 400 });
     }
 
+    const environment = body.environment;
+    if (environment !== 'staging' && environment !== 'production') {
+        return NextResponse.json(
+            { error: "environment must be 'staging' or 'production'." },
+            { status: 400 },
+        );
+    }
+
     const forwardedFor = req.headers.get('x-forwarded-for');
     const userIp = forwardedFor?.split(',')[0]?.trim() ?? req.headers.get('x-real-ip') ?? '';
 
     try {
-        const accessToken = await getAccessToken();
+        const accessToken = await getAccessToken(environment);
 
-        const res = await fetch(CREATE_WIDGET_URL, {
+        const res = await fetch(ENV_URLS[environment].createWidget, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

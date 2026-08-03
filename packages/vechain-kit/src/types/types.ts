@@ -176,6 +176,12 @@ export enum VePassportUserStatus {
 export type TransakConfig = {
     /** API key from the Transak Partner Dashboard for the respective environment. */
     apiKey?: string;
+    /**
+     * Optional override for the Transak environment. When unset it is derived
+     * automatically from the connected VeChain network: `main` → `production`,
+     * `test`/`solo` → `staging`. Only set this to force a different environment
+     * than the network implies (e.g. sandbox credentials on mainnet).
+     */
     environment?: 'staging' | 'production';
     /**
      * Required. Transak deprecated direct widget URLs (apiKey in the query
@@ -193,6 +199,13 @@ export type TransakWidgetParams = {
     fiatCurrency: string;
     cryptoCurrency: string;
     network: string;
+    /**
+     * Transak environment derived by the kit from the connected VeChain
+     * network (`main` → `production`, `test`/`solo` → `staging`) unless
+     * overridden via `TransakConfig.environment`. Your backend must use it to
+     * call the matching Transak API endpoints.
+     */
+    environment: 'staging' | 'production';
 };
 
 export type SubscriptionPlan = {

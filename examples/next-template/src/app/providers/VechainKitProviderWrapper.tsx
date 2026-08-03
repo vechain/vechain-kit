@@ -125,18 +125,19 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 process.env.NEXT_PUBLIC_TRANSAK_API_KEY
                     ? {
                           apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
-                          environment: 'staging',
                           widgetUrlBuilder: async ({
                               walletAddress,
                               fiatAmount,
                               fiatCurrency,
                               cryptoCurrency,
                               network,
+                              environment,
                           }) => {
                               const res = await fetch('/api/transak/widget-url', {
                                   method: 'POST',
                                   headers: { 'Content-Type': 'application/json' },
                                   body: JSON.stringify({
+                                      environment,
                                       widgetParams: {
                                           apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
                                           referrerDomain:

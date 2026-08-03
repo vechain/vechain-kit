@@ -61,7 +61,7 @@ export const useTransakCheckout = (
     onSuccess?: () => void,
     onError?: (error: Error) => void,
 ): UseTransakCheckoutResult => {
-    const { transak: transakConfig } = useVeChainKitConfig();
+    const { transak: transakConfig, network } = useVeChainKitConfig();
     const { account } = useWallet();
     const [isOpen, setIsOpen] = useState(false);
     const [status, setStatus] = useState<TransakCheckoutStatus>('idle');
@@ -133,12 +133,17 @@ export const useTransakCheckout = (
                     '@transak/ui-js-sdk'
                 );
 
+                const environment =
+                    transakConfig?.environment ??
+                    (network.type === 'main' ? 'production' : 'staging');
+
                 const widgetUrl = await transakConfig.widgetUrlBuilder({
                     walletAddress,
                     fiatAmount: params?.fiatAmount ?? '10',
                     fiatCurrency: params?.fiatCurrency ?? 'USD',
                     cryptoCurrency: 'VET',
                     network: 'vechain',
+                    environment,
                 });
 
                 const { instance } = setupTransak(TransakSDK, widgetUrl, {
@@ -177,7 +182,7 @@ export const useTransakCheckout = (
                 onErrorRef.current?.(error);
             }
         },
-        [transakConfig, account?.address],
+        [transakConfig, network.type, account?.address],
     );
 
     const close = useCallback(() => {
