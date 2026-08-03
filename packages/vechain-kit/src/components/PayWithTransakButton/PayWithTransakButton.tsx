@@ -14,7 +14,7 @@ export type PayWithTransakButtonProps = {
 };
 
 export const PayWithTransakButton = ({
-    fiatAmount = '50',
+    fiatAmount = '20',
     fiatCurrency,
     onSuccess,
     onError,

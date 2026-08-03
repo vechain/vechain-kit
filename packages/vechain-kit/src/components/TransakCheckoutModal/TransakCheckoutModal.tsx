@@ -34,7 +34,7 @@ export const TransakCheckoutModal = ({
     isOpen,
     onClose,
     status,
-    fiatAmount = '50',
+    fiatAmount = '20',
     error,
     onStart,
     onReset,
@@ -54,6 +54,8 @@ export const TransakCheckoutModal = ({
             onClose={handleClose}
             closeOnOverlayClick={status !== 'processing'}
             allowExternalFocus={status === 'processing'}
+            useBottomSheetOnMobile
+            mobileMaxHeight="calc(100dvh - 24px)"
         >
             <StickyHeaderContainer>
                 <ModalHeader>{t('Buy VET')}</ModalHeader>
@@ -87,7 +89,9 @@ export const TransakCheckoutModal = ({
                     <Box
                         id={TRANSAK_WIDGET_CONTAINER_ID}
                         w="full"
-                        h="600px"
+                        h="calc(100vh - 240px)"
+                        minH="420px"
+                        maxH="620px"
                         borderRadius="xl"
                         overflow="hidden"
                         position="relative"
