@@ -135,7 +135,7 @@ export const useTransakCheckout = (
 
                 const widgetUrl = await transakConfig.widgetUrlBuilder({
                     walletAddress,
-                    fiatAmount: params?.fiatAmount ?? '20',
+                    fiatAmount: params?.fiatAmount ?? '10',
                     fiatCurrency: params?.fiatCurrency ?? 'USD',
                     cryptoCurrency: 'VET',
                     network: 'vechain',

@@ -47,7 +47,7 @@ export function PaymentsDemo() {
                         {t('Buy VET with your preferred payment method. Powered by Transak.')}
                     </Text>
                     <PayWithTransakButton
-                        fiatAmount="20"
+                        fiatAmount="10"
                         onSuccess={() => console.log('Purchase successful!')}
                     />
                 </Box>

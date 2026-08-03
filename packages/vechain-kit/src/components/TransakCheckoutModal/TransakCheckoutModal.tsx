@@ -34,7 +34,7 @@ export const TransakCheckoutModal = ({
     isOpen,
     onClose,
     status,
-    fiatAmount = '20',
+    fiatAmount = '10',
     error,
     onStart,
     onReset,
