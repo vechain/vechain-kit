@@ -178,3 +178,115 @@ export const CURRENCY_SYMBOLS: Record<CURRENCY, string> = {
     gbp: '£',
     eur: '€',
 };
+
+/**
+ * A subscription plan offered by the host application.
+ */
+export type SubscriptionPlan = {
+    id: string;
+    name: string;
+    description: string;
+    /** Per-period fiat amount shown in the UI (e.g. "9.99"). */
+    amount: string;
+    currency: CURRENCY;
+    interval: 'month' | 'year';
+    features: string[];
+    /**
+     * On-chain payment parameters. When present, checkout pays with crypto.
+     * - `tokenAddress` omitted or the zero address → paid in VET (manual per-period payment).
+     * - `tokenAddress` set → paid in the ERC-20 token; the subscription
+     *   authorizes a capped allowance so the backend keeper can auto-pull
+     *   (fee-delegated `transferFrom`) each period.
+     */
+    cryptoPayment?: {
+        recipientAddress: string;
+        tokenAddress?: `0x${string}`;
+        /** Per-period amount in whole tokens (e.g. "100" = 100 B3TR / 100 VET). */
+        amount: string;
+        /** Maximum number of periods the keeper may auto-pull. 0 = unlimited. */
+        maxPeriods?: number;
+        chainType?: 'main' | 'test' | 'solo';
+    };
+};
+
+export type SubscriptionStatus =
+    | 'active'
+    | 'paused'
+    | 'canceled'
+    | 'past_due'
+    | 'trialing';
+
+export type UserSubscription = {
+    id: string;
+    planId: string;
+    status: SubscriptionStatus;
+    currentPeriodStart: string;
+    currentPeriodEnd: string;
+    cancelAtPeriodEnd: boolean;
+};
+
+/**
+ * EIP-712 authorization a user signs to subscribe. The backend recovers the
+ * signer from this typed message (no Bearer token required) and verifies it
+ * against the plan registry before activating the subscription.
+ *
+ * - `tokenAddress` zero (0x0000...0000) means VET — the backend must NOT
+ *   auto-pull VET (there is no allowance mechanism), payments stay manual.
+ * - `tokenAddress` set means ERC-20 — the kit grants a capped allowance and
+ *   the backend keeper auto-pulls via fee-delegated `transferFrom`.
+ */
+export type SubscriptionAuthorizationMessage = {
+    planId: string;
+    /** Per-period amount in the token's smallest unit (uint256). */
+    amount: string;
+    currency: string;
+    interval: 'month' | 'year';
+    /** Address that receives the funds. */
+    recipient: string;
+    /** ERC-20 token address, or the zero address for VET. */
+    tokenAddress: string;
+    /** Maximum number of periods the keeper may auto-pull. 0 = unlimited. */
+    maxPeriods: string;
+    /** Unique nonce to prevent replay. */
+    nonce: string;
+    /** Unix timestamp after which the authorization is invalid. */
+    expiry: string;
+};
+
+export type SubscriptionActionMessage = {
+    subscriptionId: string;
+    action: 'pause' | 'resume' | 'cancel';
+    nonce: string;
+    expiry: string;
+};
+
+/**
+ * EIP-712 typed data passed to the wallet signer. Matches the shape accepted
+ * by `useSignTypedData` (Privy `SignTypedDataParams` / VeChain `TypedDataDomain`).
+ */
+export type SubscriptionTypedData = {
+    domain: {
+        name: string;
+        version: string;
+        chainId: number;
+    };
+    types: Record<string, { name: string; type: string }[]>;
+    primaryType: string;
+    message: SubscriptionAuthorizationMessage | SubscriptionActionMessage;
+};
+
+/**
+ * Configures the subscription feature. Requires either an `apiBaseUrl`
+ * (backend-backed subscriptions) or `plans` (standalone demo plans).
+ */
+export type SubscriptionsConfig = {
+    apiBaseUrl?: string;
+    /** Plans offered by the app. Used when no `apiBaseUrl` is set. */
+    plans?: SubscriptionPlan[];
+    /**
+     * Override how the EIP-712 subscription authorization is signed. Defaults
+     * to the connected wallet via the kit's `useSignTypedData` (supports
+     * dapp-kit, Privy and Privy cross-app connections).
+     */
+    signAuthorization?: (data: SubscriptionTypedData) => Promise<string>;
+};

@@ -1,6 +1,6 @@
 import { AppConfig, getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { CURRENCY, PrivyLoginMethod } from '@/types';
+import { CURRENCY, PrivyLoginMethod, SubscriptionsConfig } from '@/types';
 import { isValidUrl } from '@/utils';
 import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 import { initializeI18n } from '@/utils/i18n';
@@ -188,6 +188,7 @@ export type VechainKitProviderProps = {
     hiddenQuickActions?: AccountQuickAction[];
     defaultCurrency?: CURRENCY;
     theme?: VechainKitThemeConfig;
+    subscriptions?: SubscriptionsConfig;
     onLanguageChange?: (language: string) => void;
     onCurrencyChange?: (currency: CURRENCY) => void;
 };
@@ -223,6 +224,7 @@ export type VeChainKitConfig = {
     hiddenQuickActions?: AccountQuickAction[];
     /** Current runtime currency value. Reflects the active currency in VeChainKit. */
     currentCurrency: CURRENCY;
+    subscriptions?: SubscriptionsConfig;
     theme?: VechainKitThemeConfig;
     /** Function to change the language from the host app. Changes will sync to VeChainKit. */
     setLanguage: (language: string) => void;
@@ -442,6 +444,7 @@ export const VeChainKitProvider = (
         onLanguageChange,
         onCurrencyChange,
         contractAddresses,
+        subscriptions,
     } = validatedProps;
 
     // After validation, network and dappKit are guaranteed to be defined
@@ -742,6 +745,7 @@ export const VeChainKitProvider = (
                         legalDocuments,
                         hiddenQuickActions,
                         currentCurrency,
+                        subscriptions,
                         theme: customTheme,
                         setLanguage,
                         setCurrency,
