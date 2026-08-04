@@ -133,27 +133,34 @@ export function VechainKitProviderWrapper({ children }: Props) {
                               network,
                               environment,
                           }) => {
-                              const res = await fetch('/api/transak/widget-url', {
-                                  method: 'POST',
-                                  headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({
-                                      environment,
-                                      widgetParams: {
-                                          apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
-                                          referrerDomain:
-                                              typeof window !== 'undefined'
-                                                  ? window.location.origin
-                                                  : '',
-                                          walletAddress,
-                                          fiatAmount,
-                                          fiatCurrency,
-                                          cryptoCurrencyCode: cryptoCurrency,
-                                          network,
-                                          defaultCryptoCurrency: 'VET',
-                                          disableWalletAddressForm: true,
+                              const apiUrl =
+                                  process.env.NEXT_PUBLIC_TRANSAK_API_URL ?? '';
+                              const res = await fetch(
+                                  `${apiUrl}/api/transak/widget-url`,
+                                  {
+                                      method: 'POST',
+                                      headers: {
+                                          'Content-Type': 'application/json',
                                       },
-                                  }),
-                              });
+                                      body: JSON.stringify({
+                                          environment,
+                                          widgetParams: {
+                                              apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
+                                              referrerDomain:
+                                                  typeof window !== 'undefined'
+                                                      ? window.location.origin
+                                                      : '',
+                                              walletAddress,
+                                              fiatAmount,
+                                              fiatCurrency,
+                                              cryptoCurrencyCode: cryptoCurrency,
+                                              network,
+                                              defaultCryptoCurrency: 'VET',
+                                              disableWalletAddressForm: true,
+                                          },
+                                      }),
+                                  },
+                              );
                               const json = await res.json();
                               if (!res.ok) {
                                   throw new Error(
