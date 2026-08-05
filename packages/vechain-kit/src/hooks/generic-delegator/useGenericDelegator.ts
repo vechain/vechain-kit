@@ -105,7 +105,19 @@ export const delegateAuthorized = async (encodedSignedTx: string, origin: string
             token: token.toLowerCase(),
         }),
     });
-    const data = await response.json();
+    const data = await response.json().catch(() => null);
+    // Surface delegator rejections instead of returning the error body: a
+    // non-OK response has no `signature`, and letting it flow onwards used
+    // to crash later in signVip191Transaction ("Cannot read properties of
+    // undefined (reading 'slice')"), masking the real reason the delegator
+    // refused to sign.
+    if (!response.ok || typeof data?.signature !== 'string') {
+        throw new Error(
+            `Generic delegator rejected the transaction (HTTP ${
+                response.status
+            }): ${data?.message ?? JSON.stringify(data)}`,
+        );
+    }
     return data;
 }
 
@@ -286,7 +298,18 @@ export const computeCorrectedGasTokenCost = async ({
         gasToken,
         estimationResponse,
     });
-    return cost > 0 ? cost : fallbackCost;
+    // Never pay less than the delegator's own end-to-end estimate: for a
+    // not-yet-deployed smart account the final tx carries an extra
+    // createAccount clause (~200k gas) that the local recompute above does
+    // not model, so the local number can come out at roughly half of what
+    // the delegator's validation demands — which then rejects the tx
+    // ("Transfer not received" -> HTTP 500), hard-blocking every FIRST
+    // transaction of a fresh smart account. The delegator's /estimate
+    // response already prices the deploy clause, so clamp to it. Once the
+    // account is deployed the two estimates converge and this clamp is
+    // inert.
+    const clampedCost = Math.max(cost, estimationResponse.transactionCost ?? 0);
+    return clampedCost > 0 ? clampedCost : fallbackCost;
 };
 
 /**
