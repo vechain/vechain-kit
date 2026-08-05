@@ -131,7 +131,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                               fiatCurrency,
                               cryptoCurrency,
                               network,
-                              environment,
                           }) => {
                               const apiUrl =
                                   process.env.NEXT_PUBLIC_TRANSAK_API_URL ?? '';
@@ -143,7 +142,12 @@ export function VechainKitProviderWrapper({ children }: Props) {
                                           'Content-Type': 'application/json',
                                       },
                                       body: JSON.stringify({
-                                          environment,
+                                          environment:
+                                              process.env
+                                                  .NEXT_PUBLIC_TRANSAK_ENVIRONMENT as
+                                              | 'staging'
+                                              | 'production'
+                                              | undefined,
                                           widgetParams: {
                                               apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
                                               referrerDomain:

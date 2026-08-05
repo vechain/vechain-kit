@@ -28,6 +28,9 @@ jobs:
             NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
             NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
             NEXT_PUBLIC_DELEGATOR_URL: ${{ secrets.NEXT_PUBLIC_DELEGATOR_URL }}
+            NEXT_PUBLIC_TRANSAK_API_KEY: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }}
+            NEXT_PUBLIC_TRANSAK_API_URL: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_URL }}
+            NEXT_PUBLIC_TRANSAK_ENVIRONMENT: 'production'
             NEXT_PUBLIC_NETWORK_TYPE: 'main'
             AWS_REGION: eu-west-1
         steps:
