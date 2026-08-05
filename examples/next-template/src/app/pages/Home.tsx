@@ -11,6 +11,7 @@ import { LanguageSelector } from '@/app/components/features/LanguageSelector';
 import { CurrencySelector } from '@/app/components/features/CurrencySelector';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/SigningExample/SigningExample';
+import { PaymentsDemo } from '@/app/components/features/PaymentsDemo';
 import { WelcomeSection } from '../components/features/WelcomeSection';
 
 export default function Home(): ReactElement {
@@ -48,6 +49,7 @@ export default function Home(): ReactElement {
                 <CurrencySelector />
                 <TransactionExamples />
                 <SigningExample />
+                <PaymentsDemo />
             </VStack>
         </Container>
     );

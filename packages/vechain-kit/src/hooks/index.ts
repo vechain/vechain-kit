@@ -1,5 +1,6 @@
 export * from './api';
 export * from './modals';
+export * from './payments';
 export * from './notifications';
 export * from './signing';
 export * from './login';
