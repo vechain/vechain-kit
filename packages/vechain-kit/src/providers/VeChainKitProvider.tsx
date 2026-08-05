@@ -1,6 +1,6 @@
 import { AppConfig, getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { CURRENCY, PrivyLoginMethod } from '@/types';
+import { CURRENCY, FiatOnrampConfig, SubscriptionsConfig, PrivyLoginMethod } from '@/types';
 import { isValidUrl } from '@/utils';
 import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 import { initializeI18n } from '@/utils/i18n';
@@ -70,7 +70,7 @@ type PrivyDependentMethods =
     | 'github'
     | 'passkey'
     | 'more';
-export type AccountQuickAction = 'send' | 'swap' | 'receive';
+export type AccountQuickAction = 'send' | 'swap' | 'receive' | 'buy';
 
 type LoginMethodOrder = {
     method:
@@ -187,6 +187,8 @@ export type VechainKitProviderProps = {
     legalDocuments?: LegalDocumentOptions;
     hiddenQuickActions?: AccountQuickAction[];
     defaultCurrency?: CURRENCY;
+    fiatOnramp?: FiatOnrampConfig;
+    subscriptions?: SubscriptionsConfig;
     theme?: VechainKitThemeConfig;
     onLanguageChange?: (language: string) => void;
     onCurrencyChange?: (currency: CURRENCY) => void;
@@ -223,6 +225,8 @@ export type VeChainKitConfig = {
     hiddenQuickActions?: AccountQuickAction[];
     /** Current runtime currency value. Reflects the active currency in VeChainKit. */
     currentCurrency: CURRENCY;
+    fiatOnramp?: FiatOnrampConfig;
+    subscriptions?: SubscriptionsConfig;
     theme?: VechainKitThemeConfig;
     /** Function to change the language from the host app. Changes will sync to VeChainKit. */
     setLanguage: (language: string) => void;
@@ -442,6 +446,8 @@ export const VeChainKitProvider = (
         onLanguageChange,
         onCurrencyChange,
         contractAddresses,
+        fiatOnramp,
+        subscriptions,
     } = validatedProps;
 
     // After validation, network and dappKit are guaranteed to be defined
@@ -508,8 +514,9 @@ export const VeChainKitProvider = (
         );
     }, [validatedLoginMethods]);
 
-    let privyAppId: string, privyClientId: string;
-    if (!privy) {
+    let privyAppId: string;
+    let privyClientId: string | undefined;
+    if (!privy || !privy.appId) {
         // No host-supplied Privy config -- fall back to VeChain's own
         // Privy app so PrivyProvider mounts cleanly. The previous dummy
         // (`clzdb5k0b02b9qvzjm6jpknsc`) only allowed a handful of origins,
@@ -522,10 +529,10 @@ export const VeChainKitProvider = (
         // prop, not on which app id is mounted, so logging in via this
         // path still routes through the whitelabel host.
         privyAppId = VECHAIN_PRIVY_APP_ID;
-        privyClientId = '';
+        privyClientId = undefined;
     } else {
         privyAppId = privy.appId;
-        privyClientId = privy.clientId;
+        privyClientId = privy.clientId || undefined;
     }
 
     // Initialize i18n with stored language or prop, and merge translations
@@ -742,6 +749,8 @@ export const VeChainKitProvider = (
                         legalDocuments,
                         hiddenQuickActions,
                         currentCurrency,
+                        fiatOnramp,
+                        subscriptions,
                         theme: customTheme,
                         setLanguage,
                         setCurrency,
@@ -779,9 +788,11 @@ export const VeChainKitProvider = (
                                 logo: privy?.appearance.logo,
                             },
                             embeddedWallets: {
-                                createOnLogin:
-                                    privy?.embeddedWallets?.createOnLogin ??
-                                    'all-users',
+                                ethereum: {
+                                    createOnLogin:
+                                        privy?.embeddedWallets?.createOnLogin ??
+                                        'all-users',
+                                },
                             },
                             passkeys: {
                                 shouldUnlinkOnUnenrollMfa: false,

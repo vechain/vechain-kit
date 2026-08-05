@@ -75,23 +75,31 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 },
             }}
             dappKit={{
-                allowedWallets: ['veworld', 'wallet-connect'],
-                walletConnectOptions: {
-                    projectId:
-                        process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
-                    metadata: {
-                        name: 'VeChainKit Demo App',
-                        description:
-                            'This is a demo app to show you how the VechainKit works.',
-                        url:
-                            typeof window !== 'undefined'
-                                ? window.location.origin
-                                : '',
-                        icons: [
-                            typeof window !== 'undefined' ? coloredLogo : '',
-                        ],
-                    },
-                },
+                allowedWallets: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
+                    ? ['veworld', 'wallet-connect']
+                    : ['veworld'],
+                ...(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
+                    ? {
+                          walletConnectOptions: {
+                              projectId:
+                                  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
+                              metadata: {
+                                  name: 'VeChainKit Demo App',
+                                  description:
+                                      'This is a demo app to show you how the VechainKit works.',
+                                  url:
+                                      typeof window !== 'undefined'
+                                          ? window.location.origin
+                                          : '',
+                                  icons: [
+                                      typeof window !== 'undefined'
+                                          ? coloredLogo
+                                          : '',
+                                  ],
+                              },
+                          },
+                      }
+                    : {}),
             }}
             loginMethods={[
                 { method: 'veworld', gridColumn: 4 },
