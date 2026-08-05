@@ -48,6 +48,28 @@ function rateLimited(ip: string): boolean {
     return false;
 }
 
+const PRIVATE_IP_PREFIXES = ['10.', '172.16.', '172.17.', '172.18.', '172.19.', '172.20.', '172.21.', '172.22.', '172.23.', '172.24.', '172.25.', '172.26.', '172.27.', '172.28.', '172.29.', '172.30.', '172.31.', '192.168.', '127.', '169.254.', '::1', 'fc', 'fd'];
+
+function isPrivateIp(ip: string): boolean {
+    const trimmed = ip.trim().toLowerCase();
+    return PRIVATE_IP_PREFIXES.some((p) => trimmed.startsWith(p));
+}
+
+function resolveClientIp(req: NextRequest): string {
+    const realIp = req.headers.get('x-real-ip');
+    if (realIp && !isPrivateIp(realIp)) {
+        return realIp.trim();
+    }
+    const forwardedFor = req.headers.get('x-forwarded-for');
+    if (forwardedFor) {
+        const leftmost = forwardedFor.split(',')[0]?.trim();
+        if (leftmost && !isPrivateIp(leftmost)) {
+            return leftmost;
+        }
+    }
+    return 'unknown';
+}
+
 async function fetchWithTimeout(
     url: string,
     init: RequestInit,
@@ -123,8 +145,7 @@ export async function POST(req: NextRequest) {
         );
     }
 
-    const forwardedFor = req.headers.get('x-forwarded-for');
-    const userIp = forwardedFor?.split(',')[0]?.trim() ?? req.headers.get('x-real-ip') ?? '';
+    const userIp = resolveClientIp(req);
 
     if (rateLimited(userIp)) {
         return NextResponse.json(

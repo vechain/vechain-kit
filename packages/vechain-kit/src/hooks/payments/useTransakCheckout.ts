@@ -125,10 +125,11 @@ export const useTransakCheckout = (
             setStatus('processing');
             setIsOpen(true);
 
+            genRef.current += 1;
+            const gen = genRef.current;
+
             try {
                 removeEmbeddedWidget();
-                genRef.current += 1;
-                const gen = genRef.current;
 
                 const { Transak: TransakSDK } = await import(
                     '@transak/ui-js-sdk'
@@ -181,6 +182,9 @@ export const useTransakCheckout = (
 
                 instanceRef.current = instance;
             } catch (err) {
+                if (genRef.current !== gen) {
+                    return;
+                }
                 const error =
                     err instanceof Error
                         ? err
