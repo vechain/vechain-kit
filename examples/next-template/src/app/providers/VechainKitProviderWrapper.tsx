@@ -75,23 +75,31 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 },
             }}
             dappKit={{
-                allowedWallets: ['veworld', 'wallet-connect'],
-                walletConnectOptions: {
-                    projectId:
-                        process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
-                    metadata: {
-                        name: 'VeChainKit Demo App',
-                        description:
-                            'This is a demo app to show you how the VechainKit works.',
-                        url:
-                            typeof window !== 'undefined'
-                                ? window.location.origin
-                                : '',
-                        icons: [
-                            typeof window !== 'undefined' ? coloredLogo : '',
-                        ],
-                    },
-                },
+                allowedWallets: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
+                    ? ['veworld', 'wallet-connect']
+                    : ['veworld'],
+                ...(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
+                    ? {
+                          walletConnectOptions: {
+                              projectId:
+                                  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
+                              metadata: {
+                                  name: 'VeChainKit Demo App',
+                                  description:
+                                      'This is a demo app to show you how the VechainKit works.',
+                                  url:
+                                      typeof window !== 'undefined'
+                                          ? window.location.origin
+                                          : '',
+                                  icons: [
+                                      typeof window !== 'undefined'
+                                          ? coloredLogo
+                                          : '',
+                                  ],
+                              },
+                          },
+                      }
+                    : {}),
             }}
             loginMethods={[
                 { method: 'veworld', gridColumn: 4 },
@@ -113,6 +121,61 @@ export function VechainKitProviderWrapper({ children }: Props) {
             // }}
             allowCustomTokens={true}
             allowCommunityTokens={true}
+            transak={
+                process.env.NEXT_PUBLIC_TRANSAK_API_KEY
+                    ? {
+                          apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
+                          widgetUrlBuilder: async ({
+                              walletAddress,
+                              fiatAmount,
+                              fiatCurrency,
+                              cryptoCurrency,
+                              network,
+                          }) => {
+                              const apiUrl =
+                                  process.env.NEXT_PUBLIC_TRANSAK_API_URL ?? '';
+                              const res = await fetch(
+                                  `${apiUrl}/api/transak/widget-url`,
+                                  {
+                                      method: 'POST',
+                                      headers: {
+                                          'Content-Type': 'application/json',
+                                      },
+                                      body: JSON.stringify({
+                                          environment:
+                                              process.env
+                                                  .NEXT_PUBLIC_TRANSAK_ENVIRONMENT as
+                                              | 'staging'
+                                              | 'production'
+                                              | undefined,
+                                          widgetParams: {
+                                              apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
+                                              referrerDomain:
+                                                  typeof window !== 'undefined'
+                                                      ? window.location.origin
+                                                      : '',
+                                              walletAddress,
+                                              fiatAmount,
+                                              fiatCurrency,
+                                              cryptoCurrencyCode: cryptoCurrency,
+                                              network,
+                                              defaultCryptoCurrency: 'VET',
+                                              disableWalletAddressForm: true,
+                                          },
+                                      }),
+                                  },
+                              );
+                              const json = await res.json();
+                              if (!res.ok) {
+                                  throw new Error(
+                                      json?.error ?? 'Failed to create Transak widget URL',
+                                  );
+                              }
+                              return json.data.widgetUrl as string;
+                          },
+                      }
+                    : undefined
+            }
             legalDocuments={{
                 termsAndConditions: [
                     {

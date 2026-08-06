@@ -1,0 +1,1 @@
+export { PaymentsDemo } from './PaymentsDemo';

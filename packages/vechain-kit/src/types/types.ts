@@ -171,6 +171,43 @@ export enum VePassportUserStatus {
     BLACKLIST = 'BLACKLIST',
 }
 
+
+
+export type TransakConfig = {
+    /** API key from the Transak Partner Dashboard for the respective environment. */
+    apiKey?: string;
+    /**
+     * Optional override for the Transak environment. When unset it is derived
+     * automatically from the connected VeChain network: `main` → `production`,
+     * `test`/`solo` → `staging`. Only set this to force a different environment
+     * than the network implies (e.g. sandbox credentials on mainnet).
+     */
+    environment?: 'staging' | 'production';
+    /**
+     * Required. Transak deprecated direct widget URLs (apiKey in the query
+     * string) — widgets now only load from a sessionId-based Secure Widget URL
+     * minted by the Create Widget URL API (POST /api/v2/auth/session), which
+     * must be called from your backend with your API secret. Provide an async
+     * function that obtains a fresh Secure Widget URL from your backend.
+     */
+    widgetUrlBuilder: (params: TransakWidgetParams) => Promise<string>;
+};
+
+export type TransakWidgetParams = {
+    walletAddress: string;
+    fiatAmount: string;
+    fiatCurrency: string;
+    cryptoCurrency: string;
+    network: string;
+    /**
+     * Transak environment derived by the kit from the connected VeChain
+     * network (`main` → `production`, `test`/`solo` → `staging`) unless
+     * overridden via `TransakConfig.environment`. Your backend must use it to
+     * call the matching Transak API endpoints.
+     */
+    environment: 'staging' | 'production';
+};
+
 export type CURRENCY = 'usd' | 'gbp' | 'eur';
 
 export const CURRENCY_SYMBOLS: Record<CURRENCY, string> = {

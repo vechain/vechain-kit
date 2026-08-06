@@ -64,6 +64,9 @@ jobs:
       - name: Install
         run: yarn && yarn install:all
 
+      - name: Typecheck
+        run: yarn kit:typecheck
+
       - name: Build
         run: yarn build
 
