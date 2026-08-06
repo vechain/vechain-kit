@@ -29,7 +29,9 @@ jobs:
             NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
             NEXT_PUBLIC_DELEGATOR_URL: ${{ secrets.NEXT_PUBLIC_DELEGATOR_URL }}
             NEXT_PUBLIC_TRANSAK_API_KEY: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY_PROD }}
-            NEXT_PUBLIC_TRANSAK_API_URL: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_URL }}
+            # Production talks to vechain/onramp-proxy; the preview deploy
+            # keeps NEXT_PUBLIC_TRANSAK_API_URL (vechain-kit-infra proxy).
+            NEXT_PUBLIC_TRANSAK_API_URL: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_URL_PROD }}
             NEXT_PUBLIC_TRANSAK_ENVIRONMENT: 'production'
             NEXT_PUBLIC_NETWORK_TYPE: 'main'
             AWS_REGION: eu-west-1

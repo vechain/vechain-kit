@@ -134,6 +134,44 @@ export function VechainKitProviderWrapper({ children }: Props) {
                           }) => {
                               const apiUrl =
                                   process.env.NEXT_PUBLIC_TRANSAK_API_URL ?? '';
+                              const environment = process.env
+                                  .NEXT_PUBLIC_TRANSAK_ENVIRONMENT as
+                                  | 'staging'
+                                  | 'production'
+                                  | undefined;
+
+                              // Production goes through vechain/onramp-proxy
+                              // (the shared VeChain onramp backend, GET
+                              // contract). Staging keeps the vechain-kit-infra
+                              // proxy: onramp-proxy is production-only.
+                              if (environment === 'production') {
+                                  const params = new URLSearchParams({
+                                      provider: 'transak',
+                                      address: walletAddress,
+                                      os: 'web',
+                                      theme: 'LIGHT',
+                                      currency: fiatCurrency,
+                                      referrerDomain:
+                                          typeof window !== 'undefined'
+                                              ? window.location.origin
+                                              : '',
+                                  });
+                                  if (fiatAmount) {
+                                      params.set('fiatAmount', fiatAmount);
+                                  }
+                                  const res = await fetch(
+                                      `${apiUrl}/?${params.toString()}`,
+                                  );
+                                  const json = await res.json();
+                                  if (!res.ok || !json?.url) {
+                                      throw new Error(
+                                          json?.error ??
+                                              'Failed to create Transak widget URL',
+                                      );
+                                  }
+                                  return json.url as string;
+                              }
+
                               const res = await fetch(
                                   `${apiUrl}/api/transak/widget-url`,
                                   {
