@@ -17,6 +17,7 @@ import {
     Select,
     Icon,
     Box,
+    Spinner,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -50,7 +51,7 @@ export const TransakOnrampContent = ({
     const [amount, setAmount] = useState('50');
     const [currency, setCurrency] = useState<'usd' | 'eur' | 'gbp'>('usd');
 
-    const { open: startCheckout, status } = useTransakCheckout(
+    const { open: startCheckout, status, widgetReady } = useTransakCheckout(
         () => setStep('success'),
         () => setStep('error'),
     );
@@ -146,17 +147,33 @@ export const TransakOnrampContent = ({
                             sizes the container at `height: 80dvh` with no lower cap — the deeper
                             steps of the flow (KYC, add-card-details) need close to that much room.
                             The previous 620px ceiling clipped those steps, so the "add card details"
-                            panel rendered cut off and overlapping the quote screen underneath it. */}
-                        <Box
-                            id={TRANSAK_WIDGET_CONTAINER_ID}
-                            w="full"
-                            h="80dvh"
-                            minH="560px"
-                            maxH="900px"
-                            borderRadius="xl"
-                            overflow="hidden"
-                            position="relative"
-                        />
+                            panel rendered cut off and overlapping the quote screen underneath it.
+                            The spinner is a sibling overlay, never a child of the SDK's own
+                            container div -- the SDK appends/removes the iframe with direct DOM
+                            calls (containerId mode), which would fight React for that node. */}
+                        <Box w="full" h="80dvh" minH="560px" maxH="900px" position="relative">
+                            <Box
+                                id={TRANSAK_WIDGET_CONTAINER_ID}
+                                w="full"
+                                h="full"
+                                borderRadius="xl"
+                                overflow="hidden"
+                                position="relative"
+                            />
+                            {!widgetReady && (
+                                <Box
+                                    position="absolute"
+                                    inset={0}
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    borderRadius="xl"
+                                    pointerEvents="none"
+                                >
+                                    <Spinner size="lg" color="blue.400" />
+                                </Box>
+                            )}
+                        </Box>
                     </ModalBody>
                 )}
 

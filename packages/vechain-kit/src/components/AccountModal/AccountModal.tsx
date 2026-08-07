@@ -297,20 +297,37 @@ export const AccountModal = ({
         }
     };
 
+    // The Transak onramp content embeds a whole external payment app (quote,
+    // KYC, add-card-details) inside its widget iframe -- it needs far more
+    // room than every other AccountModal screen, which are all tuned to the
+    // fixed 485px/'sm' defaults below.
+    const isTransakOnramp =
+        typeof currentContent === 'object' &&
+        currentContent.type === 'transak-onramp';
+
     return (
         <BaseModal
             isOpen={isOpen}
             onClose={onClose}
             allowExternalFocus={true}
             blockScrollOnMount={true}
+            size={isTransakOnramp ? 'lg' : undefined}
             mobileMinHeight={
-                themeConfig?.modal?.useBottomSheetOnMobile ? '520px' : '510px'
+                isTransakOnramp
+                    ? '600px'
+                    : themeConfig?.modal?.useBottomSheetOnMobile
+                      ? '520px'
+                      : '510px'
             }
             mobileMaxHeight={
-                themeConfig?.modal?.useBottomSheetOnMobile ? '520px' : '510px'
+                isTransakOnramp
+                    ? '90dvh'
+                    : themeConfig?.modal?.useBottomSheetOnMobile
+                      ? '520px'
+                      : '510px'
             }
-            desktopMinHeight={'485px'}
-            desktopMaxHeight={'485px'}
+            desktopMinHeight={isTransakOnramp ? '650px' : '485px'}
+            desktopMaxHeight={isTransakOnramp ? '90dvh' : '485px'}
         >
             {renderContent()}
         </BaseModal>
