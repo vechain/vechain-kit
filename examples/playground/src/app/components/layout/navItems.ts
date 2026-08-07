@@ -6,6 +6,7 @@ import {
     LuArrowLeftRight,
     LuPenLine,
     LuDatabase,
+    LuCreditCard,
     LuLayoutGrid,
     LuPalette,
     LuBookOpen,
@@ -66,6 +67,12 @@ export const NAV_GROUPS: NavGroup[] = [
                 href: '/transactions',
                 icon: LuArrowLeftRight,
                 label: 'Transactions',
+            },
+            {
+                href: '/payments',
+                icon: LuCreditCard,
+                label: 'Payments',
+                status: 'NEW',
             },
             {
                 href: '/signing',

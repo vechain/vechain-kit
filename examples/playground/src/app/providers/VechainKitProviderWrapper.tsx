@@ -232,6 +232,97 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}
+            transak={
+                process.env.NEXT_PUBLIC_TRANSAK_API_URL
+                    ? {
+                          apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
+                          widgetUrlBuilder: async ({
+                              walletAddress,
+                              fiatAmount,
+                              fiatCurrency,
+                              cryptoCurrency,
+                              network,
+                          }) => {
+                              const apiUrl =
+                                  process.env.NEXT_PUBLIC_TRANSAK_API_URL ?? '';
+                              const environment = process.env
+                                  .NEXT_PUBLIC_TRANSAK_ENVIRONMENT as
+                                  | 'staging'
+                                  | 'production'
+                                  | undefined;
+
+                              // Same dual-contract widgetUrlBuilder as the
+                              // homepage example: production goes through
+                              // vechain/onramp-proxy (GET), staging keeps the
+                              // vechain-kit-infra proxy (POST) -- see the
+                              // "Payments" playground page for the demo.
+                              if (environment === 'production') {
+                                  const params = new URLSearchParams({
+                                      provider: 'transak',
+                                      address: walletAddress,
+                                      os: 'web',
+                                      theme: 'LIGHT',
+                                      currency: fiatCurrency,
+                                      referrerDomain:
+                                          typeof window !== 'undefined'
+                                              ? window.location.origin
+                                              : '',
+                                  });
+                                  if (fiatAmount) {
+                                      params.set('fiatAmount', fiatAmount);
+                                  }
+                                  const res = await fetch(
+                                      `${apiUrl}/?${params.toString()}`,
+                                  );
+                                  const json = await res.json();
+                                  if (!res.ok || !json?.url) {
+                                      throw new Error(
+                                          json?.error ??
+                                              'Failed to create Transak widget URL',
+                                      );
+                                  }
+                                  return json.url as string;
+                              }
+
+                              const res = await fetch(
+                                  `${apiUrl}/api/transak/widget-url`,
+                                  {
+                                      method: 'POST',
+                                      headers: {
+                                          'Content-Type': 'application/json',
+                                      },
+                                      body: JSON.stringify({
+                                          environment,
+                                          widgetParams: {
+                                              apiKey: process.env
+                                                  .NEXT_PUBLIC_TRANSAK_API_KEY,
+                                              referrerDomain:
+                                                  typeof window !== 'undefined'
+                                                      ? window.location.origin
+                                                      : '',
+                                              walletAddress,
+                                              fiatAmount,
+                                              fiatCurrency,
+                                              cryptoCurrencyCode: cryptoCurrency,
+                                              network,
+                                              defaultCryptoCurrency: 'VET',
+                                              disableWalletAddressForm: true,
+                                          },
+                                      }),
+                                  },
+                              );
+                              const json = await res.json();
+                              if (!res.ok) {
+                                  throw new Error(
+                                      json?.error ??
+                                          'Failed to create Transak widget URL',
+                                  );
+                              }
+                              return json.data.widgetUrl as string;
+                          },
+                      }
+                    : undefined
+            }
             // contractAddresses={{
             //     b3trContractAddress:
             //         '0x026771d1be764467f8bdb78bb230df10c924b00d',
