@@ -142,12 +142,17 @@ export const TransakOnrampContent = ({
 
                 {step === 'processing' && (
                     <ModalBody>
+                        {/* Transak's own single-embed guidance (docs.transak.com/integration/web/iframe)
+                            sizes the container at `height: 80dvh` with no lower cap — the deeper
+                            steps of the flow (KYC, add-card-details) need close to that much room.
+                            The previous 620px ceiling clipped those steps, so the "add card details"
+                            panel rendered cut off and overlapping the quote screen underneath it. */}
                         <Box
                             id={TRANSAK_WIDGET_CONTAINER_ID}
                             w="full"
-                            h="calc(100vh - 240px)"
-                            minH="420px"
-                            maxH="620px"
+                            h="80dvh"
+                            minH="560px"
+                            maxH="900px"
                             borderRadius="xl"
                             overflow="hidden"
                             position="relative"
