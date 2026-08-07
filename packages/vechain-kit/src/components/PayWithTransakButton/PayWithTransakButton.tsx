@@ -24,10 +24,8 @@ export const PayWithTransakButton = ({
     const { t } = useTranslation();
     const { darkMode, theme } = useVeChainKitConfig();
 
-    const { open, close, status, error, reset, widgetReady } = useTransakCheckout(
-        onSuccess,
-        onError,
-    );
+    const { open, close, status, widgetUrl, error, reset, markCompleted } =
+        useTransakCheckout(onSuccess, onError);
 
     return (
         <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
@@ -38,7 +36,8 @@ export const PayWithTransakButton = ({
                 loadingText={t('Processing...')}
                 {...buttonProps}
             >
-                {buttonProps?.children ?? t('Buy ${{amount}} VET', { amount: fiatAmount })}
+                {buttonProps?.children ??
+                    t('Buy ${{amount}} VET', { amount: fiatAmount })}
             </Button>
 
             <TransakCheckoutModal
@@ -46,10 +45,11 @@ export const PayWithTransakButton = ({
                 onClose={close}
                 status={status}
                 fiatAmount={fiatAmount}
+                widgetUrl={widgetUrl}
                 error={error}
                 onStart={() => open({ fiatAmount, fiatCurrency })}
                 onReset={reset}
-                widgetReady={widgetReady}
+                onMarkCompleted={markCompleted}
             />
         </VechainKitThemeProvider>
     );

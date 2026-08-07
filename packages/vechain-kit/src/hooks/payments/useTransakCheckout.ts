@@ -1,16 +1,16 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { isAddress } from 'viem';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 
-export type TransakCheckoutStatus = 'idle' | 'processing' | 'success' | 'error';
-
-/** DOM id of the container the Transak iframe is embedded into. Rendering the
- * widget inside the host modal (instead of the SDK's own full-screen overlay)
- * avoids focus-trap conflicts that make the widget flicker/unfocus on click. */
-export const TRANSAK_WIDGET_CONTAINER_ID = 'vechain-kit-transak-widget-container';
+export type TransakCheckoutStatus =
+    | 'idle'
+    | 'processing'
+    | 'ready'
+    | 'success'
+    | 'error';
 
 export type UseTransakCheckoutResult = {
     isOpen: boolean;
@@ -21,54 +21,18 @@ export type UseTransakCheckoutResult = {
     }) => void;
     close: () => void;
     status: TransakCheckoutStatus;
-    orderId: string | null;
+    /** The Secure Widget URL to open in a new tab once `status` is `'ready'`. */
+    widgetUrl: string | null;
     error: Error | null;
     reset: () => void;
     /**
-     * False from the moment `status` becomes `'processing'` until the SDK
-     * fires `TRANSAK_WIDGET_INITIALISED` -- the iframe itself loads Transak's
-     * remote app, which takes a couple of seconds, so callers can render a
-     * loading state over the (otherwise blank) container instead of a flash
-     * of empty white space.
+     * Call once the user confirms they finished the purchase in the Transak
+     * tab. Opening Transak in its own tab (rather than an embedded iframe --
+     * see the PR this shipped in for why) means there is no postMessage/order
+     * event to detect completion automatically, so callers drive `status` to
+     * `'success'` explicitly.
      */
-    widgetReady: boolean;
-};
-
-const setupTransak = (
-    TransakSDK: any,
-    widgetUrl: string,
-    handlers: {
-        onWidgetInitialised: () => void;
-        onOrderSuccessful: (data: { orderId?: string }) => void;
-        onOrderFailed: (data: { failureReason?: string }) => void;
-        onWidgetClose: () => void;
-    },
-): { instance: any } => {
-    const instance = new TransakSDK({
-        widgetUrl,
-        containerId: TRANSAK_WIDGET_CONTAINER_ID,
-    });
-
-    TransakSDK.on(
-        TransakSDK.EVENTS.TRANSAK_WIDGET_INITIALISED,
-        handlers.onWidgetInitialised,
-    );
-    TransakSDK.on(
-        TransakSDK.EVENTS.TRANSAK_ORDER_SUCCESSFUL,
-        handlers.onOrderSuccessful,
-    );
-    TransakSDK.on(
-        TransakSDK.EVENTS.TRANSAK_ORDER_FAILED,
-        handlers.onOrderFailed,
-    );
-    TransakSDK.on(
-        TransakSDK.EVENTS.TRANSAK_WIDGET_CLOSE,
-        handlers.onWidgetClose,
-    );
-
-    instance.init();
-
-    return { instance };
+    markCompleted: () => void;
 };
 
 export const useTransakCheckout = (
@@ -79,10 +43,8 @@ export const useTransakCheckout = (
     const { account } = useWallet();
     const [isOpen, setIsOpen] = useState(false);
     const [status, setStatus] = useState<TransakCheckoutStatus>('idle');
-    const [orderId, setOrderId] = useState<string | null>(null);
+    const [widgetUrl, setWidgetUrl] = useState<string | null>(null);
     const [error, setError] = useState<Error | null>(null);
-    const [widgetReady, setWidgetReady] = useState(false);
-    const instanceRef = useRef<any>(null);
     const genRef = useRef(0);
     const onSuccessRef = useRef(onSuccess);
     onSuccessRef.current = onSuccess;
@@ -91,25 +53,9 @@ export const useTransakCheckout = (
 
     const reset = useCallback(() => {
         setStatus('idle');
-        setOrderId(null);
+        setWidgetUrl(null);
         setError(null);
     }, []);
-
-    // Remove the embedded iframe from its container when the widget is closed
-    // so repeated opens don't leave stale iframes behind. Uses the SDK's
-    // `cleanup()` (not `close()`), which actually removes the iframe element in
-    // container mode.
-    const removeEmbeddedWidget = useCallback(() => {
-        instanceRef.current?.cleanup();
-        instanceRef.current = null;
-        document.getElementById(TRANSAK_WIDGET_CONTAINER_ID)?.replaceChildren();
-    }, []);
-
-    useEffect(() => {
-        return () => {
-            removeEmbeddedWidget();
-        };
-    }, [removeEmbeddedWidget]);
 
     const open = useCallback(
         async (params?: {
@@ -138,23 +84,17 @@ export const useTransakCheckout = (
 
             setStatus('processing');
             setIsOpen(true);
-            setWidgetReady(false);
+            setWidgetUrl(null);
 
             genRef.current += 1;
             const gen = genRef.current;
 
             try {
-                removeEmbeddedWidget();
-
-                const { Transak: TransakSDK } = await import(
-                    '@transak/ui-js-sdk'
-                );
-
                 const environment =
                     transakConfig?.environment ??
                     (network.type === 'main' ? 'production' : 'staging');
 
-                const widgetUrl = await transakConfig.widgetUrlBuilder({
+                const url = await transakConfig.widgetUrlBuilder({
                     walletAddress,
                     fiatAmount: params?.fiatAmount ?? '10',
                     fiatCurrency: params?.fiatCurrency ?? 'USD',
@@ -163,43 +103,13 @@ export const useTransakCheckout = (
                     environment,
                 });
 
-                const { instance } = setupTransak(TransakSDK, widgetUrl, {
-                    onWidgetInitialised: () => {
-                        if (genRef.current !== gen) return;
-                        setWidgetReady(true);
-                    },
-                    onOrderSuccessful: (data) => {
-                        if (genRef.current !== gen) return;
-                        setOrderId(data.orderId ?? null);
-                        setStatus('success');
-                        onSuccessRef.current?.();
-                    },
-                    onOrderFailed: (data) => {
-                        if (genRef.current !== gen) return;
-                        const err = new Error(
-                            data.failureReason ?? 'Transak order failed',
-                        );
-                        setError(err);
-                        setStatus('error');
-                        onErrorRef.current?.(err);
-                    },
-                    onWidgetClose: () => {
-                        if (genRef.current !== gen) return;
-                        setIsOpen(false);
-                        setStatus((prev) =>
-                            prev === 'processing' ? 'idle' : prev,
-                        );
-                    },
-                });
-
                 if (genRef.current !== gen) {
-                    // A newer open() call has superseded this one -- do not
-                    // let a stale widget overwrite the active instance.
-                    instance.cleanup();
+                    // A newer open() call has superseded this one.
                     return;
                 }
 
-                instanceRef.current = instance;
+                setWidgetUrl(url);
+                setStatus('ready');
             } catch (err) {
                 if (genRef.current !== gen) {
                     return;
@@ -216,21 +126,24 @@ export const useTransakCheckout = (
         [transakConfig, network.type, account?.address],
     );
 
+    const markCompleted = useCallback(() => {
+        setStatus('success');
+        onSuccessRef.current?.();
+    }, []);
+
     const close = useCallback(() => {
-        removeEmbeddedWidget();
         setIsOpen(false);
-        setWidgetReady(false);
         setTimeout(reset, 300);
-    }, [removeEmbeddedWidget, reset]);
+    }, [reset]);
 
     return {
         isOpen,
         open,
         close,
         status,
-        orderId,
+        widgetUrl,
         error,
         reset,
-        widgetReady,
+        markCompleted,
     };
 };

@@ -23,7 +23,7 @@ function BuyVetButton() {
 const HOOK_SNIPPET = `import { useTransakCheckout } from '@vechain/vechain-kit';
 
 function BuyVetCustom() {
-    const { open, status, widgetReady } = useTransakCheckout(
+    const { open, status, widgetUrl, markCompleted } = useTransakCheckout(
         () => console.log('done'),
     );
 
@@ -31,7 +31,10 @@ function BuyVetCustom() {
         <button onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}>
             Buy VET
         </button>
-        // status/widgetReady drive your own UI -- see TransakCheckoutModal
+        // status/widgetUrl/markCompleted drive your own UI -- Transak opens
+        // in a new tab (status 'ready' + widgetUrl), and there is no
+        // postMessage/order event to detect completion from it, so call
+        // markCompleted() once the user confirms. See TransakCheckoutModal
         // in the vechain-kit source for a full reference implementation.
     );
 }
@@ -86,7 +89,7 @@ export default function PaymentsPage() {
                 <DemoSection
                     title={t('Buy VET')}
                     description={t(
-                        'Drop-in button: opens the Transak widget, tracks order status, and closes itself on success.',
+                        'Drop-in button: opens Transak in a new tab and lets the user confirm when they are done.',
                     )}
                     hooks={['PayWithTransakButton', 'useTransakCheckout']}
                     status="NEW"
@@ -108,7 +111,7 @@ export default function PaymentsPage() {
                     status="NEW"
                     code={HOOK_SNIPPET}
                     aiPrompt={t(
-                        'Build a custom "Top up wallet" card in my app using useTransakCheckout from @vechain/vechain-kit directly (not PayWithTransakButton) so I can fully control the trigger UI. Show the live status (idle/processing/success/error) and disable the button while processing.',
+                        'Build a custom "Top up wallet" card in my app using useTransakCheckout from @vechain/vechain-kit directly (not PayWithTransakButton) so I can fully control the trigger UI. Show the live status (idle/processing/ready/success/error) and disable the button while processing.',
                     )}
                     aiSkills={['vechain-kit']}
                 >
