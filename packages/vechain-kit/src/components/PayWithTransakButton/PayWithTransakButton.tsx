@@ -24,7 +24,7 @@ export const PayWithTransakButton = ({
     const { t } = useTranslation();
     const { darkMode, theme } = useVeChainKitConfig();
 
-    const { open, close, status, error, reset } = useTransakCheckout(
+    const { open, close, status, error, reset, widgetReady } = useTransakCheckout(
         onSuccess,
         onError,
     );
@@ -49,6 +49,7 @@ export const PayWithTransakButton = ({
                 error={error}
                 onStart={() => open({ fiatAmount, fiatCurrency })}
                 onReset={reset}
+                widgetReady={widgetReady}
             />
         </VechainKitThemeProvider>
     );

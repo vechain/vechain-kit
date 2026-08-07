@@ -15,6 +15,7 @@ import {
     useGetTokenUsdPrice,
     useGetVot3Balance,
     useIsPerson,
+    useTotalBalance,
     useWallet,
 } from '@vechain/vechain-kit';
 import { useTranslation } from 'react-i18next';
@@ -93,6 +94,14 @@ const { data: roundId } = useCurrentAllocationsRoundId();
 const { data: isPerson } = useIsPerson(address);
 `;
 
+const TOTAL_BALANCE_SNIPPET = `import { useTotalBalance } from '@vechain/vechain-kit';
+
+function PortfolioValue({ address }) {
+    const { totalBalanceUsd, isLoading } = useTotalBalance({ address });
+    return <p>{isLoading ? '…' : \`$\${totalBalanceUsd.toFixed(2)}\`}</p>;
+}
+`;
+
 export default function DataPage() {
     const { t } = useTranslation();
     const { account } = useWallet();
@@ -103,6 +112,10 @@ export default function DataPage() {
     const { data: vetPrice, isLoading: l3 } = useGetTokenUsdPrice('VET');
     const { data: roundId } = useCurrentAllocationsRoundId();
     const { data: isPerson } = useIsPerson(address);
+    // Liquid holdings + staking positions (Stargate, Navigator, BetterSwap
+    // LP, Juicy), summed to one USD figure -- the same total the AccountModal
+    // itself shows.
+    const { totalBalanceUsd, isLoading: l4 } = useTotalBalance({ address });
 
     return (
         <VStack align="stretch" spacing={6}>
@@ -140,6 +153,26 @@ export default function DataPage() {
                             loading={l2}
                         />
                     </VStack>
+                </DemoSection>
+
+                <DemoSection
+                    title={t('Total balance')}
+                    description={t(
+                        'One USD figure across every liquid token plus staking positions (Stargate, Navigator, BetterSwap LP, Juicy) -- the same total the AccountModal shows.',
+                    )}
+                    hooks={['useTotalBalance']}
+                    status="STABLE"
+                    code={TOTAL_BALANCE_SNIPPET}
+                    aiPrompt={t(
+                        'Show the connected user\'s total portfolio value in USD using useTotalBalance from @vechain/vechain-kit. Display it as a large "$X,XXX.XX" figure with a Chakra UI Skeleton while loading, and show a small "no assets yet" hint when hasAnyBalance is false.',
+                    )}
+                    aiSkills={['vechain-kit']}
+                >
+                    <DataRow
+                        label={t('Total balance')}
+                        value={`$${totalBalanceUsd.toFixed(2)}`}
+                        loading={l4}
+                    />
                 </DemoSection>
 
                 <DemoSection

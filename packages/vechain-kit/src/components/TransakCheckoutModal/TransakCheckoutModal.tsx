@@ -10,6 +10,7 @@ import {
     Text,
     VStack,
     Icon,
+    Spinner,
     useToken,
 } from '@chakra-ui/react';
 import { BaseModal, StatusScreen, StickyHeaderContainer } from '@/components/common';
@@ -29,6 +30,8 @@ export type TransakCheckoutModalProps = {
     error: Error | null;
     onStart: () => void;
     onReset: () => void;
+    /** False while the Transak iframe is still loading its remote app -- shows a spinner over the (otherwise blank) container. */
+    widgetReady?: boolean;
 };
 
 export const TransakCheckoutModal = ({
@@ -39,6 +42,7 @@ export const TransakCheckoutModal = ({
     error,
     onStart,
     onReset,
+    widgetReady = false,
 }: TransakCheckoutModalProps) => {
     const { t } = useTranslation();
     const { darkMode, theme } = useVeChainKitConfig();
@@ -55,6 +59,7 @@ export const TransakCheckoutModal = ({
             <BaseModal
             isOpen={isOpen}
             onClose={handleClose}
+            size="lg"
             closeOnOverlayClick={status !== 'processing'}
             allowExternalFocus={status === 'processing'}
             useBottomSheetOnMobile
@@ -89,16 +94,45 @@ export const TransakCheckoutModal = ({
                 )}
 
                 {status === 'processing' && (
+                    // Transak's own single-embed guidance (docs.transak.com/integration/web/iframe)
+                    // sizes the container at `height: 80dvh` with no lower cap — the deeper steps
+                    // of the flow (KYC, add-card-details) need close to that much room. The
+                    // previous 620px ceiling clipped those steps, so the "add card details" panel
+                    // rendered cut off and overlapping the quote screen underneath it.
+                    //
+                    // The spinner lives in a SIBLING overlay, never inside the
+                    // SDK's own container div: the SDK appends/removes the
+                    // iframe with direct DOM calls (containerId mode), which
+                    // would fight React for ownership of that node's children.
                     <Box
-                        id={TRANSAK_WIDGET_CONTAINER_ID}
                         w="full"
-                        h="calc(100vh - 240px)"
-                        minH="420px"
-                        maxH="620px"
-                        borderRadius="xl"
-                        overflow="hidden"
+                        h="80dvh"
+                        minH="560px"
+                        maxH="900px"
                         position="relative"
-                    />
+                    >
+                        <Box
+                            id={TRANSAK_WIDGET_CONTAINER_ID}
+                            w="full"
+                            h="full"
+                            borderRadius="xl"
+                            overflow="hidden"
+                            position="relative"
+                        />
+                        {!widgetReady && (
+                            <Box
+                                position="absolute"
+                                inset={0}
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                borderRadius="xl"
+                                pointerEvents="none"
+                            >
+                                <Spinner size="lg" color="blue.400" />
+                            </Box>
+                        )}
+                    </Box>
                 )}
 
                 {status === 'success' && (

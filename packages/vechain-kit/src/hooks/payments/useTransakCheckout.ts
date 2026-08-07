@@ -24,12 +24,21 @@ export type UseTransakCheckoutResult = {
     orderId: string | null;
     error: Error | null;
     reset: () => void;
+    /**
+     * False from the moment `status` becomes `'processing'` until the SDK
+     * fires `TRANSAK_WIDGET_INITIALISED` -- the iframe itself loads Transak's
+     * remote app, which takes a couple of seconds, so callers can render a
+     * loading state over the (otherwise blank) container instead of a flash
+     * of empty white space.
+     */
+    widgetReady: boolean;
 };
 
 const setupTransak = (
     TransakSDK: any,
     widgetUrl: string,
     handlers: {
+        onWidgetInitialised: () => void;
         onOrderSuccessful: (data: { orderId?: string }) => void;
         onOrderFailed: (data: { failureReason?: string }) => void;
         onWidgetClose: () => void;
@@ -40,6 +49,10 @@ const setupTransak = (
         containerId: TRANSAK_WIDGET_CONTAINER_ID,
     });
 
+    TransakSDK.on(
+        TransakSDK.EVENTS.TRANSAK_WIDGET_INITIALISED,
+        handlers.onWidgetInitialised,
+    );
     TransakSDK.on(
         TransakSDK.EVENTS.TRANSAK_ORDER_SUCCESSFUL,
         handlers.onOrderSuccessful,
@@ -68,6 +81,7 @@ export const useTransakCheckout = (
     const [status, setStatus] = useState<TransakCheckoutStatus>('idle');
     const [orderId, setOrderId] = useState<string | null>(null);
     const [error, setError] = useState<Error | null>(null);
+    const [widgetReady, setWidgetReady] = useState(false);
     const instanceRef = useRef<any>(null);
     const genRef = useRef(0);
     const onSuccessRef = useRef(onSuccess);
@@ -124,6 +138,7 @@ export const useTransakCheckout = (
 
             setStatus('processing');
             setIsOpen(true);
+            setWidgetReady(false);
 
             genRef.current += 1;
             const gen = genRef.current;
@@ -149,6 +164,10 @@ export const useTransakCheckout = (
                 });
 
                 const { instance } = setupTransak(TransakSDK, widgetUrl, {
+                    onWidgetInitialised: () => {
+                        if (genRef.current !== gen) return;
+                        setWidgetReady(true);
+                    },
                     onOrderSuccessful: (data) => {
                         if (genRef.current !== gen) return;
                         setOrderId(data.orderId ?? null);
@@ -200,6 +219,7 @@ export const useTransakCheckout = (
     const close = useCallback(() => {
         removeEmbeddedWidget();
         setIsOpen(false);
+        setWidgetReady(false);
         setTimeout(reset, 300);
     }, [removeEmbeddedWidget, reset]);
 
@@ -211,5 +231,6 @@ export const useTransakCheckout = (
         orderId,
         error,
         reset,
+        widgetReady,
     };
 };
