@@ -76,6 +76,9 @@ export const useTransakCheckout = (
     useEffect(() => clearExpiryTimer, [clearExpiryTimer]);
 
     const reset = useCallback(() => {
+        // Invalidate any in-flight widgetUrlBuilder call so a late resolve
+        // cannot move the reset checkout back to 'ready'.
+        genRef.current += 1;
         clearExpiryTimer();
         setStatus('idle');
         setWidgetUrl(null);
@@ -174,10 +177,14 @@ export const useTransakCheckout = (
     const close = useCallback(() => {
         // Invalidate any in-flight widgetUrlBuilder call so a late resolve
         // cannot move the closed checkout back to 'ready'.
-        genRef.current += 1;
+        const closeGeneration = ++genRef.current;
         clearExpiryTimer();
         setIsOpen(false);
-        setTimeout(reset, 300);
+        // Guarded: if open() starts a new checkout within the 300ms delay,
+        // it bumps genRef again -- don't let this stale reset clobber it.
+        setTimeout(() => {
+            if (genRef.current === closeGeneration) reset();
+        }, 300);
     }, [reset, clearExpiryTimer]);
 
     return {

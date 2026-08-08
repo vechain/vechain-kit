@@ -25,15 +25,36 @@ const HOOK_SNIPPET = `import { useTransakCheckout } from '@vechain/vechain-kit';
 function BuyVetCustom() {
     // Transak opens in a new tab (status 'ready' + widgetUrl) -- there's no
     // postMessage/order event to detect completion from it, so the user
-    // confirms manually via markCompleted().
-    const { open, status, widgetUrl, markCompleted } = useTransakCheckout(
-        () => console.log('done'),
-    );
+    // confirms manually via markCompleted(). The URL is single-use with a
+    // 5-minute TTL: markWidgetUrlOpened() (called on click) and
+    // widgetUrlExpired (flips after 5 minutes) tell you when to mint a new
+    // one via open() instead of relinking the stale URL.
+    const {
+        open,
+        status,
+        widgetUrl,
+        widgetUrlExpired,
+        markWidgetUrlOpened,
+        markCompleted,
+    } = useTransakCheckout(() => console.log('done'));
 
     if (status === 'ready') {
+        if (widgetUrlExpired) {
+            return (
+                <button onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}>
+                    Get a new link
+                </button>
+            );
+        }
+
         return (
             <>
-                <a href={widgetUrl} target="_blank" rel="noopener noreferrer">
+                <a
+                    href={widgetUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={markWidgetUrlOpened}
+                >
                     Continue with Transak
                 </a>
                 <button onClick={markCompleted}>
@@ -44,7 +65,10 @@ function BuyVetCustom() {
     }
 
     return (
-        <button onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}>
+        <button
+            disabled={status === 'processing'}
+            onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}
+        >
             Buy VET
         </button>
     );
@@ -112,6 +136,7 @@ function CustomHookDemo() {
                 </HStack>
             ) : (
                 <button
+                    disabled={status === 'processing'}
                     onClick={() =>
                         open({ fiatAmount: '30', fiatCurrency: 'USD' })
                     }
