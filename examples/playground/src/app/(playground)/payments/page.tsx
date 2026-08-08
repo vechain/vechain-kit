@@ -23,26 +23,51 @@ function BuyVetButton() {
 const HOOK_SNIPPET = `import { useTransakCheckout } from '@vechain/vechain-kit';
 
 function BuyVetCustom() {
+    // Transak opens in a new tab (status 'ready' + widgetUrl) -- there's no
+    // postMessage/order event to detect completion from it, so the user
+    // confirms manually via markCompleted().
     const { open, status, widgetUrl, markCompleted } = useTransakCheckout(
         () => console.log('done'),
     );
+
+    if (status === 'ready') {
+        return (
+            <>
+                <a href={widgetUrl} target="_blank" rel="noopener noreferrer">
+                    Continue with Transak
+                </a>
+                <button onClick={markCompleted}>
+                    I've completed my purchase
+                </button>
+            </>
+        );
+    }
 
     return (
         <button onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}>
             Buy VET
         </button>
-        // status/widgetUrl/markCompleted drive your own UI -- Transak opens
-        // in a new tab (status 'ready' + widgetUrl), and there is no
-        // postMessage/order event to detect completion from it, so call
-        // markCompleted() once the user confirms. See TransakCheckoutModal
-        // in the vechain-kit source for a full reference implementation.
     );
 }
 `;
 
+const buttonStyle = {
+    padding: '8px 16px',
+    borderRadius: 8,
+    border: '1px solid rgba(128,128,128,0.3)',
+    cursor: 'pointer',
+} as const;
+
 function CustomHookDemo() {
     const { t } = useTranslation();
-    const { open, status } = useTransakCheckout();
+    const {
+        open,
+        status,
+        widgetUrl,
+        widgetUrlExpired,
+        markWidgetUrlOpened,
+        markCompleted,
+    } = useTransakCheckout();
 
     return (
         <VStack align="stretch" spacing={3}>
@@ -56,17 +81,45 @@ function CustomHookDemo() {
                     {t('status')}: {status}
                 </Text>
             </HStack>
-            <button
-                onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}
-                style={{
-                    padding: '8px 16px',
-                    borderRadius: 8,
-                    border: '1px solid rgba(128,128,128,0.3)',
-                    cursor: 'pointer',
-                }}
-            >
-                {t('Buy $30 VET (custom trigger)')}
-            </button>
+            {status === 'ready' ? (
+                <HStack>
+                    {widgetUrlExpired ? (
+                        <button
+                            onClick={() =>
+                                open({
+                                    fiatAmount: '30',
+                                    fiatCurrency: 'USD',
+                                })
+                            }
+                            style={buttonStyle}
+                        >
+                            {t('Get a new link')}
+                        </button>
+                    ) : (
+                        <a
+                            href={widgetUrl ?? undefined}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={markWidgetUrlOpened}
+                            style={buttonStyle}
+                        >
+                            {t('Continue with Transak')}
+                        </a>
+                    )}
+                    <button onClick={markCompleted} style={buttonStyle}>
+                        {t("I've completed my purchase")}
+                    </button>
+                </HStack>
+            ) : (
+                <button
+                    onClick={() =>
+                        open({ fiatAmount: '30', fiatCurrency: 'USD' })
+                    }
+                    style={buttonStyle}
+                >
+                    {t('Buy $30 VET (custom trigger)')}
+                </button>
+            )}
         </VStack>
     );
 }

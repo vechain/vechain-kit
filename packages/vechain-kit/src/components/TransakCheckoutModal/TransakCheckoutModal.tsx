@@ -29,9 +29,13 @@ export type TransakCheckoutModalProps = {
     status: TransakCheckoutStatus;
     fiatAmount?: string;
     widgetUrl: string | null;
+    /** True once `widgetUrl` is no longer usable (5 min elapsed, or already opened) -- shows a "get a new link" prompt instead. */
+    widgetUrlExpired: boolean;
     error: Error | null;
     onStart: () => void;
     onReset: () => void;
+    /** Call when the user follows `widgetUrl` -- it's single-use. */
+    onWidgetUrlOpened: () => void;
     /** Call once the user confirms they finished the purchase in the Transak tab. */
     onMarkCompleted: () => void;
 };
@@ -42,9 +46,11 @@ export const TransakCheckoutModal = ({
     status,
     fiatAmount = '10',
     widgetUrl,
+    widgetUrlExpired,
     error,
     onStart,
     onReset,
+    onWidgetUrlOpened,
     onMarkCompleted,
 }: TransakCheckoutModalProps) => {
     const { t } = useTranslation();
@@ -141,24 +147,40 @@ export const TransakCheckoutModal = ({
                                         color={textSecondary}
                                         textAlign="center"
                                     >
-                                        {t(
-                                            'Continue in the new tab to complete your purchase with Transak, then come back here to confirm.',
-                                        )}
+                                        {widgetUrlExpired
+                                            ? t(
+                                                  'This link has expired or was already opened. Get a new one to continue.',
+                                              )
+                                            : t(
+                                                  'Continue in the new tab to complete your purchase with Transak, then come back here to confirm.',
+                                              )}
                                     </Text>
                                 </VStack>
                             </Box>
-                            <Button
-                                as="a"
-                                href={widgetUrl ?? undefined}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                variant="vechainKitPrimary"
-                                w="full"
-                                size="lg"
-                                isDisabled={!widgetUrl}
-                            >
-                                {t('Continue with Transak')}
-                            </Button>
+                            {widgetUrlExpired ? (
+                                <Button
+                                    onClick={onStart}
+                                    variant="vechainKitPrimary"
+                                    w="full"
+                                    size="lg"
+                                >
+                                    {t('Get a new link')}
+                                </Button>
+                            ) : (
+                                <Button
+                                    as="a"
+                                    href={widgetUrl ?? undefined}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={onWidgetUrlOpened}
+                                    variant="vechainKitPrimary"
+                                    w="full"
+                                    size="lg"
+                                    isDisabled={!widgetUrl}
+                                >
+                                    {t('Continue with Transak')}
+                                </Button>
+                            )}
                         </VStack>
                     )}
 

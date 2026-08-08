@@ -46,8 +46,11 @@ export const TransakOnrampContent = ({
 
     const {
         open: startCheckout,
+        close: closeCheckout,
         status,
         widgetUrl,
+        widgetUrlExpired,
+        markWidgetUrlOpened,
         markCompleted,
     } = useTransakCheckout(
         () => setStep('success'),
@@ -56,12 +59,15 @@ export const TransakOnrampContent = ({
 
     // Mirror the hook's status into this component's own step state (which
     // additionally tracks the pre-checkout 'form' step the hook has no
-    // concept of).
+    // concept of). Skipped once the user has navigated back to 'form' --
+    // otherwise a widgetUrlBuilder() call still in flight when they clicked
+    // Back would resolve afterwards and silently pull them into 'ready'.
     useEffect(() => {
+        if (step === 'form') return;
         if (status === 'ready') setStep('ready');
         else if (status === 'error') setStep('error');
         else if (status === 'success') setStep('success');
-    }, [status]);
+    }, [status, step]);
 
     const handleBuy = async () => {
         setStep('processing');
@@ -75,15 +81,20 @@ export const TransakOnrampContent = ({
         setCurrentContent('main');
     };
 
+    const goBackToForm = () => {
+        // Cancels any in-flight (or already-'ready') checkout so it can't
+        // resurface after the user has already navigated back.
+        closeCheckout();
+        setStep('form');
+    };
+
     return (
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Buy VET')}</ModalHeader>
                 {!isolatedView && (
                     <ModalBackButton
-                        onClick={
-                            step === 'form' ? handleBack : () => setStep('form')
-                        }
+                        onClick={step === 'form' ? handleBack : goBackToForm}
                     />
                 )}
                 <ModalCloseButton />
@@ -159,22 +170,38 @@ export const TransakOnrampContent = ({
                     <ModalBody>
                         <VStack spacing={6} align="stretch" w="full" py={4}>
                             <Text fontSize="sm" textAlign="center">
-                                {t(
-                                    'Continue in the new tab to complete your purchase with Transak, then come back here to confirm.',
-                                )}
+                                {widgetUrlExpired
+                                    ? t(
+                                          'This link has expired or was already opened. Get a new one to continue.',
+                                      )
+                                    : t(
+                                          'Continue in the new tab to complete your purchase with Transak, then come back here to confirm.',
+                                      )}
                             </Text>
-                            <Button
-                                as="a"
-                                href={widgetUrl ?? undefined}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                variant="vechainKitPrimary"
-                                w="full"
-                                size="lg"
-                                isDisabled={!widgetUrl}
-                            >
-                                {t('Continue with Transak')}
-                            </Button>
+                            {widgetUrlExpired ? (
+                                <Button
+                                    onClick={handleBuy}
+                                    variant="vechainKitPrimary"
+                                    w="full"
+                                    size="lg"
+                                >
+                                    {t('Get a new link')}
+                                </Button>
+                            ) : (
+                                <Button
+                                    as="a"
+                                    href={widgetUrl ?? undefined}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={markWidgetUrlOpened}
+                                    variant="vechainKitPrimary"
+                                    w="full"
+                                    size="lg"
+                                    isDisabled={!widgetUrl}
+                                >
+                                    {t('Continue with Transak')}
+                                </Button>
+                            )}
                         </VStack>
                     </ModalBody>
                 )}
