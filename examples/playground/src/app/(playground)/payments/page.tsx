@@ -23,23 +23,75 @@ function BuyVetButton() {
 const HOOK_SNIPPET = `import { useTransakCheckout } from '@vechain/vechain-kit';
 
 function BuyVetCustom() {
-    const { open, status, widgetReady } = useTransakCheckout(
-        () => console.log('done'),
-    );
+    // Transak opens in a new tab (status 'ready' + widgetUrl) -- there's no
+    // postMessage/order event to detect completion from it, so the user
+    // confirms manually via markCompleted(). The URL is single-use with a
+    // 5-minute TTL: markWidgetUrlOpened() (called on click) and
+    // widgetUrlExpired (flips after 5 minutes) tell you when to mint a new
+    // one via open() instead of relinking the stale URL.
+    const {
+        open,
+        status,
+        widgetUrl,
+        widgetUrlExpired,
+        markWidgetUrlOpened,
+        markCompleted,
+    } = useTransakCheckout(() => console.log('done'));
+
+    if (status === 'ready') {
+        if (widgetUrlExpired) {
+            return (
+                <button onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}>
+                    Get a new link
+                </button>
+            );
+        }
+
+        return (
+            <>
+                <a
+                    href={widgetUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={markWidgetUrlOpened}
+                >
+                    Continue with Transak
+                </a>
+                <button onClick={markCompleted}>
+                    I've completed my purchase
+                </button>
+            </>
+        );
+    }
 
     return (
-        <button onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}>
+        <button
+            disabled={status === 'processing'}
+            onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}
+        >
             Buy VET
         </button>
-        // status/widgetReady drive your own UI -- see TransakCheckoutModal
-        // in the vechain-kit source for a full reference implementation.
     );
 }
 `;
 
+const buttonStyle = {
+    padding: '8px 16px',
+    borderRadius: 8,
+    border: '1px solid rgba(128,128,128,0.3)',
+    cursor: 'pointer',
+} as const;
+
 function CustomHookDemo() {
     const { t } = useTranslation();
-    const { open, status } = useTransakCheckout();
+    const {
+        open,
+        status,
+        widgetUrl,
+        widgetUrlExpired,
+        markWidgetUrlOpened,
+        markCompleted,
+    } = useTransakCheckout();
 
     return (
         <VStack align="stretch" spacing={3}>
@@ -53,17 +105,46 @@ function CustomHookDemo() {
                     {t('status')}: {status}
                 </Text>
             </HStack>
-            <button
-                onClick={() => open({ fiatAmount: '30', fiatCurrency: 'USD' })}
-                style={{
-                    padding: '8px 16px',
-                    borderRadius: 8,
-                    border: '1px solid rgba(128,128,128,0.3)',
-                    cursor: 'pointer',
-                }}
-            >
-                {t('Buy $30 VET (custom trigger)')}
-            </button>
+            {status === 'ready' ? (
+                <HStack>
+                    {widgetUrlExpired ? (
+                        <button
+                            onClick={() =>
+                                open({
+                                    fiatAmount: '30',
+                                    fiatCurrency: 'USD',
+                                })
+                            }
+                            style={buttonStyle}
+                        >
+                            {t('Get a new link')}
+                        </button>
+                    ) : (
+                        <a
+                            href={widgetUrl ?? undefined}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={markWidgetUrlOpened}
+                            style={buttonStyle}
+                        >
+                            {t('Continue with Transak')}
+                        </a>
+                    )}
+                    <button onClick={markCompleted} style={buttonStyle}>
+                        {t("I've completed my purchase")}
+                    </button>
+                </HStack>
+            ) : (
+                <button
+                    disabled={status === 'processing'}
+                    onClick={() =>
+                        open({ fiatAmount: '30', fiatCurrency: 'USD' })
+                    }
+                    style={buttonStyle}
+                >
+                    {t('Buy $30 VET (custom trigger)')}
+                </button>
+            )}
         </VStack>
     );
 }
@@ -86,7 +167,7 @@ export default function PaymentsPage() {
                 <DemoSection
                     title={t('Buy VET')}
                     description={t(
-                        'Drop-in button: opens the Transak widget, tracks order status, and closes itself on success.',
+                        'Drop-in button: opens Transak in a new tab and lets the user confirm when they are done.',
                     )}
                     hooks={['PayWithTransakButton', 'useTransakCheckout']}
                     status="NEW"
@@ -108,7 +189,7 @@ export default function PaymentsPage() {
                     status="NEW"
                     code={HOOK_SNIPPET}
                     aiPrompt={t(
-                        'Build a custom "Top up wallet" card in my app using useTransakCheckout from @vechain/vechain-kit directly (not PayWithTransakButton) so I can fully control the trigger UI. Show the live status (idle/processing/success/error) and disable the button while processing.',
+                        'Build a custom "Top up wallet" card in my app using useTransakCheckout from @vechain/vechain-kit directly (not PayWithTransakButton) so I can fully control the trigger UI. Show the live status (idle/processing/ready/success/error) and disable the button while processing.',
                     )}
                     aiSkills={['vechain-kit']}
                 >

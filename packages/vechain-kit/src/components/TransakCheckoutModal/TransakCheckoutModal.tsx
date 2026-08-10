@@ -13,25 +13,31 @@ import {
     Spinner,
     useToken,
 } from '@chakra-ui/react';
-import { BaseModal, StatusScreen, StickyHeaderContainer } from '@/components/common';
+import {
+    BaseModal,
+    StatusScreen,
+    StickyHeaderContainer,
+} from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { LuCreditCard, LuCircleCheck, LuCircleX } from 'react-icons/lu';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
-import {
-    TRANSAK_WIDGET_CONTAINER_ID,
-    type TransakCheckoutStatus,
-} from '@/hooks/payments/useTransakCheckout';
+import { type TransakCheckoutStatus } from '@/hooks/payments/useTransakCheckout';
 
 export type TransakCheckoutModalProps = {
     isOpen: boolean;
     onClose: () => void;
     status: TransakCheckoutStatus;
     fiatAmount?: string;
+    widgetUrl: string | null;
+    /** True once `widgetUrl` is no longer usable (5 min elapsed, or already opened) -- shows a "get a new link" prompt instead. */
+    widgetUrlExpired: boolean;
     error: Error | null;
     onStart: () => void;
     onReset: () => void;
-    /** False while the Transak iframe is still loading its remote app -- shows a spinner over the (otherwise blank) container. */
-    widgetReady?: boolean;
+    /** Call when the user follows `widgetUrl` -- it's single-use. */
+    onWidgetUrlOpened: () => void;
+    /** Call once the user confirms they finished the purchase in the Transak tab. */
+    onMarkCompleted: () => void;
 };
 
 export const TransakCheckoutModal = ({
@@ -39,10 +45,13 @@ export const TransakCheckoutModal = ({
     onClose,
     status,
     fiatAmount = '10',
+    widgetUrl,
+    widgetUrlExpired,
     error,
     onStart,
     onReset,
-    widgetReady = false,
+    onWidgetUrlOpened,
+    onMarkCompleted,
 }: TransakCheckoutModalProps) => {
     const { t } = useTranslation();
     const { darkMode, theme } = useVeChainKitConfig();
@@ -57,130 +66,199 @@ export const TransakCheckoutModal = ({
     return (
         <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
             <BaseModal
-            isOpen={isOpen}
-            onClose={handleClose}
-            size="lg"
-            closeOnOverlayClick={status !== 'processing'}
-            allowExternalFocus={status === 'processing'}
-            useBottomSheetOnMobile
-            mobileMaxHeight="calc(100dvh - 24px)"
-        >
-            <StickyHeaderContainer>
-                <ModalHeader>{t('Buy VET')}</ModalHeader>
-                <ModalCloseButton isDisabled={status === 'processing'} />
-            </StickyHeaderContainer>
+                isOpen={isOpen}
+                onClose={handleClose}
+                size="lg"
+                closeOnOverlayClick={
+                    status !== 'processing' && status !== 'ready'
+                }
+                useBottomSheetOnMobile
+                mobileMaxHeight="calc(100dvh - 24px)"
+            >
+                <StickyHeaderContainer>
+                    <ModalHeader>{t('Buy VET')}</ModalHeader>
+                    <ModalCloseButton isDisabled={status === 'processing'} />
+                </StickyHeaderContainer>
 
-            <ModalBody>
-                {status === 'idle' && (
-                    <VStack spacing={6} py={4}>
-                        <Box
-                            w="full"
-                            p={6}
-                            borderRadius="xl"
-                            bg="gray.50"
-                            _dark={{ bg: 'gray.700' }}
-                        >
-                            <VStack spacing={3} align="center">
-                                <Icon as={LuCreditCard} boxSize={8} color="blue.400" />
-                                <Text fontSize="3xl" fontWeight="bold">
-                                    ${fiatAmount}
-                                </Text>
-                                <Text fontSize="sm" color={textSecondary} textAlign="center">
-                                    {t('You will be redirected to Transak to complete your purchase.')}
-                                </Text>
-                            </VStack>
-                        </Box>
-                    </VStack>
-                )}
-
-                {status === 'processing' && (
-                    // Transak's own single-embed guidance (docs.transak.com/integration/web/iframe)
-                    // sizes the container at `height: 80dvh` with no lower cap — the deeper steps
-                    // of the flow (KYC, add-card-details) need close to that much room. The
-                    // previous 620px ceiling clipped those steps, so the "add card details" panel
-                    // rendered cut off and overlapping the quote screen underneath it.
-                    //
-                    // The spinner lives in a SIBLING overlay, never inside the
-                    // SDK's own container div: the SDK appends/removes the
-                    // iframe with direct DOM calls (containerId mode), which
-                    // would fight React for ownership of that node's children.
-                    <Box
-                        w="full"
-                        h="80dvh"
-                        minH="560px"
-                        maxH="900px"
-                        position="relative"
-                    >
-                        <Box
-                            id={TRANSAK_WIDGET_CONTAINER_ID}
-                            w="full"
-                            h="full"
-                            borderRadius="xl"
-                            overflow="hidden"
-                            position="relative"
-                        />
-                        {!widgetReady && (
+                <ModalBody>
+                    {status === 'idle' && (
+                        <VStack spacing={6} py={4}>
                             <Box
-                                position="absolute"
-                                inset={0}
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
+                                w="full"
+                                p={6}
                                 borderRadius="xl"
-                                pointerEvents="none"
+                                bg="gray.50"
+                                _dark={{ bg: 'gray.700' }}
                             >
-                                <Spinner size="lg" color="blue.400" />
+                                <VStack spacing={3} align="center">
+                                    <Icon
+                                        as={LuCreditCard}
+                                        boxSize={8}
+                                        color="blue.400"
+                                    />
+                                    <Text fontSize="3xl" fontWeight="bold">
+                                        ${fiatAmount}
+                                    </Text>
+                                    <Text
+                                        fontSize="sm"
+                                        color={textSecondary}
+                                        textAlign="center"
+                                    >
+                                        {t(
+                                            'You will be redirected to Transak to complete your purchase.',
+                                        )}
+                                    </Text>
+                                </VStack>
                             </Box>
-                        )}
-                    </Box>
-                )}
+                        </VStack>
+                    )}
 
-                {status === 'success' && (
-                    <StatusScreen
-                        status="success"
-                        title={t('Purchase successful')}
-                        description={t('Your VET will arrive in your wallet shortly.')}
-                        icon={LuCircleCheck}
-                        actions={
-                            <Button variant="vechainKitPrimary" onClick={onClose} w="full">
-                                {t('Done')}
-                            </Button>
-                        }
-                    />
-                )}
+                    {status === 'processing' && (
+                        <VStack py={10}>
+                            <Spinner size="lg" color="blue.400" />
+                        </VStack>
+                    )}
 
-                {status === 'error' && (
-                    <StatusScreen
-                        status="error"
-                        title={t('Purchase failed')}
-                        description={error?.message ?? t('Something went wrong. Please try again.')}
-                        icon={LuCircleX}
-                        actions={
-                            <VStack spacing={3} w="full">
-                                <Button variant="vechainKitPrimary" onClick={onStart} w="full">
-                                    {t('Try again')}
+                    {status === 'ready' && (
+                        // Opens in a new tab instead of an embedded iframe -- Transak's
+                        // widget rejects the embedded (containerId) request in some
+                        // production setups (403 "Access Denied", error code
+                        // T-INF-102) while the exact same Secure Widget URL loads fine
+                        // as a top-level navigation. See the PR description for the
+                        // full diagnosis. There is no postMessage/order event to
+                        // detect completion from a separate tab, so the user confirms
+                        // manually below.
+                        <VStack spacing={6} py={4}>
+                            <Box
+                                w="full"
+                                p={6}
+                                borderRadius="xl"
+                                bg="gray.50"
+                                _dark={{ bg: 'gray.700' }}
+                            >
+                                <VStack spacing={3} align="center">
+                                    <Icon
+                                        as={LuCreditCard}
+                                        boxSize={8}
+                                        color="blue.400"
+                                    />
+                                    <Text
+                                        fontSize="sm"
+                                        color={textSecondary}
+                                        textAlign="center"
+                                    >
+                                        {widgetUrlExpired
+                                            ? t(
+                                                  'This link has expired or was already opened. Get a new one to continue.',
+                                              )
+                                            : t(
+                                                  'Continue in the new tab to complete your purchase with Transak, then come back here to confirm.',
+                                              )}
+                                    </Text>
+                                </VStack>
+                            </Box>
+                            {widgetUrlExpired ? (
+                                <Button
+                                    onClick={onStart}
+                                    variant="vechainKitPrimary"
+                                    w="full"
+                                    size="lg"
+                                >
+                                    {t('Get a new link')}
                                 </Button>
-                                <Button variant="vechainKitSecondary" onClick={handleClose} w="full">
-                                    {t('Cancel')}
+                            ) : (
+                                <Button
+                                    as="a"
+                                    href={widgetUrl ?? undefined}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={onWidgetUrlOpened}
+                                    variant="vechainKitPrimary"
+                                    w="full"
+                                    size="lg"
+                                    isDisabled={!widgetUrl}
+                                >
+                                    {t('Continue with Transak')}
                                 </Button>
-                            </VStack>
-                        }
-                    />
-                )}
-            </ModalBody>
+                            )}
+                        </VStack>
+                    )}
 
-            {status === 'idle' && (
-                <ModalFooter>
-                    <Button
-                        variant="vechainKitPrimary"
-                        onClick={onStart}
-                        w="full"
-                        size="lg"
-                    >
-                        {t('Buy ${{amount}} VET', { amount: fiatAmount })}
-                    </Button>
-                </ModalFooter>
-            )}
+                    {status === 'success' && (
+                        <StatusScreen
+                            status="success"
+                            title={t('Purchase successful')}
+                            description={t(
+                                'Your VET will arrive in your wallet shortly.',
+                            )}
+                            icon={LuCircleCheck}
+                            actions={
+                                <Button
+                                    variant="vechainKitPrimary"
+                                    onClick={onClose}
+                                    w="full"
+                                >
+                                    {t('Done')}
+                                </Button>
+                            }
+                        />
+                    )}
+
+                    {status === 'error' && (
+                        <StatusScreen
+                            status="error"
+                            title={t('Purchase failed')}
+                            description={
+                                error?.message ??
+                                t('Something went wrong. Please try again.')
+                            }
+                            icon={LuCircleX}
+                            actions={
+                                <VStack spacing={3} w="full">
+                                    <Button
+                                        variant="vechainKitPrimary"
+                                        onClick={onStart}
+                                        w="full"
+                                    >
+                                        {t('Try again')}
+                                    </Button>
+                                    <Button
+                                        variant="vechainKitSecondary"
+                                        onClick={handleClose}
+                                        w="full"
+                                    >
+                                        {t('Cancel')}
+                                    </Button>
+                                </VStack>
+                            }
+                        />
+                    )}
+                </ModalBody>
+
+                {status === 'idle' && (
+                    <ModalFooter>
+                        <Button
+                            variant="vechainKitPrimary"
+                            onClick={onStart}
+                            w="full"
+                            size="lg"
+                        >
+                            {t('Buy ${{amount}} VET', { amount: fiatAmount })}
+                        </Button>
+                    </ModalFooter>
+                )}
+
+                {status === 'ready' && (
+                    <ModalFooter>
+                        <Button
+                            variant="vechainKitSecondary"
+                            onClick={onMarkCompleted}
+                            w="full"
+                        >
+                            {t("I've completed my purchase")}
+                        </Button>
+                    </ModalFooter>
+                )}
             </BaseModal>
         </VechainKitThemeProvider>
     );

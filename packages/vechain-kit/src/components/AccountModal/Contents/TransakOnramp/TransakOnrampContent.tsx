@@ -16,20 +16,13 @@ import {
     FormLabel,
     Select,
     Icon,
-    Box,
     Spinner,
 } from '@chakra-ui/react';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
-import {
-    TRANSAK_WIDGET_CONTAINER_ID,
-    useTransakCheckout,
-} from '@/hooks/payments/useTransakCheckout';
+import { useTransakCheckout } from '@/hooks/payments/useTransakCheckout';
 import { useEffect, useState } from 'react';
 import { LuDollarSign, LuCircleCheck, LuCircleX } from 'react-icons/lu';
 
@@ -39,7 +32,7 @@ export type TransakOnrampContentProps = {
     >;
 };
 
-type OnrampStep = 'form' | 'processing' | 'success' | 'error';
+type OnrampStep = 'form' | 'processing' | 'ready' | 'success' | 'error';
 
 export const TransakOnrampContent = ({
     setCurrentContent,
@@ -51,18 +44,29 @@ export const TransakOnrampContent = ({
     const [amount, setAmount] = useState('50');
     const [currency, setCurrency] = useState<'usd' | 'eur' | 'gbp'>('usd');
 
-    const { open: startCheckout, status, widgetReady } = useTransakCheckout(
+    const {
+        open: startCheckout,
+        close: closeCheckout,
+        status,
+        widgetUrl,
+        widgetUrlExpired,
+        markWidgetUrlOpened,
+        markCompleted,
+    } = useTransakCheckout(
         () => setStep('success'),
         () => setStep('error'),
     );
 
-    // When the Transak widget closes without completing, status returns to
-    // idle -- bring the user back to the form instead of leaving them on the
-    // processing step with no widget.
+    // Mirror the hook's status into this component's own step state (which
+    // additionally tracks the pre-checkout 'form' step the hook has no
+    // concept of). Skipped once the user has navigated back to 'form' --
+    // otherwise a widgetUrlBuilder() call still in flight when they clicked
+    // Back would resolve afterwards and silently pull them into 'ready'.
     useEffect(() => {
-        if (step === 'processing' && status === 'idle') {
-            setStep('form');
-        }
+        if (step === 'form') return;
+        if (status === 'ready') setStep('ready');
+        else if (status === 'error') setStep('error');
+        else if (status === 'success') setStep('success');
     }, [status, step]);
 
     const handleBuy = async () => {
@@ -77,15 +81,20 @@ export const TransakOnrampContent = ({
         setCurrentContent('main');
     };
 
+    const goBackToForm = () => {
+        // Cancels any in-flight (or already-'ready') checkout so it can't
+        // resurface after the user has already navigated back.
+        closeCheckout();
+        setStep('form');
+    };
+
     return (
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Buy VET')}</ModalHeader>
                 {!isolatedView && (
                     <ModalBackButton
-                        onClick={
-                            step === 'form' ? handleBack : () => setStep('form')
-                        }
+                        onClick={step === 'form' ? handleBack : goBackToForm}
                     />
                 )}
                 <ModalCloseButton />
@@ -143,44 +152,68 @@ export const TransakOnrampContent = ({
 
                 {step === 'processing' && (
                     <ModalBody>
-                        {/* Transak's own single-embed guidance (docs.transak.com/integration/web/iframe)
-                            sizes the container at `height: 80dvh` with no lower cap — the deeper
-                            steps of the flow (KYC, add-card-details) need close to that much room.
-                            The previous 620px ceiling clipped those steps, so the "add card details"
-                            panel rendered cut off and overlapping the quote screen underneath it.
-                            The spinner is a sibling overlay, never a child of the SDK's own
-                            container div -- the SDK appends/removes the iframe with direct DOM
-                            calls (containerId mode), which would fight React for that node. */}
-                        <Box w="full" h="80dvh" minH="560px" maxH="900px" position="relative">
-                            <Box
-                                id={TRANSAK_WIDGET_CONTAINER_ID}
-                                w="full"
-                                h="full"
-                                borderRadius="xl"
-                                overflow="hidden"
-                                position="relative"
-                            />
-                            {!widgetReady && (
-                                <Box
-                                    position="absolute"
-                                    inset={0}
-                                    display="flex"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    borderRadius="xl"
-                                    pointerEvents="none"
+                        <VStack py={10}>
+                            <Spinner size="lg" color="blue.400" />
+                        </VStack>
+                    </ModalBody>
+                )}
+
+                {step === 'ready' && (
+                    // Opens in a new tab instead of an embedded iframe -- Transak's
+                    // widget rejects the embedded (containerId) request in some
+                    // production setups (403 "Access Denied", error code
+                    // T-INF-102) while the exact same Secure Widget URL loads fine
+                    // as a top-level navigation. See the PR description for the
+                    // full diagnosis. There is no postMessage/order event to
+                    // detect completion from a separate tab, so the user confirms
+                    // manually below.
+                    <ModalBody>
+                        <VStack spacing={6} align="stretch" w="full" py={4}>
+                            <Text fontSize="sm" textAlign="center">
+                                {widgetUrlExpired
+                                    ? t(
+                                          'This link has expired or was already opened. Get a new one to continue.',
+                                      )
+                                    : t(
+                                          'Continue in the new tab to complete your purchase with Transak, then come back here to confirm.',
+                                      )}
+                            </Text>
+                            {widgetUrlExpired ? (
+                                <Button
+                                    onClick={handleBuy}
+                                    variant="vechainKitPrimary"
+                                    w="full"
+                                    size="lg"
                                 >
-                                    <Spinner size="lg" color="blue.400" />
-                                </Box>
+                                    {t('Get a new link')}
+                                </Button>
+                            ) : (
+                                <Button
+                                    as="a"
+                                    href={widgetUrl ?? undefined}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={markWidgetUrlOpened}
+                                    variant="vechainKitPrimary"
+                                    w="full"
+                                    size="lg"
+                                    isDisabled={!widgetUrl}
+                                >
+                                    {t('Continue with Transak')}
+                                </Button>
                             )}
-                        </Box>
+                        </VStack>
                     </ModalBody>
                 )}
 
                 {step === 'success' && (
                     <ModalBody>
                         <VStack spacing={4} align="center" py={8}>
-                            <Icon as={LuCircleCheck} boxSize={12} color="green.400" />
+                            <Icon
+                                as={LuCircleCheck}
+                                boxSize={12}
+                                color="green.400"
+                            />
                             <Text fontWeight="bold" fontSize="lg">
                                 {t('VET purchased successfully')}
                             </Text>
@@ -201,9 +234,7 @@ export const TransakOnrampContent = ({
                                 {t('Purchase failed')}
                             </Text>
                             <Text fontSize="sm" textAlign="center">
-                                {t(
-                                    'Something went wrong. Please try again.',
-                                )}
+                                {t('Something went wrong. Please try again.')}
                             </Text>
                         </VStack>
                     </ModalBody>
@@ -220,6 +251,18 @@ export const TransakOnrampContent = ({
                         w="full"
                     >
                         {t('Continue to payment')}
+                    </Button>
+                </ModalFooter>
+            )}
+
+            {step === 'ready' && (
+                <ModalFooter>
+                    <Button
+                        variant="vechainKitSecondary"
+                        onClick={markCompleted}
+                        w="full"
+                    >
+                        {t("I've completed my purchase")}
                     </Button>
                 </ModalFooter>
             )}
