@@ -43,27 +43,35 @@ jobs:
                   issue-number: ${{ github.event.pull_request.number }}
                   body: |
                       ## 👋 Thanks for your contribution!
-                      
+
                       Since this PR comes from a forked repository, preview deployment requires approval from a maintainer for security reasons.
                       Please ensure that your PR branch name starts with your GitHub username in the format of <username>/<branch-name>. Eg. myusername/my-feature **not main**
-                      
+
                       **Next steps:**
                       1. A maintainer will review your code
                       2. If approved, they'll add the `safe-to-deploy` label to trigger deployment
                       3. **After each new commit**, the maintainer will need to remove and re-add the label for security
-                      
+
                       This ensures every version of the code is explicitly reviewed before deployment. Thank you for your patience! 🙏
 
-    # Job 2: Deploy (runs for internal PRs OR when external PR gets labeled)
-    deploy:
+    # Job 2: Build the PR's code.
+    #
+    # This is the only job that runs code from the pull request head, so it is
+    # deliberately the job with no `id-token: write`. Everything the build can
+    # reach is scoped to this job: without the id-token permission there is no
+    # OIDC token to request here, so a malicious dependency or build script in a
+    # fork cannot obtain AWS credentials. The deploy job below holds the
+    # permission but never executes PR code.
+    build:
         runs-on: ubuntu-latest
         permissions:
-            id-token: write
-            pull-requests: write
+            contents: read
         # Security gate: Only run when 'safe-to-deploy' label is ADDED OR from internal branch
         if: |
             (github.event.label.name == 'safe-to-deploy') ||
             (github.event.pull_request.head.repo.full_name == github.repository) && github.event.pull_request.head.ref != 'main'
+        outputs:
+            processedBranchName: ${{ steps.process-branch-name.outputs.processedBranchName }}
         env:
             NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
             NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
@@ -73,7 +81,6 @@ jobs:
             NEXT_PUBLIC_TRANSAK_API_URL: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_URL }}
             NEXT_PUBLIC_TRANSAK_ENVIRONMENT: 'staging'
             NEXT_PUBLIC_NETWORK_TYPE: 'main'
-            AWS_REGION: eu-west-1
             BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         steps:
             - name: Check branch name prefix (for external PRs)
@@ -93,6 +100,8 @@ jobs:
               uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
               with:
                   ref: ${{ github.event.pull_request.head.sha }}
+                  # Do not leave the token in .git/config for the build to find.
+                  persist-credentials: false
 
             - name: Process Branch Name
               id: process-branch-name
@@ -116,6 +125,34 @@ jobs:
                     echo "::warning title=Invalid file permissions automatically fixed::$line"
                   done
 
+            - name: Upload built site
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+              with:
+                  name: homepage-dist
+                  path: ./examples/homepage/dist
+                  retention-days: 1
+                  if-no-files-found: error
+
+    # Job 3: Publish the built site.
+    #
+    # Holds `id-token: write` but never checks out or runs PR code - it only
+    # downloads the artifact and copies it to S3. `aws s3 sync` transfers file
+    # contents, it does not execute them.
+    deploy:
+        runs-on: ubuntu-latest
+        needs: build
+        permissions:
+            id-token: write # mint the OIDC token exchanged for the deploy role
+            pull-requests: write # post or update the preview URL comment
+        env:
+            AWS_REGION: eu-west-1
+        steps:
+            - name: Download built site
+              uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+              with:
+                  name: homepage-dist
+                  path: ./dist
+
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
               with:
@@ -123,12 +160,17 @@ jobs:
                   aws-region: ${{ env.AWS_REGION }}
 
             - name: Deploy to S3
+              env:
+                  PREVIEW_BUCKET: ${{ secrets.AWS_PREVIEW_BUCKET_NAME }}
+                  PREVIEW_PREFIX: ${{ needs.build.outputs.processedBranchName }}
               run: |
-                  aws s3 sync ./examples/homepage/dist s3://${{ secrets.AWS_PREVIEW_BUCKET_NAME }}/${{ steps.process-branch-name.outputs.processedBranchName }} --delete
+                  aws s3 sync ./dist "s3://${PREVIEW_BUCKET}/${PREVIEW_PREFIX}" --delete
 
             - name: Cloudfront Invalidation
+              env:
+                  DISTRIBUTION_ID: ${{ secrets.AWS_PREVIEW_CLOUDFRONT_DISTRIBUTION_ID }}
               run: |
-                  AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_PREVIEW_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
+                  AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths '/' '/*'
 
             - name: Find Comment
               uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
@@ -145,5 +187,5 @@ jobs:
                   issue-number: ${{ github.event.pull_request.number }}
                   body: |
                       # 🚀 Preview environment deployed!
-                      Preview URL: https://preview.vechainkit.vechain.org/${{ steps.process-branch-name.outputs.processedBranchName }}
+                      Preview URL: https://preview.vechainkit.vechain.org/${{ needs.build.outputs.processedBranchName }}
                   edit-mode: replace
