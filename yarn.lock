@@ -7665,52 +7665,52 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-react@npm:2.3.2":
-  version: 2.3.2
-  resolution: "@vechain/dapp-kit-react@npm:2.3.2"
+"@vechain/dapp-kit-react@npm:2.3.3":
+  version: 2.3.3
+  resolution: "@vechain/dapp-kit-react@npm:2.3.3"
   dependencies:
     "@lit/react": "npm:^1.0.7"
-    "@vechain/dapp-kit": "npm:2.3.2"
-    "@vechain/dapp-kit-ui": "npm:2.3.2"
-    "@vechain/sdk-core": "npm:^2.0.0"
+    "@vechain/dapp-kit": "npm:2.3.3"
+    "@vechain/dapp-kit-ui": "npm:2.3.3"
+    "@vechain/sdk-core": "npm:^2.1.0"
     valtio: "npm:1.13.2"
-  checksum: 10c0/0a82b437a24720a80cb7b6b5b2d3f5a8e332183df4e43192eaf9d8e02dc3aaf05f017e3555eae8a9c7d25da1353d8c6b3094a1c78b6f0f0f1ad7adedfcbb2c70
+  checksum: 10c0/fe5a17545ef038576a5e627dffdeeaeb5c4d9af58549c358ad8be56947df59a56683172b213bdc5059eb7f85138dc5a9b607a0dc7aa35b9ebf161bab2b428333
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-ui@npm:2.3.2":
-  version: 2.3.2
-  resolution: "@vechain/dapp-kit-ui@npm:2.3.2"
+"@vechain/dapp-kit-ui@npm:2.3.3":
+  version: 2.3.3
+  resolution: "@vechain/dapp-kit-ui@npm:2.3.3"
   dependencies:
-    "@vechain/dapp-kit": "npm:2.3.2"
+    "@vechain/dapp-kit": "npm:2.3.3"
     "@vechain/picasso": "npm:2.1.1"
-    "@vechain/sdk-core": "npm:^2.0.0"
-    "@vechain/sdk-network": "npm:^2.0.0"
+    "@vechain/sdk-core": "npm:^2.1.0"
+    "@vechain/sdk-network": "npm:^2.1.0"
     "@wagmi/core": "npm:^2.16.7"
     "@web3modal/ethereum": "npm:^2.7.1"
     "@web3modal/html": "npm:^2.7.1"
     lit: "npm:3.2.1"
     qrcode: "npm:1.5.4"
     valtio: "npm:1.13.2"
-  checksum: 10c0/64839d943adcc5cac6aabc043229bfd8ce021d94080e3cb6f7026494c1b5d639596d1f7d270f3d9773f6b81827453776c278786bc6615a4b8f65ecfa8ea05438
+  checksum: 10c0/63e912363bec90ac58d160c568285c535dd2b56aa66a99d270d1a077e25b0d5e67c4afa3fc3ef3f2d0945a0a6901466c6f35b80e4dbfa3c6faafe6e4a6abb28e
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit@npm:2.3.2":
-  version: 2.3.2
-  resolution: "@vechain/dapp-kit@npm:2.3.2"
+"@vechain/dapp-kit@npm:2.3.3":
+  version: 2.3.3
+  resolution: "@vechain/dapp-kit@npm:2.3.3"
   dependencies:
     "@vechain/connex-wallet-buddy": "npm:^0.1.12"
-    "@vechain/sdk-core": "npm:^2.0.0"
-    "@vechain/sdk-errors": "npm:^2.0.0"
-    "@vechain/sdk-network": "npm:^2.0.0"
+    "@vechain/sdk-core": "npm:^2.1.0"
+    "@vechain/sdk-errors": "npm:^2.1.0"
+    "@vechain/sdk-network": "npm:^2.1.0"
     "@walletconnect/modal": "npm:2.7.0"
     "@walletconnect/sign-client": "npm:2.19.2"
     "@walletconnect/utils": "npm:2.19.2"
     events: "npm:^3.3.0"
     valtio: "npm:1.13.2"
     viem: "npm:2.23.2"
-  checksum: 10c0/683d3ec4346fe5489601dedc30026fbc86193237a16be084692facb0cab6ca1928ec2a203e14539ce7eabc28f55d9d2906fdbc7f321db3e5feaff7d774670e5b
+  checksum: 10c0/083f8e29745fda16aa359e03441faeed8e49580825acc3a88aef9ffa784b8177093fb6d32c03f096083c4e88f60186377825a23861f2713667dc0c2eccb871eb
   languageName: node
   linkType: hard
 
@@ -7723,9 +7723,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-core@npm:2.0.6, @vechain/sdk-core@npm:^2.0.0":
-  version: 2.0.6
-  resolution: "@vechain/sdk-core@npm:2.0.6"
+"@vechain/sdk-core@npm:2.1.0, @vechain/sdk-core@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@vechain/sdk-core@npm:2.1.0"
   dependencies:
     "@ethereumjs/rlp": "npm:^5.0.2"
     "@noble/ciphers": "npm:^1.1.1"
@@ -7734,96 +7734,44 @@ __metadata:
     "@scure/base": "npm:^1.2.4"
     "@scure/bip32": "npm:^1.4.0"
     "@scure/bip39": "npm:^1.5.1"
-    "@vechain/sdk-errors": "npm:2.0.6"
-    "@vechain/sdk-logging": "npm:2.0.6"
+    "@vechain/sdk-errors": "npm:2.1.0"
+    "@vechain/sdk-logging": "npm:2.1.0"
     abitype: "npm:^1.0.6"
     ethers: "npm:^6.14.0"
     fast-json-stable-stringify: "npm:^2.1.0"
     viem: "npm:^2.21.45"
-  checksum: 10c0/e63a61d0e860347c48d58273c1a1391759d4dea770c56b242fcc57c6884287b1ae47608d0cbb9798d3282baaad206bde7ea01b07c10d0735f1ecc36d2adaf497
+  checksum: 10c0/ec3b6463cbcb9f6b5a401c5561b8191f10991b582cbfb2a1a353cdd3aaebcef3f2737b1438609de07469d196088fb39d16a799e36ed883528f93ecd40d5a8ce5
   languageName: node
   linkType: hard
 
-"@vechain/sdk-core@npm:2.0.7":
-  version: 2.0.7
-  resolution: "@vechain/sdk-core@npm:2.0.7"
+"@vechain/sdk-errors@npm:2.1.0, @vechain/sdk-errors@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@vechain/sdk-errors@npm:2.1.0"
+  checksum: 10c0/9ee0982f9d4820152b49e06a1702b49cb1c51e4e9a47bfc38f3b5b202f4ccc478f2093c815835101db50deb39c98a5f7fc20c825e63c6fcf5d5e5d55161c9f15
+  languageName: node
+  linkType: hard
+
+"@vechain/sdk-logging@npm:2.1.0":
+  version: 2.1.0
+  resolution: "@vechain/sdk-logging@npm:2.1.0"
   dependencies:
-    "@ethereumjs/rlp": "npm:^5.0.2"
-    "@noble/ciphers": "npm:^1.1.1"
-    "@noble/curves": "npm:^1.6.0"
-    "@noble/hashes": "npm:^1.5.0"
-    "@scure/base": "npm:^1.2.4"
-    "@scure/bip32": "npm:^1.4.0"
-    "@scure/bip39": "npm:^1.5.1"
-    "@vechain/sdk-errors": "npm:2.0.7"
-    "@vechain/sdk-logging": "npm:2.0.7"
-    abitype: "npm:^1.0.6"
-    ethers: "npm:^6.14.0"
-    fast-json-stable-stringify: "npm:^2.1.0"
-    viem: "npm:^2.21.45"
-  checksum: 10c0/7286fb045b07938cfe28b3eb17295691fe1f4eb19df8afc8c406e548e8f23632a13a4703033be26ff2adf36e04c977a6c40ec763262b8d6c92209db3e9f532ba
+    "@vechain/sdk-errors": "npm:2.1.0"
+  checksum: 10c0/a21a1fa70c7bb28646288412d71ad21a2f5a0e6432681a5966572cf2be095b19de30fcc08a17119588e38a169d7ce6901cebc5feb7ca479d34136062ea2a6280
   languageName: node
   linkType: hard
 
-"@vechain/sdk-errors@npm:2.0.6, @vechain/sdk-errors@npm:^2.0.0":
-  version: 2.0.6
-  resolution: "@vechain/sdk-errors@npm:2.0.6"
-  checksum: 10c0/a1f2f7e4b2c369833ba3bf5de99c9268aa5f3cbd460568e7f29b1f711df8489ce020da4befc4f7c33f2c3fba70f9fb5f801ec09a72880eee4b58de49f8d65fca
-  languageName: node
-  linkType: hard
-
-"@vechain/sdk-errors@npm:2.0.7":
-  version: 2.0.7
-  resolution: "@vechain/sdk-errors@npm:2.0.7"
-  checksum: 10c0/9408bf926cd5662b6f5c96bd309e24f8b18b3dae0dc094621431aa8b607a90c325c3b5c14c609df665556432f43da1be81ba14fa0b6fa2d166c61b31eef53e2b
-  languageName: node
-  linkType: hard
-
-"@vechain/sdk-logging@npm:2.0.6":
-  version: 2.0.6
-  resolution: "@vechain/sdk-logging@npm:2.0.6"
-  dependencies:
-    "@vechain/sdk-errors": "npm:2.0.6"
-  checksum: 10c0/eade5a6fdb0098039daf91c246c3ed982031a5753050c4326800f670a413cbde6f718948870314579c1143fef3e24b1bd10413c73542dee5247ee3f55bef6d17
-  languageName: node
-  linkType: hard
-
-"@vechain/sdk-logging@npm:2.0.7":
-  version: 2.0.7
-  resolution: "@vechain/sdk-logging@npm:2.0.7"
-  dependencies:
-    "@vechain/sdk-errors": "npm:2.0.7"
-  checksum: 10c0/0b1c589f8a833ea4e17f0d176273a9508d6314f0ed7cf97a531c83df827d3540d50f54511cdd2f7238a73b6e1cd6617b47ed823117bce76784cad842e0b89712
-  languageName: node
-  linkType: hard
-
-"@vechain/sdk-network@npm:2.0.7":
-  version: 2.0.7
-  resolution: "@vechain/sdk-network@npm:2.0.7"
+"@vechain/sdk-network@npm:2.1.0, @vechain/sdk-network@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@vechain/sdk-network@npm:2.1.0"
   dependencies:
     "@noble/curves": "npm:^1.6.0"
-    "@vechain/sdk-core": "npm:2.0.7"
-    "@vechain/sdk-errors": "npm:2.0.7"
-    "@vechain/sdk-logging": "npm:2.0.7"
+    "@vechain/sdk-core": "npm:2.1.0"
+    "@vechain/sdk-errors": "npm:2.1.0"
+    "@vechain/sdk-logging": "npm:2.1.0"
     abitype: "npm:1.0.8"
     ethers: "npm:^6.14.0"
     viem: "npm:^2.21.54"
-  checksum: 10c0/dbf67ec161bdb200a807f308945a811c6ee12d120bf18da9b685796e222ef3985dc5bebf2639d0c0f33bea3b8b50827e0ad9690ba348bd2fde1e9aeb9a3a616e
-  languageName: node
-  linkType: hard
-
-"@vechain/sdk-network@npm:^2.0.0":
-  version: 2.0.6
-  resolution: "@vechain/sdk-network@npm:2.0.6"
-  dependencies:
-    "@noble/curves": "npm:^1.6.0"
-    "@vechain/sdk-core": "npm:2.0.6"
-    "@vechain/sdk-errors": "npm:2.0.6"
-    "@vechain/sdk-logging": "npm:2.0.6"
-    abitype: "npm:1.0.8"
-    ethers: "npm:^6.14.0"
-    viem: "npm:^2.21.54"
-  checksum: 10c0/9dbe4cf2e7f5892759806ed005c2936f637ecdae18ce9284379a4f6a8b5bf2a725e4989206f75517e90e92ca8b3f493dd70e44e8c3dadf99e78922d803c3915a
+  checksum: 10c0/9afc8baa2cd745cac5e66765908ffc6d978a219b8359e660416feef61b32f89cd6520c9df68c57e049496e20f29d529c48bd0204461a45411a155d9968ccfba1
   languageName: node
   linkType: hard
 
@@ -7864,7 +7812,7 @@ __metadata:
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
     "@vechain/contract-getters": "npm:1.3.0"
-    "@vechain/dapp-kit-react": "npm:2.3.2"
+    "@vechain/dapp-kit-react": "npm:2.3.3"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vechain-contract-types": "npm:1.6.0-rc"
     "@wagmi/core": "npm:^2.17.2"
@@ -7898,7 +7846,7 @@ __metadata:
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
     "@tanstack/react-query": ^5.64.2
-    "@vechain/dapp-kit-react": 2.3.2
+    "@vechain/dapp-kit-react": 2.3.3
     framer-motion: ^11.0.0
     react: ^18.0.0
     react-dom: ^18.0.0
@@ -11164,8 +11112,8 @@ __metadata:
     "@types/react-dom": "npm:^18"
     "@vechain/contract-getters": "npm:^1.3.0"
     "@vechain/picasso": "npm:^2.1.1"
-    "@vechain/sdk-core": "npm:2.0.7"
-    "@vechain/sdk-network": "npm:2.0.7"
+    "@vechain/sdk-core": "npm:2.1.0"
+    "@vechain/sdk-network": "npm:2.1.0"
     eslint: "npm:^9.12.0"
     eslint-config-next: "npm:14.1.4"
     i18next: "npm:^23.16.8"
@@ -20041,8 +19989,8 @@ __metadata:
   dependencies:
     "@changesets/cli": "npm:^2.27.1"
     "@commitlint/config-conventional": "npm:^18.0.0"
-    "@vechain/sdk-core": "npm:2.0.7"
-    "@vechain/sdk-network": "npm:2.0.7"
+    "@vechain/sdk-core": "npm:2.1.0"
+    "@vechain/sdk-network": "npm:2.1.0"
     commitlint: "npm:^18.0.0"
     eslint: "npm:^9.12.0"
     husky: "npm:^8.0.0"
