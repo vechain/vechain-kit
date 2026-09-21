@@ -1,14 +1,8 @@
 import { useMemo } from 'react';
-import { useRoundXApps } from './useRoundXApps';
+import { useRoundXAppsWithMetadata, XApp } from './useRoundXApps';
 import { useXAppsShares } from './useXAppShares';
 
-export type XApp = {
-    id: string;
-    teamWalletAddress: string;
-    name: string;
-    metadataURI: string;
-    createdAtTimestamp: string;
-};
+export type { XApp };
 
 export type MostVotedAppsInRoundReturnType = {
     percentage: number;
@@ -19,13 +13,17 @@ export type MostVotedAppsInRoundReturnType = {
 /**
  * Get the most voted apps in a round
  *
+ * App names are resolved from each app's IPFS metadata document, falling back
+ * to the immutable on-chain name, so a rebranded app shows its current name.
+ * The raw on-chain name stays available on `app.onchainName`.
+ *
  * @param roundId the id of the round to get the most voted apps
  * @returns a sorted array of the most voted apps in the round
  */
 export const useMostVotedAppsInRound = (
     roundId?: string,
 ): { data: MostVotedAppsInRoundReturnType[]; isLoading: boolean } => {
-    const { data: apps } = useRoundXApps(roundId);
+    const { data: apps } = useRoundXAppsWithMetadata(roundId);
 
     // get shares of apps
     const xAppsShares = useXAppsShares(
@@ -36,13 +34,19 @@ export const useMostVotedAppsInRound = (
     const mostVotedApps = useMemo(
         () =>
             xAppsShares.data
-                ?.map((appShares) => ({
-                    percentage: appShares.share + appShares.unallocatedShare,
-                    id: apps?.find((xa) => xa.id === appShares.app)?.id ?? '',
-                    app:
-                        apps?.find((xa) => xa.id === appShares.app) ??
-                        ({} as XApp),
-                }))
+                ?.flatMap((appShares) => {
+                    const app = apps?.find((xa) => xa.id === appShares.app);
+                    if (!app) return [];
+
+                    return [
+                        {
+                            percentage:
+                                appShares.share + appShares.unallocatedShare,
+                            id: app.id,
+                            app,
+                        },
+                    ];
+                })
                 .sort((a, b) => Number(b.percentage) - Number(a.percentage)) ??
             [],
         [xAppsShares.data, apps],

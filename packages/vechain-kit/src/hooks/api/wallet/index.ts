@@ -24,3 +24,4 @@ export * from './useSwitchWallet';
 export * from './useWalletStorage';
 export * from './useXAppMetadata';
 export * from './useXAppShares';
+export * from './useXAppsMetadata';
