@@ -23,12 +23,17 @@ export const AppComponent = ({
         appMetadata?.logo,
     );
 
+    // xApp.name is already resolved from metadata with an on-chain fallback, so
+    // it keeps the card readable when this card's own fetch is still in flight
+    // or failed.
+    const name = appMetadata?.name?.trim() || xApp.name || '';
+
     const handleAppClick = () => {
-        if (appMetadata?.name) {
+        if (name) {
             setCurrentContent({
                 type: 'app-overview',
                 props: {
-                    name: appMetadata.name,
+                    name,
                     image: logo?.image ?? '',
                     url: appMetadata?.external_url ?? '',
                     description: appMetadata?.description ?? '',
@@ -47,7 +52,7 @@ export const AppComponent = ({
             height="100%"
         >
             <SharedAppCard
-                name={appMetadata?.name ?? ''}
+                name={name}
                 imageUrl={logo?.image ?? ''}
                 linkUrl={appMetadata?.external_url ?? ''}
                 category="vebetter"

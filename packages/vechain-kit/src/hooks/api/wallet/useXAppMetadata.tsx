@@ -65,12 +65,26 @@ export const getXAppMetadata = async (
 
 const abi = X2EarnApps__factory.abi;
 
+/**
+ * Query key for the resolved IPFS metadata of a single xApp.
+ *
+ * Shared with {@link useXAppsMetadata} so that the round/allocation-voting list
+ * and the ecosystem cards read and write the very same cache entry instead of
+ * fetching the same document from IPFS twice.
+ *
+ * @param xAppId - The id of the xApp
+ */
+export const getXAppMetadataQueryKey = (xAppId: string) => [
+    'xAppMetaData',
+    xAppId,
+];
+
 export const useXAppMetadata = (xAppId: string) => {
     const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
-        queryKey: ['xAppMetaData', xAppId],
+        queryKey: getXAppMetadataQueryKey(xAppId),
         queryFn: async () => {
             const address = getConfig(network.type).x2EarnAppsContractAddress;
             const contract = thor.contracts.load(address, abi);
@@ -91,5 +105,9 @@ export const useXAppMetadata = (xAppId: string) => {
             return metadata;
         },
         enabled: !!xAppId,
+        // The metadata document is content addressed, so it never goes stale.
+        // Infinity also keeps the entry shared with useXAppsMetadata from being
+        // refetched the moment a card mounts on top of an already loaded list.
+        staleTime: Infinity,
     });
 };

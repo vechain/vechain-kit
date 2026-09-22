@@ -166,11 +166,16 @@ export const ExploreEcosystemContent = ({
     // Only show VBD apps if we're on mainnet
     const isMainnet = network.type === 'main';
 
-    // Filter VeBetterDAO apps based on search query
+    // Filter VeBetterDAO apps based on search query. A rebranded app is
+    // searchable under both its metadata name and its on-chain name.
     const filteredVbdApps = isMainnet
-        ? vbdApps.filter((dapp) =>
-              dapp.app.name.toLowerCase().includes(searchQuery.toLowerCase()),
-          )
+        ? vbdApps.filter((dapp) => {
+              const query = searchQuery.toLowerCase();
+              return (
+                  (dapp.app?.name ?? '').toLowerCase().includes(query) ||
+                  (dapp.app?.onchainName ?? '').toLowerCase().includes(query)
+              );
+          })
         : [];
 
     // Filter default apps based on search query
