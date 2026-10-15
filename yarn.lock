@@ -19140,6 +19140,7 @@ __metadata:
     "@playwright/test": "npm:1.63.0"
     "@vechain/sdk-core": "npm:2.1.0"
     "@vechain/sdk-network": "npm:2.1.0"
+    "@vechain/vechain-contract-types": "npm:1.6.0-rc"
     viem: "npm:^2.29.3"
   languageName: unknown
   linkType: soft

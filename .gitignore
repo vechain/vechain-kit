@@ -60,3 +60,6 @@ progress.txt
 # Playwright
 tests/e2e/test-results
 tests/e2e/playwright-report
+
+# Privy session saved by the testnet setup
+tests/e2e/.auth
