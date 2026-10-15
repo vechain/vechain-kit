@@ -782,10 +782,13 @@ export const VeChainKitProvider = (
                                 loginMessage: privy?.appearance.loginMessage,
                                 logo: privy?.appearance.logo,
                             },
+                            // Privy v3 ignores a top-level createOnLogin.
                             embeddedWallets: {
-                                createOnLogin:
-                                    privy?.embeddedWallets?.createOnLogin ??
-                                    'all-users',
+                                ethereum: {
+                                    createOnLogin:
+                                        privy?.embeddedWallets?.createOnLogin ??
+                                        'all-users',
+                                },
                             },
                             passkeys: {
                                 shouldUnlinkOnUnenrollMfa: false,

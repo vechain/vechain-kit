@@ -125,11 +125,11 @@ describe('VeChainKitProvider -> PrivyProvider', () => {
     it('places createOnLogin where the installed Privy version reads it', () => {
         mount({ privy });
         expect(lastPrivy().config.embeddedWallets).toEqual({
-            createOnLogin: 'users-without-wallets',
+            ethereum: { createOnLogin: 'users-without-wallets' },
         });
         mount({ privy: { ...privy, embeddedWallets: undefined } });
         expect(lastPrivy().config.embeddedWallets).toEqual({
-            createOnLogin: 'all-users',
+            ethereum: { createOnLogin: 'all-users' },
         });
     });
 
@@ -145,7 +145,7 @@ describe('VeChainKitProvider -> PrivyProvider', () => {
         expect(privyConfig.appearance.theme).toBe('light');
         expect(privyConfig.appearance.accentColor).toMatch(/^#[0-9a-fA-F]{6}$/);
         expect(privyConfig.embeddedWallets).toEqual({
-            createOnLogin: 'all-users',
+            ethereum: { createOnLogin: 'all-users' },
         });
     });
 });

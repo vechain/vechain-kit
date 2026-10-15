@@ -3,6 +3,7 @@
         "module": "ESNext",
         "moduleResolution": "node",
         "target": "es2021",
+        "lib": ["es2022", "dom", "dom.iterable"],
         "experimentalDecorators": true,
         "composite": false,
         "declaration": true,
