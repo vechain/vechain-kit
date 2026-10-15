@@ -3,12 +3,18 @@ import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Packages whose module-level state (stores, contexts) must be shared with the
-// kit. Two copies build fine but crash on load: the "valtio 1 vs 2" incident.
-const SHARED: Array<{ pkg: string; consumers: string[] }> = [
+// Packages whose module-level state (stores, contexts) must be shared between
+// the listed consumers; the kit joins only where it imports the package itself.
+// Two copies build fine but crash on load: the "valtio 1 vs 2" incident.
+const SHARED: Array<{
+    pkg: string;
+    consumers: string[];
+    kitImports?: boolean;
+}> = [
     {
         pkg: 'valtio',
         consumers: ['@vechain/dapp-kit', '@vechain/dapp-kit-react'],
+        kitImports: false,
     },
     {
         pkg: 'react',
@@ -44,18 +50,28 @@ const version = (dir: string) =>
 
 describe('dependency tree', () => {
     it.each(SHARED)(
-        'resolves a single copy of $pkg for the kit and $consumers',
-        ({ pkg, consumers }) => {
-            const kitCopy = findPackageDir(kitDir, pkg);
-            expect(kitCopy).not.toBeNull();
-            for (const consumer of consumers) {
+        'resolves a single copy of $pkg across $consumers',
+        ({ pkg, consumers, kitImports = true }) => {
+            const copies = consumers.map((consumer) => {
                 const consumerDir = findPackageDir(kitDir, consumer);
                 expect(consumerDir).not.toBeNull();
-                const copy = findPackageDir(consumerDir as string, pkg);
+                return {
+                    consumer,
+                    copy: findPackageDir(consumerDir as string, pkg),
+                };
+            });
+            if (kitImports)
+                copies.push({
+                    consumer: 'vechain-kit',
+                    copy: findPackageDir(kitDir, pkg),
+                });
+            const reference = copies[0].copy;
+            expect(reference).not.toBeNull();
+            for (const { consumer, copy } of copies) {
                 expect({ consumer, pkg, copy }).toEqual({
                     consumer,
                     pkg,
-                    copy: kitCopy,
+                    copy: reference,
                 });
             }
         },
