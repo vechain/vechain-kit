@@ -782,10 +782,14 @@ export const VeChainKitProvider = (
                                 loginMessage: privy?.appearance.loginMessage,
                                 logo: privy?.appearance.logo,
                             },
+                            // Privy v3 nests createOnLogin per chain; the kit
+                            // only uses EVM embedded wallets.
                             embeddedWallets: {
-                                createOnLogin:
-                                    privy?.embeddedWallets?.createOnLogin ??
-                                    'all-users',
+                                ethereum: {
+                                    createOnLogin:
+                                        privy?.embeddedWallets?.createOnLogin ??
+                                        'all-users',
+                                },
                             },
                             passkeys: {
                                 shouldUnlinkOnUnenrollMfa: false,
