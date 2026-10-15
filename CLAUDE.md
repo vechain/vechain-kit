@@ -172,3 +172,13 @@ const { sendTransaction } = useBuildTransaction({
 if (!isAddress(recipient)) throw new Error('Invalid address');
 if (BigInt(amount) <= 0n) throw new Error('Amount must be positive');
 ```
+
+## Commits & PRs
+
+- Conventional commits, enforced by commitlint.
+- **Prose bloat is a merge blocker.** [.github/workflows/pr-bloat.yaml](.github/workflows/pr-bloat.yaml) fails a PR on a description over 240 words (or under 10), a tool-attribution trailer, or a comment block that outweighs the code it documents (>1:1 against attached added-code lines; 10 lines absolute; a top-of-file header measures against the whole file). Comment density and long Markdown paragraphs are advisory; Markdown never blocks. `yarn check:pr-bloat` runs it locally. Bypass is the `verbose-ok` label, which anyone including the author may apply. Thresholds are env-overridable in [scripts/check-pr-bloat.mjs](scripts/check-pr-bloat.mjs).
+- **Write reviewer-facing prose at final length — don't draft long and trim.** The budget is the target, not a limit to approach.
+  - **PR descriptions:** what changed and why, in two or three sentences. Skip `## Summary` / `## Test plan` scaffolding unless there is genuinely something new to test. No tool-attribution trailers.
+  - **Comments:** default to none. Add one only when the WHY is non-obvious (hidden constraint, invariant, workaround), and keep it to one short line. Never explain WHAT the code does. A comment must not outweigh the code it documents.
+  - Don't restate what the code does, what a technical term already implies, or what a linked doc already says. Don't explain what something does _not_ do.
+  - **But keep visual/semantic bridges.** Mapping something observable to what it means is real information, not padding.
