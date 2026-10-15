@@ -187,21 +187,21 @@ Kept out of this PR so it changes no runtime behaviour.
 
 The maintainers' pre-release checklist, and where each item stands.
 
-| Item                                           | Status                                                                     | Where                                                   |
-| ---------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------- |
-| VeWorld login, logout                          | Automated                                                                  | `tests/e2e/tests/connect.spec.ts`                       |
-| VeWorld transactions (toast, modal, rejection) | Automated, confirmed on chain                                              | `tests/e2e/tests/transactions.spec.ts`                  |
-| Sign message, sign typed data (VeWorld)        | Automated                                                                  | `tests/e2e/tests/signing.spec.ts`                       |
-| Social login, logout                           | Manual (tier 2)                                                            | Needs a Privy test app and test-account OTP as secrets. |
-| Linking wallets                                | Manual (tier 2)                                                            | Same.                                                   |
-| Social (smart-account) transactions            | Kit path automated in unit tests; end to end manual (tier 2)               | Needs testnet (factory contract) and a fee sponsor.     |
-| Domain names                                   | Manual (tier 2)                                                            | Needs testnet contracts and a funded account.           |
-| Mnemonic backup                                | Manual (tier 2)                                                            | Privy's export modal; can be driven to the modal.       |
-| Hooks in the playground                        | Chain hooks automated against solo and the fake node; indexer hooks manual | Testnet-backed nightly is tier 2.                       |
+| Item                                           | Status                                                                     | Where                                                                                                       |
+| ---------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| VeWorld login, logout                          | Automated                                                                  | `tests/e2e/tests/connect.spec.ts`                                                                           |
+| VeWorld transactions (toast, modal, rejection) | Automated, confirmed on chain                                              | `tests/e2e/tests/transactions.spec.ts`                                                                      |
+| Sign message, sign typed data (VeWorld)        | Automated                                                                  | `tests/e2e/tests/signing.spec.ts`                                                                           |
+| Social login, logout                           | Manual (tier 2)                                                            | Needs a Privy test app and test-account OTP as secrets.                                                     |
+| Linking wallets                                | Out of scope for now                                                       | Unclear which flow this means; revisit with the maintainers.                                                |
+| Social (smart-account) transactions            | Kit path automated in unit tests; end to end manual (tier 2)               | Needs testnet (factory contract) and a fee sponsor.                                                         |
+| Domain names                                   | Manual (tier 2)                                                            | Needs testnet contracts and a funded account. Each run claims a fresh testnet subdomain, which is accepted. |
+| Mnemonic backup                                | Manual (tier 2)                                                            | Privy's export modal; can be driven to the modal.                                                           |
+| Hooks in the playground                        | Chain hooks automated against solo and the fake node; indexer hooks manual | Testnet-backed nightly is tier 2.                                                                           |
 
 ## Gaps and follow-ups, in priority order
 
-1. **Tier-2 E2E against testnet** (needs maintainers: Privy test app id and client id, test-account OTP, a funded testnet key, a sponsor URL, all as repo secrets): social login/logout/link through Privy test accounts, smart-account transaction, domain claim, backup entry point. Same harness, second Playwright project, non-required until stable for a few weeks.
+1. **Tier-2 E2E against testnet** (needs maintainers: Privy test app id and client id, test-account email and code, a funded testnet key and a testnet sponsor URL, as secrets in a GitHub environment): social login and logout through a Privy test account, smart-account transaction, domain claim, backup entry point. Same harness, second Playwright project, non-required until stable for a few weeks. Fork PRs get no secrets, so the job skips there; external contributions are rare and need a maintainer's review either way.
 2. **Privy v3 real-mount check.** Add a test file that mounts the real `PrivyProvider` with `fetch` stubbed, to catch an init-time crash of a new Privy major. Needs a decision on how much of Privy's bootstrap to stub.
 3. **Smart-account contract fixture.** Publish or vendor the `SocialLoginSmartAccountFactory` bytecode so the authorization typed data can be verified by the contract on thor-solo, not only recovered locally, and so smart-account E2E can run on solo instead of testnet.
 4. **Component tests for the modals.** ConnectModal login-method grid (ordering, `isPrimary`, Privy-less fallbacks) and AccountModal send flow with the fake node. The theme/colour-mode fixes were the largest group of UI regressions.
