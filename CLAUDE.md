@@ -45,7 +45,7 @@ yarn purge                # Clean + remove node_modules
 
 ### Testing
 
-E2E tests exist in `tests/e2e/` using Playwright but are currently disabled. No need to add new tests or run existing ones.
+`yarn test` runs the Vitest suite (kit unit/hook/provider tests, lambda, CI gate script); `yarn test:coverage` adds coverage; `yarn test:e2e` runs the Playwright VeWorld suite (needs thor-solo via `thor-solo/`, `yarn kit:build` and a solo build of `next-template`). Build the kit first (`yarn kit:build`) to include the dist smoke test. Strategy, levels and follow-ups: [docs/testing.md](docs/testing.md). Add or update tests next to the code you change (`*.test.ts` for pure code, `*.test.tsx` when React or the DOM is involved); mock Privy and dapp-kit at the module boundary with the fakes in `packages/vechain-kit/test/`, never hit the network.
 
 ### Translations
 
