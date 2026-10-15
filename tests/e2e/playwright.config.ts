@@ -11,7 +11,11 @@ export default defineConfig({
     timeout: 90_000,
     expect: { timeout: 30_000 },
     reporter: process.env.CI
-        ? [['list'], ['html', { open: 'never' }]]
+        ? [
+              ['list'],
+              ['html', { open: 'never' }],
+              ['json', { outputFile: 'test-results/results.json' }],
+          ]
         : [['list']],
     use: {
         baseURL,

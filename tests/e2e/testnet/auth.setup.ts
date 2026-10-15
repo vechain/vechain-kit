@@ -14,7 +14,7 @@ setup('log in with the Privy test account', async ({ page }) => {
     await expect(page.getByTestId('network')).toContainText('test');
     const { smartAccount } = await accounts(page);
     setup.info().annotations.push({
-        type: 'smart account (fund with testnet VET)',
+        type: 'smart account',
         description: smartAccount,
     });
     await page

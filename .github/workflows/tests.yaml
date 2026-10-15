@@ -116,6 +116,7 @@ jobs:
         environment: e2e-test
         permissions:
             contents: read
+            pull-requests: write # updates the results comment on the PR
         steps:
             - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
               with:
@@ -173,6 +174,25 @@ jobs:
                   E2E_PRIVY_TEST_EMAIL: ${{ secrets.E2E_PRIVY_TEST_EMAIL }}
                   E2E_PRIVY_TEST_CODE: ${{ secrets.E2E_PRIVY_TEST_CODE }}
               run: yarn test:e2e --project testnet
+
+            - name: Comment results
+              if: always() && steps.creds.outputs.run == 'true'
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  PR_NUMBER: ${{ github.event.pull_request.number }}
+                  HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+              run: |
+                  RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+                      node scripts/e2e-testnet-comment.mjs tests/e2e/test-results/results.json > "$RUNNER_TEMP/comment.md"
+                  cat "$RUNNER_TEMP/comment.md" >> "$GITHUB_STEP_SUMMARY"
+                  [ -n "$PR_NUMBER" ] || exit 0
+                  id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --paginate \
+                      --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- e2e-testnet -->"))) | .id' | head -n 1)
+                  if [ -n "$id" ]; then
+                      gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F body=@"$RUNNER_TEMP/comment.md" > /dev/null
+                  else
+                      gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -F body=@"$RUNNER_TEMP/comment.md" > /dev/null
+                  fi
 
             - name: Upload Playwright report
               if: failure() && steps.creds.outputs.run == 'true'

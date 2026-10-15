@@ -149,7 +149,7 @@ Workflow `.github/workflows/tests.yaml`, jobs **`Tests`** and **`E2E`** (the two
     actions pinned to commit SHAs, no `${{ }}` inside `run:`. Passes
     `zizmor --persona auditor --min-severity medium --min-confidence high`.
 -   `E2E` repeats the gate, starts thor-solo with Docker Compose (11 s locally), builds the kit and `next-template` for solo (27 s), installs Chromium and runs Playwright (25 s for 9 tests). It uploads the Playwright report on failure. It depends on the `ghcr.io/vechain/thor` image pull and on one GET to Privy's app config; no secrets.
--   `E2E (testnet)` runs in the `e2e-test` environment and skips with a summary line when its secrets are absent (fork and Dependabot PRs). It is not a required check until it has been stable for a few weeks. Traces are off in that project, and screenshots are off during login, so the report never contains the test code or session tokens.
+-   `E2E (testnet)` runs in the `e2e-test` environment and skips with a summary line when its secrets are absent (fork and Dependabot PRs). It updates one PR comment with the pass/fail counts, the test smart account's VET and VTHO balances and a link to the run. It is not a required check until it has been stable for a few weeks. Traces are off in that project, and screenshots are off during login, so the report never contains the test code or session tokens.
 -   Budget: locally the unit suite runs in about 6 s and the kit build in 14 s; `Tests` is dominated by `yarn install` and should land around 3–5 minutes on a cold cache, `E2E` around 5–7 minutes. Measure on the first runs and tighten this line.
 
 ## Handling flaky external dependencies
