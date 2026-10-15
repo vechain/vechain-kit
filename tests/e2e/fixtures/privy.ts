@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { Address } from '@vechain/sdk-core';
 import { ThorClient } from '@vechain/sdk-network';
 import {
@@ -35,17 +35,34 @@ export const loginWithEmail = async (
         .first()
         .click();
     await page.getByRole('button', { name: 'More options' }).click();
-    await page.getByTestId('email-login-input').fill(email);
+    await setInputValue(page.getByTestId('email-login-input'), email);
     await page.getByTestId('email-login-submit').click();
-    await page
-        .getByTestId('email-code-input')
-        .getByRole('textbox')
-        .first()
-        .click();
-    await page.keyboard.type(code);
-    await page.getByTestId('accept-tnc-button').click();
-    await expect(page.getByTestId('connection-type')).toContainText('privy');
+    // Chakra spreads a full code typed into the first field across all six.
+    await setInputValue(
+        page.getByTestId('email-code-input').getByRole('textbox').first(),
+        code,
+    );
+    try {
+        await page.getByTestId('accept-tnc-button').click();
+        await expect(page.getByTestId('connection-type')).toContainText(
+            'privy',
+        );
+    } catch (error) {
+        // The failure snapshot and screenshot would show the code in the PIN fields.
+        await page.goto('about:blank');
+        throw error;
+    }
 };
+
+// fill() and type() put the value in report step titles; evaluate() does not.
+const setInputValue = (input: Locator, value: string) =>
+    input.evaluate((el: HTMLInputElement, v: string) => {
+        Object.getOwnPropertyDescriptor(
+            HTMLInputElement.prototype,
+            'value',
+        )!.set!.call(el, v);
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+    }, value);
 
 const addressIn = async (page: Page, testId: string) => {
     const text = await page.getByTestId(testId).textContent();
