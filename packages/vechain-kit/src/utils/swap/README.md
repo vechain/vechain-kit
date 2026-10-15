@@ -15,7 +15,7 @@ const aggregators = getSwapAggregators(networkType);
 The `getSwapAggregators` function returns an array of configured aggregators for the specified network (main, test, or solo). Currently supported aggregators:
 
 - **VeTrade.vet**: API-based aggregator that returns complex swap instructions
-- **BetterSwap.io**: API-based aggregator that selects between BetterSwap's AggregatorRouter and Smart Order Router
+- **BetterSwap.io**: On-chain aggregator that quotes and executes directly through BetterSwap's AggregatorRouter
 
 ### 2. Quote Fetching
 
@@ -109,6 +109,14 @@ Use direct contract calls to a Uniswap V2 compatible router.
 **Deadline:**
 - Set to 20 minutes from current time (Unix timestamp)
 
+### BetterSwap On-Chain
+
+BetterSwap uses the mainnet AggregatorRouter at `0x23cbbf0265f55574490ab6eb1ed8730c71e23d6c` through the Uniswap V2 compatible adapter. It reads `getAmountsOut` directly from the connected Thor client; the returned output includes router fees. The adapter applies slippage locally, builds exact-input swap clauses and exact-amount ERC20 approvals, and simulates the complete transaction with the shared token-flow checks before execution.
+
+Native VET uses `0x45429a2255e7248e57fce99e7239aed3f84b7a53` as the router's path placeholder. Explicit wrapped-VET tokens and non-mainnet networks are rejected. Price impact is not estimated by this adapter.
+
+This integration supports exact-input swaps through the on-chain AggregatorRouter. VeTrade remains available alongside BetterSwap.
+
 ### API-Based
 
 Fetches interface and parameters from an API and encodes function calls locally.
@@ -119,8 +127,6 @@ Fetches interface and parameters from an API and encodes function calls locally.
 3. Encodes function calls locally using viem's `encodeFunctionData`
 4. Filters clauses to only include those targeting supported addresses to ensure interaction is limited to whitelisted contracts
 5. Adds approve clause if swapping from ERC20 token (not VET)
-
-BetterSwap returns pre-encoded execution calldata. Its adapter rejects the full quote unless the source and target match the configured AggregatorRouter or Smart Order Router, validates the exact-input calldata and quote deadline, and rebuilds ERC20 approvals locally. The complete transaction is then simulated with the same token-flow checks as other aggregators.
 
 **Clause Structure:**
 - Each clause contains: `to`, `value`, `data` (encoded function call), `comment`
