@@ -1,0 +1,55 @@
+name: Tests
+
+# Single required check. Skips (still reporting success) only when every changed
+# file is on the ignore list in scripts/ci-test-gate.mjs; always runs on main.
+
+on:
+    pull_request:
+    push:
+        branches: [main]
+
+permissions: {}
+
+concurrency:
+    group: tests-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    tests:
+        name: Tests
+        runs-on: ubuntu-24.04
+        permissions:
+            contents: read
+        steps:
+            - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+              with:
+                  fetch-depth: 0
+                  persist-credentials: false
+
+            - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+              with:
+                  node-version-file: .nvmrc
+                  cache: yarn
+
+            - name: Decide whether the changed files can affect tests
+              id: gate
+              env:
+                  EVENT_NAME: ${{ github.event_name }}
+                  BASE_REF: ${{ github.event.pull_request.base.ref }}
+              run: node scripts/ci-test-gate.mjs
+
+            - name: Install
+              if: steps.gate.outputs.run == 'true'
+              run: yarn install --immutable
+
+            - name: Build kit
+              if: steps.gate.outputs.run == 'true'
+              run: yarn kit:build
+
+            - name: Test
+              if: steps.gate.outputs.run == 'true'
+              run: yarn test:coverage
+
+            - name: Coverage summary
+              if: always() && steps.gate.outputs.run == 'true'
+              run: node scripts/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"

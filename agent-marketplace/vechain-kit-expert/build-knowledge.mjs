@@ -123,10 +123,10 @@ const publicIndexes = packageSource.filter((file) =>
 const nonTestSource = packageSource.filter(
     (file) => /\.(?:ts|tsx|md)$/u.test(file) && !isTestFile(file),
 );
-const e2eSource = (await walk('tests/e2e')).filter(
-    (file) =>
-        /\.(?:md|ts|tsx)$/u.test(file) && !file.includes('/node_modules/'),
-);
+const e2eSource = [
+    'docs/testing.md',
+    ...packageSource.filter((file) => /\.test\.tsx?$/u.test(file)),
+];
 
 const aiSkillDirectories = [
     'skills/vechain-kit',
