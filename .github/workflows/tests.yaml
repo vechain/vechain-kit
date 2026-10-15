@@ -113,7 +113,7 @@ jobs:
     e2e-testnet:
         name: E2E (testnet)
         runs-on: ubuntu-24.04
-        environment: e2e-testnet
+        environment: e2e-test
         permissions:
             contents: read
         steps:
@@ -147,7 +147,7 @@ jobs:
                       echo "run=true" >> "$GITHUB_OUTPUT"
                   else
                       echo "run=false" >> "$GITHUB_OUTPUT"
-                      echo "Testnet E2E skipped: the e2e-testnet environment secrets are not available to this run." >> "$GITHUB_STEP_SUMMARY"
+                      echo "Testnet E2E skipped: the e2e-test environment secrets are not available to this run." >> "$GITHUB_STEP_SUMMARY"
                   fi
 
             - name: Install
