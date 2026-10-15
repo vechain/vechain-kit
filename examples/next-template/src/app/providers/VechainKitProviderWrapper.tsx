@@ -5,6 +5,7 @@ import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
+import type { VechainKitProviderProps } from '@vechain/vechain-kit';
 
 // Dynamic import is used here for several reasons:
 // 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
@@ -47,42 +48,53 @@ export function VechainKitProviderWrapper({ children }: Props) {
     const coloredLogo =
         'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png';
 
+    // Without a Privy app id the example runs in opt-out mode (VeWorld + cross-app only),
+    // which is how the E2E suite runs it against thor-solo.
+    const privy: VechainKitProviderProps['privy'] = process.env
+        .NEXT_PUBLIC_PRIVY_APP_ID
+        ? {
+              appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+              clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+              loginMethods: [
+                  'google',
+                  'apple',
+                  'twitter',
+                  'farcaster',
+                  'email',
+                  'discord',
+                  'tiktok',
+                  // 'rabby_wallet',
+                  // 'coinbase_wallet',
+                  // 'rainbow',
+                  // 'phantom',
+                  // 'metamask',
+              ],
+              appearance: {
+                  loginMessage: 'Select a login method',
+                  logo: coloredLogo,
+              },
+              embeddedWallets: {
+                  createOnLogin: 'all-users',
+              },
+          }
+        : undefined;
+
+    const networkType = process.env.NEXT_PUBLIC_NETWORK_TYPE;
+
     return (
         <VeChainKitProvider
-            privy={{
-                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: [
-                    'google',
-                    'apple',
-                    'twitter',
-                    'farcaster',
-                    'email',
-                    'discord',
-                    'tiktok',
-                    // 'rabby_wallet',
-                    // 'coinbase_wallet',
-                    // 'rainbow',
-                    // 'phantom',
-                    // 'metamask',
-                ],
-                appearance: {
-                    loginMessage: 'Select a login method',
-                    logo: coloredLogo,
-                },
-                embeddedWallets: {
-                    createOnLogin: 'all-users',
-                },
-            }}
+            privy={privy}
             dappKit={{
-                allowedWallets: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
+                allowedWallets: process.env
+                    .NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
                     ? ['veworld', 'wallet-connect']
                     : ['veworld'],
                 ...(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
                     ? {
                           walletConnectOptions: {
                               projectId:
-                                  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
+                                  process.env
+                                      .NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
                               metadata: {
                                   name: 'VeChainKit Demo App',
                                   description:
@@ -116,9 +128,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             darkMode={isDarkMode}
             onLanguageChange={handleLanguageChange}
             onCurrencyChange={handleCurrencyChange}
-            // network={{
-            //     type: process.env.NEXT_PUBLIC_NETWORK_TYPE,
-            // }}
+            network={networkType ? { type: networkType } : undefined}
             allowCustomTokens={true}
             allowCommunityTokens={true}
             transak={
@@ -180,14 +190,14 @@ export function VechainKitProviderWrapper({ children }: Props) {
                                           'Content-Type': 'application/json',
                                       },
                                       body: JSON.stringify({
-                                          environment:
-                                              process.env
-                                                  .NEXT_PUBLIC_TRANSAK_ENVIRONMENT as
+                                          environment: process.env
+                                              .NEXT_PUBLIC_TRANSAK_ENVIRONMENT as
                                               | 'staging'
                                               | 'production'
                                               | undefined,
                                           widgetParams: {
-                                              apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
+                                              apiKey: process.env
+                                                  .NEXT_PUBLIC_TRANSAK_API_KEY,
                                               referrerDomain:
                                                   typeof window !== 'undefined'
                                                       ? window.location.origin
@@ -195,7 +205,8 @@ export function VechainKitProviderWrapper({ children }: Props) {
                                               walletAddress,
                                               fiatAmount,
                                               fiatCurrency,
-                                              cryptoCurrencyCode: cryptoCurrency,
+                                              cryptoCurrencyCode:
+                                                  cryptoCurrency,
                                               network,
                                               defaultCryptoCurrency: 'VET',
                                               disableWalletAddressForm: true,
@@ -206,7 +217,8 @@ export function VechainKitProviderWrapper({ children }: Props) {
                               const json = await res.json();
                               if (!res.ok) {
                                   throw new Error(
-                                      json?.error ?? 'Failed to create Transak widget URL',
+                                      json?.error ??
+                                          'Failed to create Transak widget URL',
                                   );
                               }
                               return json.data.widgetUrl as string;

@@ -8,7 +8,8 @@
         "!examples/test-tailwind-vck",
         "packages/*",
         "lambda",
-        "cross-app-connect"
+        "cross-app-connect",
+        "tests/e2e"
     ],
     "keywords": [
         "vechain",
@@ -55,7 +56,8 @@
         "dev:next-template:build": "yarn workspace @vechain/vechain-kit build & yarn workspace next-template build",
         "dev:next-chakra-v3": "yarn workspace @vechain/vechain-kit watch & yarn workspace next-chakra-v3 dev",
         "dev:cross-app-connect": "yarn workspace @vechain/vechain-kit watch & yarn workspace cross-app-connect dev",
-        "dev:cross-app-connect:build": "yarn workspace @vechain/vechain-kit build & yarn workspace cross-app-connect build"
+        "dev:cross-app-connect:build": "yarn workspace @vechain/vechain-kit build & yarn workspace cross-app-connect build",
+        "test:e2e": "yarn workspace vechain-kit-e2e test"
     },
     "husky": {
         "hooks": {

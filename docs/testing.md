@@ -26,13 +26,14 @@ The suite is shaped around those, not around line coverage.
 
 ## Levels
 
-| Level           | Where                                    | Runs in            | What it covers                                                                                                                                                                                                                                                                                                                          |
-| --------------- | ---------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unit            | `packages/vechain-kit/src/**/*.test.ts`  | happy-dom (Vitest) | Pure functions: typed-data builders, gas math, VIP-191 assembly, delegator HTTP contract, formatting, address/hex utils, query keys, ERC-20 clause building, network config.                                                                                                                                                            |
-| Hook / provider | `packages/vechain-kit/src/**/*.test.tsx` | happy-dom          | React behaviour with Privy and dapp-kit faked at the module boundary and a fake Thor node behind `fetch`: `useBuildClauses`, `PrivyWalletProvider.sendTransaction`, `useGenericDelegator`, `useSendTransaction`, `VeChainKitProvider` config mapping, full provider mount with the real `DAppKitProvider`, wagmi and cross-app-connect. |
-| Package         | `packages/vechain-kit/test/`             | happy-dom / node   | Dependency-tree identity (one `valtio`, `react`, `react-dom`, `react-query` for the kit and the packages it composes) and a smoke test of the built bundle in `dist/` (exports present, ESM import, provider mounts).                                                                                                                   |
-| Lambda          | `lambda/tests/`                          | node               | The Privy social-identifier lambda, unchanged tests moved from Jest to Vitest.                                                                                                                                                                                                                                                          |
-| CI gate         | `scripts/ci-test-gate.test.mjs`          | node               | The change-detection script the required check relies on.                                                                                                                                                                                                                                                                               |
+| Level           | Where                                    | Runs in                                                           | What it covers                                                                                                                                                                                                                                                                                                                          |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit            | `packages/vechain-kit/src/**/*.test.ts`  | happy-dom (Vitest)                                                | Pure functions: typed-data builders, gas math, VIP-191 assembly, delegator HTTP contract, formatting, address/hex utils, query keys, ERC-20 clause building, network config.                                                                                                                                                            |
+| Hook / provider | `packages/vechain-kit/src/**/*.test.tsx` | happy-dom                                                         | React behaviour with Privy and dapp-kit faked at the module boundary and a fake Thor node behind `fetch`: `useBuildClauses`, `PrivyWalletProvider.sendTransaction`, `useGenericDelegator`, `useSendTransaction`, `VeChainKitProvider` config mapping, full provider mount with the real `DAppKitProvider`, wagmi and cross-app-connect. |
+| Package         | `packages/vechain-kit/test/`             | happy-dom / node                                                  | Dependency-tree identity (one `valtio`, `react`, `react-dom`, `react-query` for the kit and the packages it composes) and a smoke test of the built bundle in `dist/` (exports present, ESM import, provider mounts).                                                                                                                   |
+| Lambda          | `lambda/tests/`                          | node                                                              | The Privy social-identifier lambda, unchanged tests moved from Jest to Vitest.                                                                                                                                                                                                                                                          |
+| CI gate         | `scripts/ci-test-gate.test.mjs`          | node                                                              | The change-detection script the required check relies on.                                                                                                                                                                                                                                                                               |
+| E2E             | `tests/e2e/` (Playwright)                | Chromium against the built `next-template` and a Docker thor-solo | VeWorld login, logout, session reload, rejected connection, transactions with toast and modal confirmed on chain, rejected signature, message and typed-data signing. `yarn test:e2e`.                                                                                                                                                  |
 
 ### Why these fakes
 
@@ -53,8 +54,8 @@ The suite is shaped around those, not around line coverage.
     real code paths. Fee delegators (dApp-sponsored and generic) are faked per
     test as a few lines of `otherHosts` routing; they co-sign with a known key so
     the test can recover `origin` and `gasPayer` from the broadcast bytes.
--   **Nothing reaches the network.** `test/setup.ts` replaces `fetch` with a
-    404 stub before every test; a test that needs a server installs its own.
+-   **Nothing reaches the network** in the unit tier. `test/setup.ts` replaces `fetch` with a 404 stub before every test; a test that needs a server installs its own.
+-   **VeWorld in E2E** is `tests/e2e/fixtures/veworld.ts`: a `window.vechain` shim speaking dapp-kit's v2 `request` API, backed by a Node signer holding a thor-solo genesis key. Every transaction is really signed and mined on solo, and the test reads the receipt back. The maintained `@vechain/veworld-mock` only implements the v1 Connex signer, which dapp-kit 2.3 no longer uses by default. The example app runs in opt-out mode (no Privy app id) on solo; the kit still fetches VeChain's Privy app config once at load, the one live third-party call in the E2E tier (see finding 6 below).
 
 ### Deliberately not tested
 
@@ -74,13 +75,13 @@ The suite is shaped around those, not around line coverage.
 
 ## Verdict on the existing tests
 
-| Suite                                                   | Verdict                   | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ------------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tests/e2e/` (Playwright, 5 specs, all `describe.skip`) | **Deleted**               | Every spec was skipped since Oct 2025. The Privy specs log in with a shared OTP inbox (not automatable deterministically), the domain specs depend on public testnet state, and the VeWorld specs need the next-template app built against thor-solo where the smart-account factory does not exist. Keeping skipped specs implied coverage that did not exist. The page models are in git history if a browser suite is rebuilt (see follow-ups). |
-| `.github/workflows/test-e2e.yaml`                       | **Deleted**               | Ran a fully skipped suite on every PR with a hard-coded Privy app id, unpinned actions and 60 s of sleeps.                                                                                                                                                                                                                                                                                                                                         |
-| `lambda/tests/index.test.ts` (Jest)                     | **Kept, moved to Vitest** | Tests are sound (mocked axios and Privy server client). Same assertions, `jest.*` → `vi.*`, so the repo has one runner.                                                                                                                                                                                                                                                                                                                            |
-| `.github/workflows/test-lambda.yml`                     | **Deleted**               | Only ran when the test file changed, so a change to `lambda/index.ts` never ran the tests. The lambda project now runs inside the required check.                                                                                                                                                                                                                                                                                                  |
-| `CLAUDE.md` "no need to add tests"                      | **Replaced**              | Tests are expected next to the code they cover.                                                                                                                                                                                                                                                                                                                                                                                                    |
+| Suite                                                   | Verdict                   | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tests/e2e/` (Playwright, 5 specs, all `describe.skip`) | **Deleted and rebuilt**   | Every spec was skipped since Oct 2025. The Privy specs log in with a shared OTP inbox (not automatable deterministically), the domain specs depend on public testnet state, and the VeWorld specs need the next-template app built against thor-solo where the smart-account factory does not exist. Keeping skipped specs implied coverage that did not exist. Rebuilt as a VeWorld-only suite against thor-solo with a v2 wallet shim; the Privy and testnet flows are tier 2 (see follow-ups). |
+| `.github/workflows/test-e2e.yaml`                       | **Deleted**               | Ran a fully skipped suite on every PR with a hard-coded Privy app id, unpinned actions and 60 s of sleeps.                                                                                                                                                                                                                                                                                                                                                                                        |
+| `lambda/tests/index.test.ts` (Jest)                     | **Kept, moved to Vitest** | Tests are sound (mocked axios and Privy server client). Same assertions, `jest.*` → `vi.*`, so the repo has one runner.                                                                                                                                                                                                                                                                                                                                                                           |
+| `.github/workflows/test-lambda.yml`                     | **Deleted**               | Only ran when the test file changed, so a change to `lambda/index.ts` never ran the tests. The lambda project now runs inside the required check.                                                                                                                                                                                                                                                                                                                                                 |
+| `CLAUDE.md` "no need to add tests"                      | **Replaced**              | Tests are expected next to the code they cover.                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 ## Runner and configuration
 
@@ -129,8 +130,7 @@ code that has bitten users. Raise them, or add files, when tests are added.
 
 ## CI
 
-Workflow `.github/workflows/tests.yaml`, job **`Tests`** (the check to make
-required on `main`).
+Workflow `.github/workflows/tests.yaml`, jobs **`Tests`** and **`E2E`** (the two checks to make required on `main`).
 
 -   Triggers: every `pull_request`; every push to `main` (always full).
 -   One job, always reports. Skipping is decided inside the job by
@@ -147,18 +147,18 @@ required on `main`).
 -   Conventions: `permissions: {}` at the top, `contents: read` for the job,
     actions pinned to commit SHAs, no `${{ }}` inside `run:`. Passes
     `zizmor --persona auditor --min-severity medium --min-confidence high`.
--   Budget: locally the suite runs in about 6 s and the kit build in 14 s; the
-    job is dominated by `yarn install` and should land around 3–5 minutes on a
-    cold cache. Measure on the first runs and tighten this line.
+-   `E2E` repeats the gate, starts thor-solo with Docker Compose (11 s locally), builds the kit and `next-template` for solo (27 s), installs Chromium and runs Playwright (25 s for 9 tests). It uploads the Playwright report on failure. It depends on the `ghcr.io/vechain/thor` image pull and on one GET to Privy's app config; no secrets.
+-   Budget: locally the unit suite runs in about 6 s and the kit build in 14 s; `Tests` is dominated by `yarn install` and should land around 3–5 minutes on a cold cache, `E2E` around 5–7 minutes. Measure on the first runs and tighten this line.
 
 ## Handling flaky external dependencies
 
-| Dependency                          | In the required check                                                           | Elsewhere                                                                   |
-| ----------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Privy (auth API, embedded wallet)   | Module fake only.                                                               | Manual checklist on upgrade PRs; a non-required browser job is a follow-up. |
-| Public Thor nodes                   | Fake node behind `fetch`.                                                       | thor-solo via `thor-solo/` for local integration runs (follow-up job).      |
-| Fee delegators (sponsor, generic)   | Faked per test; the HTTP contract (paths, bodies, error surfacing) is asserted. | —                                                                           |
-| IPFS, indexers, price APIs, app-hub | Not exercised. `fetch` returns 404 so an accidental call fails loudly.          | —                                                                           |
+| Dependency                          | In the required check                                                                                        | Elsewhere                                                           |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| Privy (auth API, embedded wallet)   | Module fake only. In E2E one live GET of the app config at page load (blocking it hangs the kit, finding 6). | Manual checklist on upgrade PRs; tier-2 E2E needs a Privy test app. |
+| VeWorld extension                   | Not used.                                                                                                    | E2E: Node-side v2 wallet shim with a solo key.                      |
+| Public Thor nodes                   | Fake node behind `fetch`.                                                                                    | E2E: thor-solo in Docker, started per run.                          |
+| Fee delegators (sponsor, generic)   | Faked per test; the HTTP contract (paths, bodies, error surfacing) is asserted.                              | —                                                                   |
+| IPFS, indexers, price APIs, app-hub | Not exercised. `fetch` returns 404 so an accidental call fails loudly.                                       | —                                                                   |
 
 ## Bugs noticed while writing the tests (not fixed here)
 
@@ -181,31 +181,30 @@ Kept out of this PR so the before/after comparison with #663 stays clean.
 5. On `@privy-io/react-auth` 2.25.0 `embeddedWallets.createOnLogin` is already
    deprecated in favour of `embeddedWallets.ethereum.createOnLogin`; the kit
    still sets the deprecated key (#663 moves it).
+6. `connection.isLoading` waits for Privy's `ready`, so when `auth.privy.io` is unreachable every kit app, including VeWorld-only ones, stays on its loading state. Found by blocking that host in the E2E fixture.
+
+## Manual checklist coverage
+
+The maintainers' pre-release checklist, and where each item stands.
+
+| Item                                           | Status                                                                     | Where                                                   |
+| ---------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------- |
+| VeWorld login, logout                          | Automated                                                                  | `tests/e2e/tests/connect.spec.ts`                       |
+| VeWorld transactions (toast, modal, rejection) | Automated, confirmed on chain                                              | `tests/e2e/tests/transactions.spec.ts`                  |
+| Sign message, sign typed data (VeWorld)        | Automated                                                                  | `tests/e2e/tests/signing.spec.ts`                       |
+| Social login, logout                           | Manual (tier 2)                                                            | Needs a Privy test app and test-account OTP as secrets. |
+| Linking wallets                                | Manual (tier 2)                                                            | Same.                                                   |
+| Social (smart-account) transactions            | Kit path automated in unit tests; end to end manual (tier 2)               | Needs testnet (factory contract) and a fee sponsor.     |
+| Domain names                                   | Manual (tier 2)                                                            | Needs testnet contracts and a funded account.           |
+| Mnemonic backup                                | Manual (tier 2)                                                            | Privy's export modal; can be driven to the modal.       |
+| Hooks in the playground                        | Chain hooks automated against solo and the fake node; indexer hooks manual | Testnet-backed nightly is tier 2.                       |
 
 ## Gaps and follow-ups, in priority order
 
-1. **Privy v3 real-mount check.** Add a test file that mounts the real
-   `PrivyProvider` with `fetch` stubbed, to catch an init-time crash of a new
-   Privy major. Needs a decision on how much of Privy's bootstrap to stub.
-2. **thor-solo integration job (non-required).** Spin up `thor-solo/` in a
-   separate job and run the VIP-191 send path end to end with a locally
-   signing gas payer against the real node, plus `useCallClause` against the
-   built-in VTHO contract. Everything needed is in the repo; it costs a
-   Docker pull per run, which is why it is not in the required check.
-3. **Smart-account contract fixture.** Publish or vendor the
-   `SocialLoginSmartAccountFactory` bytecode so the authorization typed data
-   can be verified by the contract on thor-solo, not only recovered locally.
-4. **Component tests for the modals.** ConnectModal login-method grid
-   (ordering, `isPrimary`, Privy-less fallbacks) and AccountModal send flow
-   with the fake node. The theme/colour-mode fixes were the largest group of
-   UI regressions.
-5. **Formatting and currency.** `formatCurrencyValue` narrow symbol per
-   locale (#616), `useGetCustomTokenBalances` decimals, swap utilities.
-6. **Browser smoke of the built example (non-required, needs a decision).**
-   Build `examples/next-template` and load it headless to assert no runtime
-   error on page load; the veworld-mock packages from the deleted suite can
-   drive a VeWorld connect. Requires maintainers to accept a Playwright
-   install in CI and, for Privy flows, a dedicated Privy test app and
-   secrets.
-7. **Node 20.18 is end-of-life.** Bumping `.nvmrc` to 20.19 or 22 would
-   unblock jsdom and current Vite; it is a repo decision, not a test one.
+1. **Tier-2 E2E against testnet** (needs maintainers: Privy test app id and client id, test-account OTP, a funded testnet key, a sponsor URL, all as repo secrets): social login/logout/link through Privy test accounts, smart-account transaction, domain claim, backup entry point. Same harness, second Playwright project, non-required until stable for a few weeks.
+2. **Privy v3 real-mount check.** Add a test file that mounts the real `PrivyProvider` with `fetch` stubbed, to catch an init-time crash of a new Privy major. Needs a decision on how much of Privy's bootstrap to stub.
+3. **Smart-account contract fixture.** Publish or vendor the `SocialLoginSmartAccountFactory` bytecode so the authorization typed data can be verified by the contract on thor-solo, not only recovered locally, and so smart-account E2E can run on solo instead of testnet.
+4. **Component tests for the modals.** ConnectModal login-method grid (ordering, `isPrimary`, Privy-less fallbacks) and AccountModal send flow with the fake node. The theme/colour-mode fixes were the largest group of UI regressions.
+5. **More VeWorld E2E.** Account switching (a second solo key is in the fixture), language and currency switching, the account modal send flow.
+6. **Formatting and currency.** `formatCurrencyValue` narrow symbol per locale (#616), `useGetCustomTokenBalances` decimals, swap utilities.
+7. **Node 20.18 is end-of-life.** Bumping `.nvmrc` to 20.19 or 22 would unblock jsdom and current Vite; it is a repo decision, not a test one.
