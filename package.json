@@ -36,6 +36,7 @@
         "dev": "turbo run dev --filter='@vechain/*'",
         "gh-pages-build": "turbo run gh-pages-build",
         "lint": "turbo run lint",
+        "check:pr-bloat": "BASE_REF=origin/main HEAD_REF=WORKTREE node scripts/check-pr-bloat.mjs",
         "prepare": "husky install",
         "preview": "turbo run preview",
         "purge": "npx turbo@latest run purge && rm -rf node_modules",
