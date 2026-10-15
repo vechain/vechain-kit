@@ -202,6 +202,7 @@ Kept out of this PR so it changes no runtime behaviour.
    deprecated in favour of `embeddedWallets.ethereum.createOnLogin`; the kit
    still sets the deprecated key.
 6. `connection.isLoading` waits for Privy's `ready`, so when `auth.privy.io` is unreachable every kit app, including VeWorld-only ones, stays on its loading state. Found by blocking that host in the E2E fixture.
+7. `estimateGas` in `useGenericDelegator` calls `response.json()` without checking the status, so a delegator outage (HTML 503) surfaces as "no gas tokens have sufficient balance or are enabled in Gas Token Preferences". Seen on testnet on 2026-10-15.
 
 ## Manual checklist coverage
 

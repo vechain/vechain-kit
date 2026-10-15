@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import {
     MISSING_CREDENTIALS,
+    TESTNET_GENERIC_DELEGATOR_URL,
     accounts,
     approvePrivySignature,
     expectSmartAccountTx,
@@ -20,6 +21,12 @@ test('a smart-account transaction is signed in Privy and confirmed on testnet', 
         await vetBalance(addresses.smartAccount),
         `fund ${addresses.smartAccount} at https://faucet.vecha.in`,
     ).toBeGreaterThan(0n);
+
+    // The kit reports a delegator outage as insufficient gas-token balance.
+    const delegator = await fetch(
+        `${TESTNET_GENERIC_DELEGATOR_URL}deposit/account`,
+    );
+    expect(delegator.status, 'testnet generic delegator is up').toBe(200);
 
     const txId = nextBroadcastTxId(page);
     await page.getByTestId('tx-with-toast-button').first().click();

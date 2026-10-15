@@ -19,6 +19,9 @@ export const MISSING_CREDENTIALS =
 
 export const testnet = ThorClient.at(TESTNET_NODE_URL);
 
+export const TESTNET_GENERIC_DELEGATOR_URL =
+    'https://testnet.delegator.vechain.org/api/v1/';
+
 export const privyCredentials = () => {
     const email = process.env.E2E_PRIVY_TEST_EMAIL;
     const code = process.env.E2E_PRIVY_TEST_CODE;
