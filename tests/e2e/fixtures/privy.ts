@@ -43,9 +43,11 @@ export const loginWithEmail = async (
         code,
     );
     try {
-        await page.getByTestId('accept-tnc-button').click();
+        // Bounded so a hang fails here, while the page can still be cleared.
+        await page.getByTestId('accept-tnc-button').click({ timeout: 60_000 });
         await expect(page.getByTestId('connection-type')).toContainText(
             'privy',
+            { timeout: 60_000 },
         );
     } catch (error) {
         // The failure snapshot and screenshot would show the code in the PIN fields.

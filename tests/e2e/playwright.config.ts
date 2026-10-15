@@ -30,6 +30,7 @@ export default defineConfig({
             name: 'testnet-setup',
             testDir: './testnet',
             testMatch: /\.setup\.ts$/,
+            timeout: 240_000,
             use: {
                 ...devices['Desktop Chrome'],
                 trace: 'off',
