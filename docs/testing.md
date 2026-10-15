@@ -26,18 +26,19 @@ The suite is shaped around those, not around line coverage.
 
 ## Levels
 
-| Level           | Where                                    | Runs in                                                           | What it covers                                                                                                                                                                                                                                                                                                                          |
-| --------------- | ---------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unit            | `packages/vechain-kit/src/**/*.test.ts`  | happy-dom (Vitest)                                                | Pure functions: typed-data builders, gas math, VIP-191 assembly, delegator HTTP contract, formatting, address/hex utils, query keys, ERC-20 clause building, network config.                                                                                                                                                            |
-| Hook / provider | `packages/vechain-kit/src/**/*.test.tsx` | happy-dom                                                         | React behaviour with Privy and dapp-kit faked at the module boundary and a fake Thor node behind `fetch`: `useBuildClauses`, `PrivyWalletProvider.sendTransaction`, `useGenericDelegator`, `useSendTransaction`, `VeChainKitProvider` config mapping, full provider mount with the real `DAppKitProvider`, wagmi and cross-app-connect. |
-| Package         | `packages/vechain-kit/test/`             | happy-dom / node                                                  | Dependency-tree identity (one `valtio`, `react`, `react-dom`, `react-query` for the kit and the packages it composes) and a smoke test of the built bundle in `dist/` (exports present, ESM import, provider mounts).                                                                                                                   |
-| Lambda          | `lambda/tests/`                          | node                                                              | The Privy social-identifier lambda, unchanged tests moved from Jest to Vitest.                                                                                                                                                                                                                                                          |
-| CI gate         | `scripts/ci-test-gate.test.mjs`          | node                                                              | The change-detection script the required check relies on.                                                                                                                                                                                                                                                                               |
-| E2E             | `tests/e2e/` (Playwright)                | Chromium against the built `next-template` and a Docker thor-solo | VeWorld login, logout, session reload, rejected connection, transactions with toast and modal confirmed on chain, rejected signature, message and typed-data signing. `yarn test:e2e`.                                                                                                                                                  |
+| Level           | Where                                    | Runs in                                                                  | What it covers                                                                                                                                                                                                                                                                                                                          |
+| --------------- | ---------------------------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit            | `packages/vechain-kit/src/**/*.test.ts`  | happy-dom (Vitest)                                                       | Pure functions: typed-data builders, gas math, VIP-191 assembly, delegator HTTP contract, formatting, address/hex utils, query keys, ERC-20 clause building, network config.                                                                                                                                                            |
+| Hook / provider | `packages/vechain-kit/src/**/*.test.tsx` | happy-dom                                                                | React behaviour with Privy and dapp-kit faked at the module boundary and a fake Thor node behind `fetch`: `useBuildClauses`, `PrivyWalletProvider.sendTransaction`, `useGenericDelegator`, `useSendTransaction`, `VeChainKitProvider` config mapping, full provider mount with the real `DAppKitProvider`, wagmi and cross-app-connect. |
+| Package         | `packages/vechain-kit/test/`             | happy-dom / node                                                         | Dependency-tree identity (one `valtio`, `react`, `react-dom`, `react-query` for the kit and the packages it composes) and a smoke test of the built bundle in `dist/` (exports present, ESM import, provider mounts).                                                                                                                   |
+| Lambda          | `lambda/tests/`                          | node                                                                     | The Privy social-identifier lambda, unchanged tests moved from Jest to Vitest.                                                                                                                                                                                                                                                          |
+| CI gate         | `scripts/ci-test-gate.test.mjs`          | node                                                                     | The change-detection script the required check relies on.                                                                                                                                                                                                                                                                               |
+| E2E             | `tests/e2e/` (Playwright)                | Chromium against the built `next-template` and a Docker thor-solo        | VeWorld login, logout, session reload, rejected connection, transactions with toast and modal confirmed on chain, rejected signature, message and typed-data signing. `yarn test:e2e --project solo`.                                                                                                                                   |
+| E2E testnet     | `tests/e2e/testnet/` (Playwright)        | Chromium against `next-template` built for testnet with a Privy test app | Privy email login and logout, session restore, smart-account transaction through the generic delegator, `.veworld.vet` claim, Backup up to Privy's export modal. Receipts are read back from testnet. `yarn test:e2e --project testnet`, see [Testnet E2E](#testnet-e2e).                                                               |
 
 ### Why these fakes
 
--   **Privy** is never real in tests. `test/mocks/privyReactAuth.tsx` exports
+-   **Privy** is never real below the testnet E2E project. `test/mocks/privyReactAuth.tsx` exports
     exactly the surface the kit imports (`PrivyProvider`, `usePrivy`,
     `useLoginWithEmail`, …). Tests assert what the kit hands to Privy (typed
     data, `uiOptions`, provider config) and what it does with the result. If a
@@ -59,9 +60,9 @@ The suite is shaped around those, not around line coverage.
 
 ### Deliberately not tested
 
--   **Privy's own behaviour** (OTP flows, OAuth popups, embedded-wallet
-    signing). It needs a live Privy app and real accounts and is Privy's
-    contract to keep, not the kit's.
+-   **Privy's OAuth providers** (Google, Apple, …) and wallet linking. OAuth
+    needs real third-party accounts; the testnet project covers the email
+    OTP path with a Privy test account instead.
 -   **Modal UI pixel/visual regressions.** The AccountModal fixes of the last
     year were visual; a screenshot suite needs a browser matrix and a review
     process the team has not set up. Component tests of modal behaviour are a
@@ -148,17 +149,36 @@ Workflow `.github/workflows/tests.yaml`, jobs **`Tests`** and **`E2E`** (the two
     actions pinned to commit SHAs, no `${{ }}` inside `run:`. Passes
     `zizmor --persona auditor --min-severity medium --min-confidence high`.
 -   `E2E` repeats the gate, starts thor-solo with Docker Compose (11 s locally), builds the kit and `next-template` for solo (27 s), installs Chromium and runs Playwright (25 s for 9 tests). It uploads the Playwright report on failure. It depends on the `ghcr.io/vechain/thor` image pull and on one GET to Privy's app config; no secrets.
+-   `E2E (testnet)` runs in the `e2e-testnet` environment and skips with a summary line when its secrets are absent (fork and Dependabot PRs). It is not a required check until it has been stable for a few weeks. Traces are off in that project, and screenshots are off during login, so the report never contains the test code or session tokens.
 -   Budget: locally the unit suite runs in about 6 s and the kit build in 14 s; `Tests` is dominated by `yarn install` and should land around 3–5 minutes on a cold cache, `E2E` around 5–7 minutes. Measure on the first runs and tighten this line.
 
 ## Handling flaky external dependencies
 
-| Dependency                          | In the required check                                                                                        | Elsewhere                                                           |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| Privy (auth API, embedded wallet)   | Module fake only. In E2E one live GET of the app config at page load (blocking it hangs the kit, finding 6). | Manual checklist on upgrade PRs; tier-2 E2E needs a Privy test app. |
-| VeWorld extension                   | Not used.                                                                                                    | E2E: Node-side v2 wallet shim with a solo key.                      |
-| Public Thor nodes                   | Fake node behind `fetch`.                                                                                    | E2E: thor-solo in Docker, started per run.                          |
-| Fee delegators (sponsor, generic)   | Faked per test; the HTTP contract (paths, bodies, error surfacing) is asserted.                              | —                                                                   |
-| IPFS, indexers, price APIs, app-hub | Not exercised. `fetch` returns 404 so an accidental call fails loudly.                                       | —                                                                   |
+| Dependency                          | In the required check                                                                                        | Elsewhere                                                                 |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| Privy (auth API, embedded wallet)   | Module fake only. In E2E one live GET of the app config at page load (blocking it hangs the kit, finding 6). | Testnet E2E with a Privy test account; a Privy outage shows as a timeout. |
+| VeWorld extension                   | Not used.                                                                                                    | E2E: Node-side v2 wallet shim with a solo key.                            |
+| Public Thor nodes                   | Fake node behind `fetch`.                                                                                    | E2E: thor-solo in Docker, started per run.                                |
+| Fee delegators (sponsor, generic)   | Faked per test; the HTTP contract (paths, bodies, error surfacing) is asserted.                              | —                                                                         |
+| IPFS, indexers, price APIs, app-hub | Not exercised. `fetch` returns 404 so an accidental call fails loudly.                                       | —                                                                         |
+
+## Testnet E2E
+
+One-time setup, by maintainers:
+
+-   **Privy app.** A separate development app (not the production one) with email login and "Enable test accounts" on (User management > Authentication > Advanced). Toggling test accounts off and on issues new credentials.
+-   **Secrets.** In the `e2e-testnet` environment: `E2E_PRIVY_APP_ID`, `E2E_PRIVY_CLIENT_ID`, `E2E_PRIVY_TEST_EMAIL`, `E2E_PRIVY_TEST_CODE`. Only the app and client ids go into the build; the email and code are read by the runner.
+-   **Funds.** The smart-account transaction pays gas in VET through the generic delegator. The setup logs the account's address (it never changes for the test user); send it testnet VET from https://faucet.vecha.in and top it up when the spec says so. Domain claims are sponsored and need nothing.
+
+Run locally with the same four variables exported:
+
+```bash
+yarn kit:build
+NEXT_PUBLIC_NETWORK_TYPE=test NEXT_PUBLIC_PRIVY_APP_ID=… NEXT_PUBLIC_PRIVY_CLIENT_ID=… yarn workspace next-template build
+yarn test:e2e --project testnet
+```
+
+The setup project logs in once and saves the session to `tests/e2e/.auth/` (gitignored); the logout spec logs in separately so it never revokes the shared session. Selectors for Privy's own modal (signature approval, key export) live in `tests/e2e/fixtures/privy.ts`. The email and OTP inputs and the profile avatar carry `data-testid`s added for these tests.
 
 ## Bugs noticed while writing the tests (not fixed here)
 
@@ -187,21 +207,21 @@ Kept out of this PR so it changes no runtime behaviour.
 
 The maintainers' pre-release checklist, and where each item stands.
 
-| Item                                           | Status                                                                     | Where                                                   |
-| ---------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------- |
-| VeWorld login, logout                          | Automated                                                                  | `tests/e2e/tests/connect.spec.ts`                       |
-| VeWorld transactions (toast, modal, rejection) | Automated, confirmed on chain                                              | `tests/e2e/tests/transactions.spec.ts`                  |
-| Sign message, sign typed data (VeWorld)        | Automated                                                                  | `tests/e2e/tests/signing.spec.ts`                       |
-| Social login, logout                           | Manual (tier 2)                                                            | Needs a Privy test app and test-account OTP as secrets. |
-| Linking wallets                                | Manual (tier 2)                                                            | Same.                                                   |
-| Social (smart-account) transactions            | Kit path automated in unit tests; end to end manual (tier 2)               | Needs testnet (factory contract) and a fee sponsor.     |
-| Domain names                                   | Manual (tier 2)                                                            | Needs testnet contracts and a funded account.           |
-| Mnemonic backup                                | Manual (tier 2)                                                            | Privy's export modal; can be driven to the modal.       |
-| Hooks in the playground                        | Chain hooks automated against solo and the fake node; indexer hooks manual | Testnet-backed nightly is tier 2.                       |
+| Item                                           | Status                                                                     | Where                                   |
+| ---------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------- |
+| VeWorld login, logout                          | Automated                                                                  | `tests/e2e/tests/connect.spec.ts`       |
+| VeWorld transactions (toast, modal, rejection) | Automated, confirmed on chain                                              | `tests/e2e/tests/transactions.spec.ts`  |
+| Sign message, sign typed data (VeWorld)        | Automated                                                                  | `tests/e2e/tests/signing.spec.ts`       |
+| Social login, logout                           | Automated (email test account, testnet)                                    | `tests/e2e/testnet/session.spec.ts`     |
+| Linking wallets                                | Manual                                                                     | Which flow it means is undecided.       |
+| Social (smart-account) transactions            | Automated, confirmed on testnet                                            | `tests/e2e/testnet/transaction.spec.ts` |
+| Domain names                                   | Automated, fresh `.veworld.vet` subdomain per run                          | `tests/e2e/testnet/domain.spec.ts`      |
+| Mnemonic backup                                | Automated up to Privy's export modal; the key is never revealed            | `tests/e2e/testnet/backup.spec.ts`      |
+| Hooks in the playground                        | Chain hooks automated against solo and the fake node; indexer hooks manual | Testnet-backed nightly is tier 2.       |
 
 ## Gaps and follow-ups, in priority order
 
-1. **Tier-2 E2E against testnet** (needs maintainers: Privy test app id and client id, test-account OTP, a funded testnet key, a sponsor URL, all as repo secrets): social login/logout/link through Privy test accounts, smart-account transaction, domain claim, backup entry point. Same harness, second Playwright project, non-required until stable for a few weeks.
+1. **Make `E2E (testnet)` required** once it has been stable for a few weeks.
 2. **Privy v3 real-mount check.** Add a test file that mounts the real `PrivyProvider` with `fetch` stubbed, to catch an init-time crash of a new Privy major. Needs a decision on how much of Privy's bootstrap to stub.
 3. **Smart-account contract fixture.** Publish or vendor the `SocialLoginSmartAccountFactory` bytecode so the authorization typed data can be verified by the contract on thor-solo, not only recovered locally, and so smart-account E2E can run on solo instead of testnet.
 4. **Component tests for the modals.** ConnectModal login-method grid (ordering, `isPrimary`, Privy-less fallbacks) and AccountModal send flow with the fake node. The theme/colour-mode fixes were the largest group of UI regressions.

@@ -571,6 +571,7 @@ export const MoreOptionsContent = ({
                                                 />
                                             </InputLeftElement>
                                             <Input
+                                                data-testid="email-login-input"
                                                 type={'email'}
                                                 placeholder={t(
                                                     'your@email.com',
@@ -623,6 +624,7 @@ export const MoreOptionsContent = ({
                                                     'sending-code'
                                                 }
                                                 onClick={submitEmail}
+                                                data-testid="email-login-submit"
                                             >
                                                 {t('Submit')}
                                             </Button>

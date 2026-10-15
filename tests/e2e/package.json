@@ -13,6 +13,7 @@
         "@playwright/test": "1.63.0",
         "@vechain/sdk-core": "2.1.0",
         "@vechain/sdk-network": "2.1.0",
+        "@vechain/vechain-contract-types": "1.6.0-rc",
         "viem": "^2.29.3"
     }
 }

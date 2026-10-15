@@ -1,9 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import { PRIVY_AUTH_FILE } from './fixtures/privy';
 
 const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
 
 export default defineConfig({
-    testDir: './tests',
     fullyParallel: false,
     workers: 1,
     retries: 0,
@@ -19,7 +19,35 @@ export default defineConfig({
         trace: 'retain-on-failure',
         screenshot: 'only-on-failure',
     },
-    projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+    projects: [
+        {
+            name: 'solo',
+            testDir: './tests',
+            use: { ...devices['Desktop Chrome'] },
+        },
+        // Traces and setup screenshots would capture the Privy test code and session tokens.
+        {
+            name: 'testnet-setup',
+            testDir: './testnet',
+            testMatch: /\.setup\.ts$/,
+            use: {
+                ...devices['Desktop Chrome'],
+                trace: 'off',
+                screenshot: 'off',
+            },
+        },
+        {
+            name: 'testnet',
+            testDir: './testnet',
+            dependencies: ['testnet-setup'],
+            timeout: 240_000,
+            use: {
+                ...devices['Desktop Chrome'],
+                storageState: PRIVY_AUTH_FILE,
+                trace: 'off',
+            },
+        },
+    ],
     webServer: {
         command: 'node serve-static.mjs ../../examples/next-template/dist 3000',
         url: baseURL,

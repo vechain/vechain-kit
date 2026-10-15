@@ -57,6 +57,7 @@ export const EmailLoginButton = () => {
                             />
                         </InputLeftElement>
                         <Input
+                            data-testid="email-login-input"
                             placeholder={t('your@email.com')}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -84,6 +85,7 @@ export const EmailLoginButton = () => {
                             borderRadius="full"
                             isLoading={emailState.status === 'sending-code'}
                             onClick={handleSendCode}
+                            data-testid="email-login-submit"
                         >
                             {t('Submit')}
                         </Button>

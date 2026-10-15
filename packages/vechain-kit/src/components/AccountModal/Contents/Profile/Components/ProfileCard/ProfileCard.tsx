@@ -83,6 +83,7 @@ export const ProfileCard = ({
                 position="relative"
                 display="inline-block"
                 cursor={setCurrentContent ? 'pointer' : 'default'}
+                data-testid="profile-avatar"
                 onClick={
                     setCurrentContent
                         ? () => {
