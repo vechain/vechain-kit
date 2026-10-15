@@ -1,48 +1,50 @@
+import { beforeEach, describe, expect, it, vi, type Mocked } from 'vitest';
 import axios from 'axios';
 import { PrivyClient, User } from '@privy-io/server-auth';
-import { getUserIdentifiers, checkPrivyDenylist, tryUserCheck, addToDenylist } from '../index';
+import {
+    getUserIdentifiers,
+    checkPrivyDenylist,
+    tryUserCheck,
+    addToDenylist,
+} from '../index';
 
-// Mock axios
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+vi.mock('axios');
+const mockedAxios = axios as Mocked<typeof axios>;
 
-// Mock Privy client
-const mockGetUserByWalletAddress = jest.fn();
-jest.mock('@privy-io/server-auth', () => ({
-    PrivyClient: jest.fn().mockImplementation(() => ({
-        getUserByWalletAddress: mockGetUserByWalletAddress
-    }))
+const { mockGetUserByWalletAddress } = vi.hoisted(() => ({
+    mockGetUserByWalletAddress: vi.fn(),
+}));
+vi.mock('@privy-io/server-auth', () => ({
+    PrivyClient: vi.fn(function () {
+        return { getUserByWalletAddress: mockGetUserByWalletAddress };
+    }),
 }));
 
-// Mock environment variables
-jest.mock('../index', () => {
-    const originalModule = jest.requireActual('../index');
-    return {
-        ...originalModule
-    };
-});
-
-const createMockUser = (email: string, linkedAccounts: any[] = []): User => ({
-    id: 'test-id',
-    createdAt: new Date(),
-    isGuest: false,
-    customMetadata: {},
-    email: {
-        address: email,
-        verifiedAt: new Date(),
-        firstVerifiedAt: new Date(),
-        latestVerifiedAt: new Date()
-    },
-    linkedAccounts
-});
+const createMockUser = (email: string, linkedAccounts: any[] = []): User =>
+    ({
+        id: 'test-id',
+        createdAt: new Date(),
+        isGuest: false,
+        customMetadata: {},
+        email: {
+            address: email,
+            verifiedAt: new Date(),
+            firstVerifiedAt: new Date(),
+            latestVerifiedAt: new Date(),
+        },
+        linkedAccounts,
+    } as User);
 
 describe('Privy User Functions', () => {
     let privy: PrivyClient;
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         mockedAxios.get.mockReset();
-        privy = new PrivyClient(process.env.PRIVY_APP_ID!, process.env.PRIVY_APP_SECRET!);
+        privy = new PrivyClient(
+            process.env.PRIVY_APP_ID!,
+            process.env.PRIVY_APP_SECRET!,
+        );
     });
 
     describe('getUserByWalletAddress', () => {
@@ -54,10 +56,12 @@ describe('Privy User Functions', () => {
 
         it('should return user data if user exists', async () => {
             const mockUser = createMockUser('mojawih502@movfull.com', [
-                { type: 'email', email: 'mojawih502@movfull.com' }
+                { type: 'email', email: 'mojawih502@movfull.com' },
             ]);
             mockGetUserByWalletAddress.mockResolvedValueOnce(mockUser);
-            const user = await privy.getUserByWalletAddress('0xeae63d5e8d9e582EB59ED3a07f295da1D4068fD4');
+            const user = await privy.getUserByWalletAddress(
+                '0xeae63d5e8d9e582EB59ED3a07f295da1D4068fD4',
+            );
             expect(user).toEqual(mockUser);
         });
     });
@@ -65,11 +69,10 @@ describe('Privy User Functions', () => {
     describe('getUserIdentifiers', () => {
         it('should extract email from user data', () => {
             const mockUser = createMockUser('mojawih502@movfull.com', [
-                { type: 'email', email: 'mojawih502@movfull.com' }
+                { type: 'email', email: 'mojawih502@movfull.com' },
             ]);
-            const identifiers = getUserIdentifiers(mockUser);
-            expect(identifiers).toEqual({
-                email: 'mojawih502@movfull.com'
+            expect(getUserIdentifiers(mockUser)).toEqual({
+                email: 'mojawih502@movfull.com',
             });
         });
 
@@ -77,13 +80,12 @@ describe('Privy User Functions', () => {
             const mockUser = createMockUser('test@example.com', [
                 { type: 'email', email: 'test@example.com' },
                 { type: 'google_oauth', email: 'google@example.com' },
-                { type: 'twitter_oauth', username: 'tempuser1234' }
+                { type: 'twitter_oauth', username: 'tempuser1234' },
             ]);
-            const identifiers = getUserIdentifiers(mockUser);
-            expect(identifiers).toEqual({
+            expect(getUserIdentifiers(mockUser)).toEqual({
                 email: 'test@example.com',
                 google: 'google@example.com',
-                twitter: 'tempuser1234'
+                twitter: 'tempuser1234',
             });
         });
     });
@@ -91,29 +93,21 @@ describe('Privy User Functions', () => {
     describe('checkPrivyDenylist', () => {
         it('should return true if email domain is in denylist', async () => {
             mockedAxios.get.mockResolvedValueOnce({
-                data: {
-                    data: [{ value: 'movfull.com' }]
-                }
+                data: { data: [{ value: 'movfull.com' }] },
             });
-            const isInDenylist = await checkPrivyDenylist('test@movfull.com');
-            expect(isInDenylist).toBe(true);
+            expect(await checkPrivyDenylist('test@movfull.com')).toBe(true);
         });
 
         it('should return false if email domain is not in denylist', async () => {
             mockedAxios.get.mockResolvedValueOnce({
-                data: {
-                    data: [],
-                    next_cursor: null
-                }
+                data: { data: [], next_cursor: null },
             });
-            const isDisposable = await checkPrivyDenylist('test@gmail.com');
-            expect(isDisposable).toBe(false);
+            expect(await checkPrivyDenylist('test@gmail.com')).toBe(false);
         });
 
         it('should handle API errors gracefully', async () => {
             mockedAxios.get.mockRejectedValueOnce(new Error('API Error'));
-            const isDisposable = await checkPrivyDenylist('test@example.com');
-            expect(isDisposable).toBe(false);
+            expect(await checkPrivyDenylist('test@example.com')).toBe(false);
         });
     });
 
@@ -121,48 +115,41 @@ describe('Privy User Functions', () => {
         beforeEach(() => {
             process.env.USERCHECK_API_KEY = 'test-key';
         });
+
         it('should return true if email is disposable', async () => {
             mockedAxios.get.mockResolvedValueOnce({
                 status: 200,
-                data: { 
-                    disposable: true
-                }
+                data: { disposable: true },
             });
-            const isDisposable = await tryUserCheck('test@tempmail.com');
-            expect(isDisposable).toBe(true);
+            expect(await tryUserCheck('test@tempmail.com')).toBe(true);
             expect(mockedAxios.get).toHaveBeenCalled();
         });
 
         it('should return false if email is not disposable', async () => {
             mockedAxios.get.mockResolvedValueOnce({
                 status: 200,
-                data: { 
-                    disposable: false
-                }
+                data: { disposable: false },
             });
-            const isDisposable = await tryUserCheck('test@gmail.com');
-            expect(isDisposable).toBe(false);
+            expect(await tryUserCheck('test@gmail.com')).toBe(false);
             expect(mockedAxios.get).toHaveBeenCalled();
         });
 
         it('should handle rate limit exceeded', async () => {
             mockedAxios.get.mockResolvedValueOnce({
                 status: 429,
-                data: {
-                    error: 'Error too many requests'
-                }
+                data: { error: 'Error too many requests' },
             });
-            const isDisposable = await tryUserCheck('test@example.com');
-            expect(isDisposable).toBe(false);
+            expect(await tryUserCheck('test@example.com')).toBe(false);
             expect(mockedAxios.get).toHaveBeenCalled();
         });
 
         it('should return false if API key is not set', async () => {
-            delete process.env.USERCHECK_API_KEY; // unset the env var
-            jest.resetModules(); // force fresh import
-            const { tryUserCheck } = await import('../index'); // import AFTER env is cleared
-            const isDisposable = await tryUserCheck('test@example.com');
-            expect(isDisposable).toBe(false);
+            delete process.env.USERCHECK_API_KEY;
+            vi.resetModules();
+            const { tryUserCheck: freshTryUserCheck } = await import(
+                '../index'
+            );
+            expect(await freshTryUserCheck('test@example.com')).toBe(false);
             expect(mockedAxios.get).not.toHaveBeenCalled();
         });
     });
@@ -171,28 +158,20 @@ describe('Privy User Functions', () => {
         it('should add email domain to denylist', async () => {
             mockedAxios.post.mockResolvedValueOnce({
                 status: 200,
-                data: {
-                    rule_type: 'emailDomain',
-                    value: 'movfull.com'
-                }
+                data: { rule_type: 'emailDomain', value: 'movfull.com' },
             });
-            const successfullyAddedDomain = await addToDenylist('test@movfull.com');
-            expect(successfullyAddedDomain).toBe(true);
+            expect(await addToDenylist('test@movfull.com')).toBe(true);
             expect(mockedAxios.post).toHaveBeenCalled();
         });
 
         it('should handle invalid domain', async () => {
             mockedAxios.post.mockRejectedValueOnce({
                 status: 400,
-                response: {
-                    data: {
-                        value: 'Invalid domain'
-                    }
-                }
+                response: { data: { value: 'Invalid domain' } },
             });
-            const successfullyAddedDomain = await addToDenylist('movfull.com'); // should fail because it is not an email address, function gets domain from email address
-            expect(successfullyAddedDomain).toBe(false);
+            // not an email address: the domain is derived from the part after '@'
+            expect(await addToDenylist('movfull.com')).toBe(false);
             expect(mockedAxios.post).toHaveBeenCalled();
         });
     });
-}); 
+});

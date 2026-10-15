@@ -57,3 +57,6 @@ packages/vechain-kit/.env
 prd.json
 progress.txt
 /tasks
+# Playwright
+tests/e2e/test-results
+tests/e2e/playwright-report
