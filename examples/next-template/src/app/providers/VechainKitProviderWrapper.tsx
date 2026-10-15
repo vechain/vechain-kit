@@ -54,7 +54,9 @@ export function VechainKitProviderWrapper({ children }: Props) {
         .NEXT_PUBLIC_PRIVY_APP_ID
         ? {
               appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-              clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+              // Optional in Privy; CI passes an empty string when the secret is unset.
+              clientId: (process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID ||
+                  undefined) as string,
               loginMethods: [
                   'google',
                   'apple',

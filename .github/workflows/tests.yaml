@@ -140,11 +140,10 @@ jobs:
               if: steps.gate.outputs.run == 'true'
               env:
                   E2E_PRIVY_APP_ID: ${{ secrets.E2E_PRIVY_APP_ID }}
-                  E2E_PRIVY_CLIENT_ID: ${{ secrets.E2E_PRIVY_CLIENT_ID }}
                   E2E_PRIVY_TEST_EMAIL: ${{ secrets.E2E_PRIVY_TEST_EMAIL }}
                   E2E_PRIVY_TEST_CODE: ${{ secrets.E2E_PRIVY_TEST_CODE }}
               run: |
-                  if [ -n "$E2E_PRIVY_APP_ID" ] && [ -n "$E2E_PRIVY_CLIENT_ID" ] && [ -n "$E2E_PRIVY_TEST_EMAIL" ] && [ -n "$E2E_PRIVY_TEST_CODE" ]; then
+                  if [ -n "$E2E_PRIVY_APP_ID" ] && [ -n "$E2E_PRIVY_TEST_EMAIL" ] && [ -n "$E2E_PRIVY_TEST_CODE" ]; then
                       echo "run=true" >> "$GITHUB_OUTPUT"
                   else
                       echo "run=false" >> "$GITHUB_OUTPUT"

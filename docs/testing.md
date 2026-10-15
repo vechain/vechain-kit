@@ -167,10 +167,10 @@ Workflow `.github/workflows/tests.yaml`, jobs **`Tests`** and **`E2E`** (the two
 One-time setup, by maintainers:
 
 -   **Privy app.** A separate development app (not the production one) with email login and "Enable test accounts" on (User management > Authentication > Advanced). Toggling test accounts off and on issues new credentials.
--   **Secrets.** In the `e2e-testnet` environment: `E2E_PRIVY_APP_ID`, `E2E_PRIVY_CLIENT_ID`, `E2E_PRIVY_TEST_EMAIL`, `E2E_PRIVY_TEST_CODE`. Only the app and client ids go into the build; the email and code are read by the runner.
+-   **Secrets.** In the `e2e-testnet` environment: `E2E_PRIVY_APP_ID`, `E2E_PRIVY_TEST_EMAIL`, `E2E_PRIVY_TEST_CODE`, and optionally `E2E_PRIVY_CLIENT_ID` (Privy falls back to the app's default client). Only the app and client ids go into the build; the email and code are read by the runner.
 -   **Funds.** The smart-account transaction pays gas in VET through the generic delegator. The setup logs the account's address (it never changes for the test user); send it testnet VET from https://faucet.vecha.in and top it up when the spec says so. Domain claims are sponsored and need nothing.
 
-Run locally with the same four variables exported:
+Run locally with the same variables exported:
 
 ```bash
 yarn kit:build
