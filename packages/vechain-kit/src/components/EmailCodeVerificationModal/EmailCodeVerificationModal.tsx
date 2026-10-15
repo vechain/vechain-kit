@@ -96,7 +96,12 @@ export const EmailCodeVerificationModal = ({
                                 },
                             )}
                         </Text>
-                        <HStack spacing={2} justify="center" mt={4}>
+                        <HStack
+                            spacing={2}
+                            justify="center"
+                            mt={4}
+                            data-testid="email-code-input"
+                        >
                             <PinInput
                                 value={code}
                                 onChange={setCode}
@@ -228,7 +233,11 @@ export const EmailCodeVerificationModal = ({
                             </PinInput>
                         </HStack>
                         {error && (
-                            <Text color="#ef4444" fontSize="xs">
+                            <Text
+                                color="#ef4444"
+                                fontSize="xs"
+                                data-testid="email-code-error"
+                            >
                                 {error}
                             </Text>
                         )}
