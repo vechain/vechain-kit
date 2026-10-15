@@ -162,7 +162,7 @@ Workflow `.github/workflows/tests.yaml`, jobs **`Tests`** and **`E2E`** (the two
 
 ## Bugs noticed while writing the tests (not fixed here)
 
-Kept out of this PR so the before/after comparison with #663 stays clean.
+Kept out of this PR so it changes no runtime behaviour.
 
 1. `VeChainKitProvider` seeds the generic delegator URL from
    `localStorage['vechain-kit:network']`, which it only writes in an effect
@@ -180,7 +180,7 @@ Kept out of this PR so the before/after comparison with #663 stays clean.
    `document.body` that is never disconnected (one per provider mount).
 5. On `@privy-io/react-auth` 2.25.0 `embeddedWallets.createOnLogin` is already
    deprecated in favour of `embeddedWallets.ethereum.createOnLogin`; the kit
-   still sets the deprecated key (#663 moves it).
+   still sets the deprecated key.
 6. `connection.isLoading` waits for Privy's `ready`, so when `auth.privy.io` is unreachable every kit app, including VeWorld-only ones, stays on its loading state. Found by blocking that host in the E2E fixture.
 
 ## Manual checklist coverage
