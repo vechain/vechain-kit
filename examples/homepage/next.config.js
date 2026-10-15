@@ -1,4 +1,14 @@
+const path = require('path');
+
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
+// @privy-io/react-auth 3.x imports packages that are not installed, from code
+// paths VeChain Kit never uses (Solana funding, Stripe onramp). Alias them to
+// stubs so the app bundles.
+const privyStubAliases = {
+    '@solana-program/system': './privy-stubs/solana-program-system.js',
+    '@stripe/stripe-js': './privy-stubs/stripe-js.js',
+};
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -23,6 +33,7 @@ const nextConfig = {
         resolveAlias: {
             // Optimize imports
             '@/*': './src/*',
+            ...privyStubAliases,
         },
     },
 
@@ -36,6 +47,10 @@ const nextConfig = {
 
     // Webpack optimizations
     webpack: (config, { buildId, dev, isServer, webpack }) => {
+        for (const [name, stub] of Object.entries(privyStubAliases)) {
+            config.resolve.alias[name] = path.resolve(__dirname, stub);
+        }
+
         // Optimize bundle splitting
         if (!dev && !isServer) {
             config.optimization.splitChunks = {
