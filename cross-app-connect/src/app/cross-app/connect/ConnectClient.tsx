@@ -17,6 +17,7 @@ import {
 import { useCrossAppClient } from '../_lib/client';
 import { lookupAppByUrl } from '../_lib/app-hub';
 import { getRecentProvider, setRecentProvider } from '../_lib/recent';
+import { stashQueryForOAuth } from '../_lib/oauthReturn';
 import { labelFromPrivyUser, setLastIdentity } from '../_lib/lastIdentity';
 import {
     getSmartAccountAddress,
@@ -66,7 +67,6 @@ export function ConnectClient() {
     const { ready, authenticated, user, getAccessToken } = usePrivy();
     const { wallets } = useWallets();
     const { logout } = useLogout();
-    const { initOAuth, loading: oauthLoading } = useLoginWithOAuth();
 
     const [request, setRequest] = useState<ConnectionRequest | null>(null);
     const [parseError, setParseError] = useState<
@@ -74,6 +74,9 @@ export function ConnectClient() {
     >(null);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
+        onError: (e) => setSubmitError(String(e)),
+    });
     const [smartAccount, setSmartAccount] = useState<SmartAccountInfo | null>(
         null,
     );
@@ -195,6 +198,14 @@ export function ConnectClient() {
         logout().catch((e) => console.error('Failed to logout:', e));
     }, [phase, logout]);
 
+    const startIntentOAuth = useCallback(() => {
+        if (!intent || !isOAuthIntent(intent)) return;
+        setSubmitError(null);
+        setRecentProvider(intent);
+        stashQueryForOAuth();
+        initOAuth({ provider: intent }).catch((e) => setSubmitError(String(e)));
+    }, [intent, initOAuth]);
+
     useEffect(() => {
         if (phase !== 'auth_pending') return;
         if (!intent || !isOAuthIntent(intent)) return;
@@ -207,9 +218,8 @@ export function ConnectClient() {
             }
             sessionStorage.setItem(OAUTH_ATTEMPTED_STORAGE_KEY, intent);
         }
-        setRecentProvider(intent);
-        initOAuth({ provider: intent }).catch((e) => setSubmitError(String(e)));
-    }, [phase, intent, oauthLoading, initOAuth]);
+        startIntentOAuth();
+    }, [phase, intent, oauthLoading, startIntentOAuth]);
 
     const initialAuthRef = useRef<boolean | undefined>(undefined);
     useEffect(() => {
@@ -250,6 +260,40 @@ export function ConnectClient() {
                     {parseError?.kind === 'invalid'
                         ? parseError.message
                         : t('connect.title.couldNotLoad')}
+                </div>
+            </>
+        );
+    }
+
+    if (phase === 'auth_pending' && submitError) {
+        return (
+            <>
+                <VechainHeader
+                    title={t('connect.title.logIn')}
+                    requesterUrl={request?.callbackUrl}
+                />
+                <div className={styles.card}>
+                    <div className={styles.cardBody}>
+                        <div className={`${styles.alert} ${styles.alertError}`}>
+                            {submitError}
+                        </div>
+                        <button
+                            type="button"
+                            className={styles.btnBrand}
+                            onClick={startIntentOAuth}
+                            disabled={oauthLoading}
+                        >
+                            {t('common.button.retry')}
+                        </button>
+                        <button
+                            type="button"
+                            className={styles.btnGhost}
+                            onClick={onReject}
+                            disabled={submitting}
+                        >
+                            {t('common.button.cancel')}
+                        </button>
+                    </div>
                 </div>
             </>
         );

@@ -5,7 +5,8 @@
             "cancel": "रद्द करें",
             "continue": "जारी रखें",
             "continueAnyway": "फिर भी जारी रखें",
-            "close": "बंद करें"
+            "close": "बंद करें",
+            "retry": "फिर से कोशिश करें"
         },
         "amount": {
             "unlimited": "असीमित"

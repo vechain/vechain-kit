@@ -13,6 +13,7 @@ import {
     type OAuthProvider,
 } from '../../components/socials';
 import { getRecentProvider, setRecentProvider } from '../_lib/recent';
+import { stashQueryForOAuth } from '../_lib/oauthReturn';
 import { PinInput } from '../connect/PinInput';
 import styles from '../connect/connect.module.css';
 
@@ -89,6 +90,7 @@ export function SignInPanel({
     const onOAuth = (provider: OAuthProvider) => {
         setError(null);
         setRecentProvider(provider);
+        stashQueryForOAuth();
         initOAuth({ provider }).catch((e) => setError(String(e)));
     };
 

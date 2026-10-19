@@ -5,7 +5,8 @@
             "cancel": "取消",
             "continue": "继续",
             "continueAnyway": "仍然继续",
-            "close": "关闭"
+            "close": "关闭",
+            "retry": "重试"
         },
         "amount": {
             "unlimited": "无限制"

@@ -5,7 +5,8 @@
             "cancel": "Hủy",
             "continue": "Tiếp tục",
             "continueAnyway": "Vẫn tiếp tục",
-            "close": "Đóng"
+            "close": "Đóng",
+            "retry": "Thử lại"
         },
         "amount": {
             "unlimited": "Không giới hạn"

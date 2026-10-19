@@ -1,6 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { PrivyProvider } from '@privy-io/react-auth';
+import {
+    getOAuthRedirectUrl,
+    restoreQueryAfterOAuth,
+} from '../cross-app/_lib/oauthReturn';
 
 const coloredLogo =
     'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png';
@@ -17,6 +22,10 @@ interface Props {
  * `cross-app/_lib/thor.ts`.
  */
 export function PrivyProviderWrapper({ children }: Props) {
+    const [customOAuthRedirectUrl] = useState(() => {
+        restoreQueryAfterOAuth();
+        return getOAuthRedirectUrl();
+    });
     const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
     if (!appId) {
         throw new Error(
@@ -29,6 +38,7 @@ export function PrivyProviderWrapper({ children }: Props) {
             appId={appId}
             clientId={process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID}
             config={{
+                customOAuthRedirectUrl,
                 loginMethodsAndOrder: {
                     primary: ['google', 'apple', 'twitter', 'email'],
                     overflow: ['discord'],

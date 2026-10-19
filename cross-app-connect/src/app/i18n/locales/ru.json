@@ -5,7 +5,8 @@
             "cancel": "Отмена",
             "continue": "Продолжить",
             "continueAnyway": "Всё равно продолжить",
-            "close": "Закрыть"
+            "close": "Закрыть",
+            "retry": "Повторить"
         },
         "amount": {
             "unlimited": "Без ограничений"
