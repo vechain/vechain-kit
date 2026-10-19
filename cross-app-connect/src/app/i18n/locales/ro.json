@@ -5,7 +5,8 @@
             "cancel": "Anulează",
             "continue": "Continuă",
             "continueAnyway": "Continuă oricum",
-            "close": "Închide"
+            "close": "Închide",
+            "retry": "Încearcă din nou"
         },
         "amount": {
             "unlimited": "Nelimitat"

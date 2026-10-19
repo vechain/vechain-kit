@@ -5,7 +5,8 @@
             "cancel": "Cancelar",
             "continue": "Continuar",
             "continueAnyway": "Continuar mesmo assim",
-            "close": "Fechar"
+            "close": "Fechar",
+            "retry": "Tentar novamente"
         },
         "amount": {
             "unlimited": "Ilimitado"

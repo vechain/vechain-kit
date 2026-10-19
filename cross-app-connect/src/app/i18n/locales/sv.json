@@ -5,7 +5,8 @@
             "cancel": "Avbryt",
             "continue": "Fortsätt",
             "continueAnyway": "Fortsätt ändå",
-            "close": "Stäng"
+            "close": "Stäng",
+            "retry": "Försök igen"
         },
         "amount": {
             "unlimited": "Obegränsat"

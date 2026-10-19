@@ -5,7 +5,8 @@
             "cancel": "キャンセル",
             "continue": "続行",
             "continueAnyway": "それでも続行",
-            "close": "閉じる"
+            "close": "閉じる",
+            "retry": "再試行"
         },
         "amount": {
             "unlimited": "無制限"

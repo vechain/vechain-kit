@@ -60,6 +60,19 @@ export default defineConfig({
             },
             {
                 test: {
+                    name: 'cross-app-connect',
+                    root: fileURLToPath(
+                        new URL('./cross-app-connect', import.meta.url),
+                    ),
+                    environment: 'happy-dom',
+                    environmentOptions: {
+                        happyDOM: { url: 'https://connect.vechain.org/' },
+                    },
+                    include: ['src/**/*.test.ts'],
+                },
+            },
+            {
+                test: {
                     name: 'scripts',
                     environment: 'node',
                     include: ['scripts/**/*.test.mjs'],

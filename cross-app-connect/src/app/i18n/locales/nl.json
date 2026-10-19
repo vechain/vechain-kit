@@ -5,7 +5,8 @@
             "cancel": "Annuleren",
             "continue": "Doorgaan",
             "continueAnyway": "Toch doorgaan",
-            "close": "Sluiten"
+            "close": "Sluiten",
+            "retry": "Opnieuw proberen"
         },
         "amount": {
             "unlimited": "Onbeperkt"

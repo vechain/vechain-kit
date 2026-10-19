@@ -5,7 +5,8 @@
             "cancel": "İptal",
             "continue": "Devam",
             "continueAnyway": "Yine de devam et",
-            "close": "Kapat"
+            "close": "Kapat",
+            "retry": "Tekrar dene"
         },
         "amount": {
             "unlimited": "Sınırsız"
