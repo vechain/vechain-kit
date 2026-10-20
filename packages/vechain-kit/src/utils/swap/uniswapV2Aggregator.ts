@@ -119,9 +119,16 @@ export const createUniswapV2Aggregator = (
                 // Calculate minimum output with slippage
                 // slippageTolerance is in percentage (e.g., 1 = 1%)
                 // For 1% slippage: multiplier = 10000 - 100 = 9900 (99% of output)
-                const slippageTolerancePercent = params.slippageTolerance || 1;
+                const slippageTolerancePercent = params.slippageTolerance ?? 1;
+                if (
+                    !Number.isFinite(slippageTolerancePercent) ||
+                    slippageTolerancePercent < 0 ||
+                    slippageTolerancePercent > 100
+                ) {
+                    throw new Error('Slippage must be between 0 and 100');
+                }
                 const slippageMultiplier = BigInt(
-                    10000 - slippageTolerancePercent * 100,
+                    10000 - Math.round(slippageTolerancePercent * 100),
                 );
                 const minimumOutputAmount =
                     (outputAmount * slippageMultiplier) / BigInt(10000);
