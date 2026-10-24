@@ -1,21 +1,15 @@
 {
+  "https://psychobeasts.com": {
+    "slug": "app.beastmode",
+    "name": "#BEASTMODE",
+    "category": "sustainability",
+    "href": "https://psychobeasts.com/beastmode"
+  },
   "https://play2048x.com": {
     "slug": "com.2048x.2048x",
     "name": "2048x",
     "category": "games",
     "href": "https://play2048x.com"
-  },
-  "https://v3tax.app": {
-    "slug": "app.v3tax",
-    "name": "V3Tax",
-    "category": "utilities",
-    "href": "https://v3tax.app"
-  },
-  "https://theshits.art": {
-    "slug": "art.theshits",
-    "name": "The Shts",
-    "category": "collectibles",
-    "href": "https://theshits.art"
   },
   "https://veworld.ai": {
     "slug": "ai.veworld",
@@ -23,23 +17,17 @@
     "category": "marketplaces",
     "href": "https://veworld.ai"
   },
-  "https://recirclerewards.app": {
-    "slug": "app.recirclerewards",
-    "name": "ReCircle",
-    "category": "utilities",
-    "href": "https://recirclerewards.app"
-  },
-  "https://pergramapp.com": {
-    "slug": "app.pergram",
-    "name": "Per Gram",
-    "category": "sustainability",
-    "href": "https://pergramapp.com"
-  },
-  "https://1mpxl.site": {
-    "slug": "com.1mpxl.site",
-    "name": "1M PXL",
+  "https://gaspump.cc": {
+    "slug": "cc.gaspump",
+    "name": "Gas Pump",
     "category": "defi",
-    "href": "https://1mpxl.site/"
+    "href": "https://gaspump.cc"
+  },
+  "https://theshits.art": {
+    "slug": "art.theshits",
+    "name": "The Shts",
+    "category": "collectibles",
+    "href": "https://theshits.art"
   },
   "https://app.agent.veworld.ai": {
     "slug": "ai.veworld.agent-marketplace",
@@ -47,11 +35,11 @@
     "category": "marketplaces",
     "href": "https://app.agent.veworld.ai"
   },
-  "https://psychobeasts.com": {
-    "slug": "app.beastmode",
-    "name": "#BEASTMODE",
-    "category": "sustainability",
-    "href": "https://psychobeasts.com/beastmode"
+  "https://recirclerewards.app": {
+    "slug": "app.recirclerewards",
+    "name": "ReCircle",
+    "category": "utilities",
+    "href": "https://recirclerewards.app"
   },
   "https://www.b3dtime.com": {
     "slug": "com.b3dtime",
@@ -59,29 +47,17 @@
     "category": "sustainability",
     "href": "https://www.b3dtime.com"
   },
-  "https://gaspump.cc": {
-    "slug": "cc.gaspump",
-    "name": "Gas Pump",
-    "category": "defi",
-    "href": "https://gaspump.cc"
-  },
-  "https://b3ttery.hyenaworks.xyz": {
-    "slug": "com.b3ttery.hyenaworks.xyz",
-    "name": "B3TTERY",
+  "https://h5.eatup.vet": {
+    "slug": "com.eatup.vet",
+    "name": "Eat Up",
     "category": "sustainability",
-    "href": "https://b3ttery.hyenaworks.xyz/"
+    "href": "https://h5.eatup.vet/"
   },
-  "https://app.cleanmatedao.com": {
-    "slug": "com.cleanmatedao.app",
-    "name": "Cleanmate",
-    "category": "utilities",
-    "href": "https://app.cleanmatedao.com"
-  },
-  "https://gopaperoo.xyz": {
-    "slug": "com.gopaperoo.xyz",
-    "name": "GoPaperoo!",
-    "category": "sustainability",
-    "href": "https://gopaperoo.xyz/"
+  "https://blackvemarket.com": {
+    "slug": "com.blackvemarket",
+    "name": "BlackVeMarket",
+    "category": "marketplaces",
+    "href": "https://blackvemarket.com"
   },
   "https://www.goatzclubnft.com": {
     "slug": "com.goatzclubnft",
@@ -89,23 +65,35 @@
     "category": "collectibles",
     "href": "https://www.goatzclubnft.com/"
   },
+  "https://pergramapp.com": {
+    "slug": "app.pergram",
+    "name": "Per Gram",
+    "category": "sustainability",
+    "href": "https://pergramapp.com"
+  },
+  "https://v3tax.app": {
+    "slug": "app.v3tax",
+    "name": "V3Tax",
+    "category": "utilities",
+    "href": "https://v3tax.app"
+  },
+  "https://app.cleanmatedao.com": {
+    "slug": "com.cleanmatedao.app",
+    "name": "Cleanmate",
+    "category": "utilities",
+    "href": "https://app.cleanmatedao.com"
+  },
+  "https://1mpxl.site": {
+    "slug": "com.1mpxl.site",
+    "name": "1M PXL",
+    "category": "defi",
+    "href": "https://1mpxl.site/"
+  },
   "https://vechain.bike": {
     "slug": "com.bikademy.app",
     "name": "BIKADEMY",
     "category": "sustainability",
     "href": "https://vechain.bike/"
-  },
-  "https://bybgym.com": {
-    "slug": "com.bybgym",
-    "name": "BYB - Build Your Body",
-    "category": "sustainability",
-    "href": "https://bybgym.com"
-  },
-  "https://www.groncard.com": {
-    "slug": "com.groncard.www",
-    "name": "GronCard",
-    "category": "defi",
-    "href": "https://www.groncard.com"
   },
   "https://avoco.app": {
     "slug": "com.likapa.avoco",
@@ -113,17 +101,11 @@
     "category": "sustainability",
     "href": "https://avoco.app"
   },
-  "https://minomob.com": {
-    "slug": "com.minomob",
-    "name": "Mino Mob",
-    "category": "collectibles",
-    "href": "https://minomob.com"
-  },
-  "https://mvanfts.com": {
-    "slug": "com.mvanfts",
-    "name": "MVA Fight Club",
-    "category": "games",
-    "href": "https://mvanfts.com"
+  "https://www.groncard.com": {
+    "slug": "com.groncard.www",
+    "name": "GronCard",
+    "category": "defi",
+    "href": "https://www.groncard.com"
   },
   "https://finance.mvanfts.com": {
     "slug": "com.mvanfts.finance",
@@ -131,11 +113,17 @@
     "category": "defi",
     "href": "https://finance.mvanfts.com"
   },
-  "https://h5.eatup.vet": {
-    "slug": "com.eatup.vet",
-    "name": "Eat Up",
-    "category": "sustainability",
-    "href": "https://h5.eatup.vet/"
+  "https://myvechain.com": {
+    "slug": "com.myvechain",
+    "name": "myVeChain",
+    "category": "utilities",
+    "href": "https://myvechain.com"
+  },
+  "https://mvanfts.com": {
+    "slug": "com.mvanfts",
+    "name": "MVA Fight Club",
+    "category": "games",
+    "href": "https://mvanfts.com"
   },
   "https://www.nfbclub.com": {
     "slug": "com.nfbc",
@@ -143,41 +131,17 @@
     "category": "marketplaces",
     "href": "https://www.nfbclub.com/"
   },
-  "https://pauseyourcarbon.com": {
-    "slug": "com.pauseyourcarbon",
-    "name": "Pause your carbon",
-    "category": "sustainability",
-    "href": "https://pauseyourcarbon.com/"
-  },
   "https://3dables.smuzzies.com": {
     "slug": "com.smuzzies.3dables",
     "name": "3DAbles",
     "category": "collectibles",
     "href": "https://3dables.smuzzies.com/"
   },
-  "https://plant2earn.xyz": {
-    "slug": "com.plant2earn.xyz",
-    "name": "Plant To Earn",
+  "https://pauseyourcarbon.com": {
+    "slug": "com.pauseyourcarbon",
+    "name": "Pause your carbon",
     "category": "sustainability",
-    "href": "https://plant2earn.xyz"
-  },
-  "https://reuse-now.com": {
-    "slug": "com.reuse-now",
-    "name": "ReUse",
-    "category": "sustainability",
-    "href": "https://reuse-now.com"
-  },
-  "https://terrademia.com": {
-    "slug": "com.terrademia",
-    "name": "Terrademia",
-    "category": "sustainability",
-    "href": "https://terrademia.com/"
-  },
-  "https://myvechain.com": {
-    "slug": "com.myvechain",
-    "name": "myVeChain",
-    "category": "utilities",
-    "href": "https://myvechain.com"
+    "href": "https://pauseyourcarbon.com/"
   },
   "https://thesagaz.com": {
     "slug": "com.thesagaz",
@@ -185,11 +149,17 @@
     "category": "collectibles",
     "href": "https://thesagaz.com"
   },
-  "https://snapbox.online": {
-    "slug": "com.snapbox.online",
-    "name": "SnapBox",
-    "category": "sustainability",
-    "href": "https://snapbox.online"
+  "https://minomob.com": {
+    "slug": "com.minomob",
+    "name": "Mino Mob",
+    "category": "collectibles",
+    "href": "https://minomob.com"
+  },
+  "https://thorhead.com": {
+    "slug": "com.thorhead",
+    "name": "Thorhead",
+    "category": "collectibles",
+    "href": "https://thorhead.com"
   },
   "https://vaiyansworld.com": {
     "slug": "com.vaiyansworld",
@@ -203,11 +173,11 @@
     "category": "utilities",
     "href": "https://bmac.vecha.in/"
   },
-  "https://thorhead.com": {
-    "slug": "com.thorhead",
-    "name": "Thorhead",
-    "category": "collectibles",
-    "href": "https://thorhead.com"
+  "https://inspector.vecha.in": {
+    "slug": "com.vechain.inspector",
+    "name": "Inspector",
+    "category": "utilities",
+    "href": "https://inspector.vecha.in"
   },
   "https://insight.vecha.in": {
     "slug": "com.vechain.insight",
@@ -221,23 +191,23 @@
     "category": "utilities",
     "href": "https://vevote.vechain.org/"
   },
-  "https://inspector.vecha.in": {
-    "slug": "com.vechain.inspector",
-    "name": "Inspector",
-    "category": "utilities",
-    "href": "https://inspector.vecha.in"
-  },
-  "https://win.vet": {
-    "slug": "com.vechain.vewin",
-    "name": "VeWin",
+  "https://mysteryboxes.contest.vebetter.com": {
+    "slug": "com.vechain.mysteryboxes",
+    "name": "Mystery Boxes",
     "category": "games",
-    "href": "https://win.vet"
+    "href": "https://mysteryboxes.contest.vebetter.com/"
   },
-  "https://vechainstats.com": {
-    "slug": "com.vechainstats",
-    "name": "VeChainStats",
-    "category": "utilities",
-    "href": "https://vechainstats.com/"
+  "https://terrademia.com": {
+    "slug": "com.terrademia",
+    "name": "Terrademia",
+    "category": "sustainability",
+    "href": "https://terrademia.com/"
+  },
+  "https://reuse-now.com": {
+    "slug": "com.reuse-now",
+    "name": "ReUse",
+    "category": "sustainability",
+    "href": "https://reuse-now.com"
   },
   "https://manager.vechainstats.com": {
     "slug": "com.vechainstats.manager",
@@ -246,16 +216,10 @@
     "href": "https://manager.vechainstats.com/"
   },
   "https://vefam.com": {
-    "slug": "com.vefam.pixelpuffs",
-    "name": "PixelPuffs NFT",
+    "slug": "com.vefam.vpunks-weapons",
+    "name": "VPunks Weapons",
     "category": "collectibles",
-    "href": "https://vefam.com/projects/pixel-puffs/"
-  },
-  "https://mysteryboxes.contest.vebetter.com": {
-    "slug": "com.vechain.mysteryboxes",
-    "name": "Mystery Boxes",
-    "category": "games",
-    "href": "https://mysteryboxes.contest.vebetter.com/"
+    "href": "https://vefam.com/#/collections/details/vpunks-weapons?network=vechain&from=apphub"
   },
   "https://vemugs.com": {
     "slug": "com.vemugs",
@@ -263,11 +227,11 @@
     "category": "collectibles",
     "href": "https://vemugs.com"
   },
-  "https://www.veproof.com": {
-    "slug": "com.veproof",
-    "name": "VeProof",
-    "category": "utilities",
-    "href": "https://www.veproof.com"
+  "https://vpunks.com": {
+    "slug": "com.vpunks",
+    "name": "VPunks",
+    "category": "collectibles",
+    "href": "https://vpunks.com"
   },
   "https://veinvite.vercel.app": {
     "slug": "com.veinvite.app",
@@ -275,35 +239,23 @@
     "category": "utilities",
     "href": "https://veinvite.vercel.app"
   },
-  "https://app.verocket.com": {
-    "slug": "com.verocket.app",
-    "name": "VeRocket (ZumoSwap)",
-    "category": "defi",
-    "href": "https://app.verocket.com"
-  },
-  "https://vpunks.com": {
-    "slug": "com.vpunks",
-    "name": "VPunks",
-    "category": "collectibles",
-    "href": "https://vpunks.com"
-  },
   "https://vyvo.com": {
     "slug": "com.vyvo.www",
     "name": "Vyvo",
     "category": "sustainability",
     "href": "https://vyvo.com"
   },
-  "https://walkie.space": {
-    "slug": "com.walkie.space",
-    "name": "Walkie",
-    "category": "sustainability",
-    "href": "https://walkie.space"
+  "https://www.veproof.com": {
+    "slug": "com.veproof",
+    "name": "VeProof",
+    "category": "utilities",
+    "href": "https://www.veproof.com"
   },
-  "https://wattly-app.com": {
-    "slug": "com.wattly-app",
-    "name": "Wattly",
-    "category": "sustainability",
-    "href": "https://wattly-app.com"
+  "https://win.vet": {
+    "slug": "com.vechain.vewin",
+    "name": "VeWin",
+    "category": "games",
+    "href": "https://win.vet"
   },
   "https://worldofv.art": {
     "slug": "com.worldofv.expluslottery",
@@ -311,17 +263,35 @@
     "category": "games",
     "href": "https://worldofv.art/playground/lottery/vebounce-blockchain-lottery"
   },
-  "https://vehashes.club": {
-    "slug": "com.worldofv.vehashes",
-    "name": "VeHashes",
-    "category": "collectibles",
-    "href": "https://vehashes.club/"
+  "https://wattly-app.com": {
+    "slug": "com.wattly-app",
+    "name": "Wattly",
+    "category": "sustainability",
+    "href": "https://wattly-app.com"
+  },
+  "https://vechainstats.com": {
+    "slug": "com.vechainstats",
+    "name": "VeChainStats",
+    "category": "utilities",
+    "href": "https://vechainstats.com/"
   },
   "https://staking.worldofv.art": {
     "slug": "com.worldofv.staking",
     "name": "WoV Staking",
     "category": "defi",
     "href": "https://staking.worldofv.art/"
+  },
+  "https://vehashes.club": {
+    "slug": "com.worldofv.vehashes",
+    "name": "VeHashes",
+    "category": "collectibles",
+    "href": "https://vehashes.club/"
+  },
+  "https://vet.domains": {
+    "slug": "domains.vet",
+    "name": "vet.domains",
+    "category": "utilities",
+    "href": "https://vet.domains/"
   },
   "https://revoke.vechain.energy": {
     "slug": "energy.vechain.revoke",
@@ -335,41 +305,17 @@
     "category": "defi",
     "href": "https://ramp.vechain.energy/"
   },
-  "https://swap.vechain.energy": {
-    "slug": "energy.vechain.swap",
-    "name": "Token Swap / Exchange",
-    "category": "defi",
-    "href": "https://swap.vechain.energy/"
-  },
-  "https://vet.domains": {
-    "slug": "domains.vet",
-    "name": "vet.domains",
-    "category": "utilities",
-    "href": "https://vet.domains/"
-  },
-  "https://vechain.energy": {
-    "slug": "energy.vechain",
-    "name": "vechain.energy · blockchain development platform",
-    "category": "utilities",
-    "href": "https://vechain.energy/"
-  },
   "https://wipe.tools.vechain.energy": {
     "slug": "energy.vechain.tools.wipe",
     "name": "Empty Wallet",
     "category": "utilities",
     "href": "https://wipe.tools.vechain.energy/"
   },
-  "https://dreamchicks.turtlelabs.finance": {
-    "slug": "finance.turtlelabs.dreamchicks",
-    "name": "Dream Chicks",
-    "category": "collectibles",
-    "href": "https://dreamchicks.TurtleLabs.Finance"
-  },
-  "https://vtho.exchange": {
-    "slug": "exchange.vtho",
-    "name": "VTHO Exchange",
+  "https://swap.vechain.energy": {
+    "slug": "energy.vechain.swap",
+    "name": "Token Swap / Exchange",
     "category": "defi",
-    "href": "https://vtho.exchange/"
+    "href": "https://swap.vechain.energy/"
   },
   "https://clayworld.turtlelabs.finance": {
     "slug": "finance.turtlelabs.clayworld",
@@ -377,11 +323,29 @@
     "category": "collectibles",
     "href": "https://clayworld.TurtleLabs.Finance"
   },
+  "https://vechain.energy": {
+    "slug": "energy.vechain",
+    "name": "vechain.energy · blockchain development platform",
+    "category": "utilities",
+    "href": "https://vechain.energy/"
+  },
+  "https://vtho.exchange": {
+    "slug": "exchange.vtho",
+    "name": "VTHO Exchange",
+    "category": "defi",
+    "href": "https://vtho.exchange/"
+  },
   "https://bangzboardz.turtlelabs.finance": {
     "slug": "finance.turtlelabs.bangzboardz",
     "name": "Bangz Boardz",
     "category": "defi",
     "href": "https://BangzBoardz.TurtleLabs.Finance"
+  },
+  "https://dreamchicks.turtlelabs.finance": {
+    "slug": "finance.turtlelabs.dreamchicks",
+    "name": "Dream Chicks",
+    "category": "collectibles",
+    "href": "https://dreamchicks.TurtleLabs.Finance"
   },
   "https://pepeplug.turtlelabs.finance": {
     "slug": "finance.turtlelabs.pepeplug",
@@ -395,41 +359,11 @@
     "category": "defi",
     "href": "https://vearn.finance"
   },
-  "https://turtleswap.turtlelabs.finance": {
-    "slug": "finance.turtlelabs.turtleswap",
-    "name": "Turtle Swap",
-    "category": "defi",
-    "href": "https://TurtleSwap.TurtleLabs.Finance"
-  },
-  "https://bubbles.green": {
-    "slug": "green.bubbles",
-    "name": "Bubbles",
-    "category": "sustainability",
-    "href": "https://bubbles.green"
-  },
-  "https://dthor.io": {
-    "slug": "io.dthor",
-    "name": "DThor Swap",
-    "category": "defi",
-    "href": "https://dthor.io/#/?network=vechain&from=apphub"
-  },
   "https://squadtc.fun": {
     "slug": "fun.squadtc",
     "name": "Squad Trading Cards Dapp",
     "category": "collectibles",
     "href": "https://squadtc.fun"
-  },
-  "https://www.betterswap.io": {
-    "slug": "io.betterswap",
-    "name": "BetterSwap",
-    "category": "defi",
-    "href": "https://www.betterswap.io"
-  },
-  "https://app.dappies.io": {
-    "slug": "io.dappies",
-    "name": "Dappies",
-    "category": "sustainability",
-    "href": "https://app.dappies.io"
   },
   "https://squadvechain.fun": {
     "slug": "fun.squadvechain",
@@ -437,29 +371,29 @@
     "category": "defi",
     "href": "https://SquadVechain.fun/"
   },
-  "https://evearn.io": {
-    "slug": "io.evearn",
-    "name": "Evearn",
+  "https://bubbles.green": {
+    "slug": "green.bubbles",
+    "name": "Bubbles",
     "category": "sustainability",
-    "href": "https://evearn.io"
+    "href": "https://bubbles.green"
   },
-  "https://app.juicyfinance.io": {
-    "slug": "io.juicyfinance",
-    "name": "Juicy Finance",
+  "https://app.dappies.io": {
+    "slug": "io.dappies",
+    "name": "Dappies",
+    "category": "sustainability",
+    "href": "https://app.dappies.io"
+  },
+  "https://www.betterswap.io": {
+    "slug": "io.betterswap",
+    "name": "BetterSwap",
     "category": "defi",
-    "href": "https://app.juicyfinance.io"
+    "href": "https://www.betterswap.io"
   },
-  "https://gangstergorillaz.io": {
-    "slug": "io.gangstergorillaz",
-    "name": "Gangster Gorillaz.",
-    "category": "collectibles",
-    "href": "https://gangstergorillaz.io/"
-  },
-  "https://app.safeswap.io": {
-    "slug": "io.safeswap.app",
-    "name": "SafeSwap",
+  "https://dthor.io": {
+    "slug": "io.dthor",
+    "name": "DThor Swap",
     "category": "defi",
-    "href": "https://app.safeswap.io"
+    "href": "https://dthor.io/#/?network=vechain&from=apphub"
   },
   "https://vebetter.stellapay.io": {
     "slug": "io.stellapay.vebetter",
@@ -473,29 +407,29 @@
     "category": "utilities",
     "href": "https://realitems.io"
   },
-  "https://vestation.io": {
-    "slug": "io.vestation",
-    "name": "VeStation",
-    "category": "defi",
-    "href": "https://vestation.io/"
-  },
-  "https://veswap.io": {
-    "slug": "io.veswap",
-    "name": "VeSwap",
-    "category": "defi",
-    "href": "https://veswap.io/"
-  },
-  "https://www.mendify.me": {
-    "slug": "me.mendify",
-    "name": "Mendify",
+  "https://evearn.io": {
+    "slug": "io.evearn",
+    "name": "Evearn",
     "category": "sustainability",
-    "href": "https://www.mendify.me"
+    "href": "https://evearn.io"
   },
-  "https://disperse.me": {
-    "slug": "me.disperse",
-    "name": "Disperse",
-    "category": "utilities",
-    "href": "https://disperse.me"
+  "https://gangstergorillaz.io": {
+    "slug": "io.gangstergorillaz",
+    "name": "Gangster Gorillaz.",
+    "category": "collectibles",
+    "href": "https://gangstergorillaz.io/"
+  },
+  "https://app.safeswap.io": {
+    "slug": "io.safeswap.app",
+    "name": "SafeSwap",
+    "category": "defi",
+    "href": "https://app.safeswap.io"
+  },
+  "https://app.juicyfinance.io": {
+    "slug": "io.juicyfinance",
+    "name": "Juicy Finance",
+    "category": "defi",
+    "href": "https://app.juicyfinance.io"
   },
   "https://spotter.zeloop.net": {
     "slug": "net.zeloop.spotter",
@@ -503,29 +437,11 @@
     "category": "sustainability",
     "href": "https://spotter.zeloop.net/"
   },
-  "https://dapp.carbonlarity.org": {
-    "slug": "org.carbonlarity.dapp",
-    "name": "Carbonlarity",
-    "category": "sustainability",
-    "href": "https://dapp.carbonlarity.org"
-  },
-  "https://bridge.wanchain.org": {
-    "slug": "org.bridge.wanchain",
-    "name": "WanBridge",
-    "category": "defi",
-    "href": "https://bridge.wanchain.org/"
-  },
-  "https://www.b3trbeach.org": {
-    "slug": "org.b3trbeach",
-    "name": "B3TR Beach",
+  "https://disperse.me": {
+    "slug": "me.disperse",
+    "name": "Disperse",
     "category": "utilities",
-    "href": "https://www.b3trbeach.org/app"
-  },
-  "https://envelop.favo.org": {
-    "slug": "org.favo.envelop",
-    "name": "Message Exchange",
-    "category": "utilities",
-    "href": "https://envelop.favo.org/"
+    "href": "https://disperse.me"
   },
   "https://app.glodollar.org": {
     "slug": "org.glodollar.app",
@@ -533,17 +449,35 @@
     "category": "defi",
     "href": "https://app.glodollar.org"
   },
-  "https://redeno.org": {
-    "slug": "org.redeno",
-    "name": "Redeno",
+  "https://bridge.wanchain.org": {
+    "slug": "org.bridge.wanchain",
+    "name": "WanBridge",
     "category": "defi",
-    "href": "https://redeno.org/"
+    "href": "https://bridge.wanchain.org/"
+  },
+  "https://envelop.favo.org": {
+    "slug": "org.favo.envelop",
+    "name": "Message Exchange",
+    "category": "utilities",
+    "href": "https://envelop.favo.org/"
+  },
+  "https://www.b3trbeach.org": {
+    "slug": "org.b3trbeach",
+    "name": "B3TR Beach",
+    "category": "utilities",
+    "href": "https://www.b3trbeach.org/app"
   },
   "https://hangndry.org": {
     "slug": "org.hangndry",
     "name": "HangnDry",
     "category": "sustainability",
     "href": "https://hangndry.org"
+  },
+  "https://redeno.org": {
+    "slug": "org.redeno",
+    "name": "Redeno",
+    "category": "defi",
+    "href": "https://redeno.org/"
   },
   "https://thearborapp.org": {
     "slug": "org.thearborapp",
@@ -563,6 +497,12 @@
     "category": "utilities",
     "href": "https://connect.vebetterdao.org"
   },
+  "https://relayers.vebetterdao.org": {
+    "slug": "org.vebetterdao.relayers",
+    "name": "VeBetter Relayers",
+    "category": "utilities",
+    "href": "https://relayers.vebetterdao.org"
+  },
   "https://governance.vebetterdao.org": {
     "slug": "org.vebetterdao.governance",
     "name": "VeBetter",
@@ -575,29 +515,11 @@
     "category": "marketplaces",
     "href": "https://nfbclub.marketplace.vechain.org/"
   },
-  "https://app.rewards.vechain.org": {
-    "slug": "org.vechain.rewards.app",
-    "name": "vechain Rewards dApp",
-    "category": "defi",
-    "href": "https://app.rewards.vechain.org"
-  },
   "https://solarwise.marketplace.vechain.org": {
     "slug": "org.vechain.marketplace.solarwise",
     "name": "Solarwise Marketplace",
     "category": "marketplaces",
     "href": "https://solarwise.marketplace.vechain.org/"
-  },
-  "https://relayers.vebetterdao.org": {
-    "slug": "org.vebetterdao.relayers",
-    "name": "VeBetter Relayers",
-    "category": "utilities",
-    "href": "https://relayers.vebetterdao.org"
-  },
-  "https://app.stargate.vechain.org": {
-    "slug": "org.vechain.stargate.app",
-    "name": "StarGate",
-    "category": "utilities",
-    "href": "https://app.stargate.vechain.org/"
   },
   "https://stargate.marketplace.vechain.org": {
     "slug": "org.vechain.marketplace.stargate",
@@ -605,17 +527,11 @@
     "category": "marketplaces",
     "href": "https://stargate.marketplace.vechain.org/"
   },
-  "https://b3trsmile.site": {
-    "slug": "site.b3trsmile",
-    "name": "B3TR Smile",
-    "category": "sustainability",
-    "href": "https://b3trsmile.site"
-  },
-  "https://smart-accounts.vechain.org": {
-    "slug": "smart-accounts.io.github.vechain",
-    "name": "VeChain Smart Accounts",
-    "category": "utilities",
-    "href": "https://smart-accounts.vechain.org"
+  "https://app.rewards.vechain.org": {
+    "slug": "org.vechain.rewards.app",
+    "name": "vechain Rewards dApp",
+    "category": "defi",
+    "href": "https://app.rewards.vechain.org"
   },
   "https://vechainkit.vechain.org": {
     "slug": "org.vechain.vechainkit",
@@ -623,11 +539,11 @@
     "category": "utilities",
     "href": "https://vechainkit.vechain.org/"
   },
-  "https://app.bitegram.vet": {
-    "slug": "vet.bitegram",
-    "name": "BiteGram",
-    "category": "sustainability",
-    "href": "https://app.bitegram.vet"
+  "https://smart-accounts.vechain.org": {
+    "slug": "smart-accounts.io.github.vechain",
+    "name": "VeChain Smart Accounts",
+    "category": "utilities",
+    "href": "https://smart-accounts.vechain.org"
   },
   "https://app.bigbottle.vet": {
     "slug": "vet.bigbottle.app",
@@ -635,11 +551,11 @@
     "category": "sustainability",
     "href": "https://app.bigbottle.vet"
   },
-  "https://app.byebyebites.vet": {
-    "slug": "vet.byebyebites",
-    "name": "Bye Bye Bites",
-    "category": "sustainability",
-    "href": "https://app.byebyebites.vet"
+  "https://games.sproutlyrwa.com": {
+    "slug": "sproutly.inc.vet",
+    "name": "Sproutly Inc.",
+    "category": "utilities",
+    "href": "https://games.sproutlyrwa.com/get-started"
   },
   "https://app.cleanify.vet": {
     "slug": "vet.cleanify",
@@ -647,17 +563,17 @@
     "category": "sustainability",
     "href": "https://app.cleanify.vet"
   },
+  "https://ecobag.solutions": {
+    "slug": "vet.ecobag",
+    "name": "ecobag",
+    "category": "sustainability",
+    "href": "https://ecobag.solutions/"
+  },
   "https://bridge.vet": {
     "slug": "vet.bridge",
     "name": "bridge.vet",
     "category": "defi",
     "href": "https://bridge.vet/"
-  },
-  "https://ecomeal.vet": {
-    "slug": "vet.ecomeal",
-    "name": "EcoMeal",
-    "category": "sustainability",
-    "href": "https://ecomeal.vet"
   },
   "https://app.greencart.ai": {
     "slug": "vet.greencart",
@@ -665,11 +581,17 @@
     "category": "sustainability",
     "href": "https://app.greencart.ai"
   },
-  "https://ecobag.solutions": {
-    "slug": "vet.ecobag",
-    "name": "ecobag",
+  "https://ecomeal.vet": {
+    "slug": "vet.ecomeal",
+    "name": "EcoMeal",
     "category": "sustainability",
-    "href": "https://ecobag.solutions/"
+    "href": "https://ecomeal.vet"
+  },
+  "https://app.stargate.vechain.org": {
+    "slug": "org.vechain.stargate.app",
+    "name": "StarGate",
+    "category": "utilities",
+    "href": "https://app.stargate.vechain.org/"
   },
   "https://justote.vet": {
     "slug": "vet.justote",
@@ -677,29 +599,11 @@
     "category": "sustainability",
     "href": "https://justote.vet"
   },
-  "https://games.sproutlyrwa.com": {
-    "slug": "sproutly.inc.vet",
-    "name": "Sproutly Inc.",
-    "category": "utilities",
-    "href": "https://games.sproutlyrwa.com/get-started"
-  },
-  "https://nanoact.vet": {
-    "slug": "vet.nanoact",
-    "name": "NanoAct",
-    "category": "sustainability",
-    "href": "https://nanoact.vet"
-  },
-  "https://mugshot.vet": {
-    "slug": "vet.mugshot",
-    "name": "Mugshot",
-    "category": "sustainability",
-    "href": "https://mugshot.vet"
-  },
-  "https://app.powerup.vet": {
-    "slug": "vet.powerup.app",
-    "name": "Power Up!",
-    "category": "sustainability",
-    "href": "https://app.powerup.vet"
+  "https://app.solarwise.vet": {
+    "slug": "vet.solarwise.app",
+    "name": "Solarwise",
+    "category": "defi",
+    "href": "https://app.solarwise.vet"
   },
   "https://scoopup.vet": {
     "slug": "vet.scoopup",
@@ -707,35 +611,17 @@
     "category": "sustainability",
     "href": "https://scoopup.vet"
   },
-  "https://app.solarwise.vet": {
-    "slug": "vet.solarwise.app",
-    "name": "Solarwise",
-    "category": "defi",
-    "href": "https://app.solarwise.vet"
-  },
-  "https://st3pr.vet": {
-    "slug": "vet.st3pr",
-    "name": "ST3PR",
+  "https://mugshot.vet": {
+    "slug": "vet.mugshot",
+    "name": "Mugshot",
     "category": "sustainability",
-    "href": "https://st3pr.vet"
-  },
-  "https://app.trashdash.vet": {
-    "slug": "vet.trashdash",
-    "name": "TrashDash",
-    "category": "sustainability",
-    "href": "https://app.trashdash.vet"
+    "href": "https://mugshot.vet"
   },
   "https://vedelegate.vet": {
     "slug": "vet.vedelegate",
     "name": "veDelegate.vet",
     "category": "defi",
     "href": "https://vedelegate.vet"
-  },
-  "https://bubblycaps.xyz": {
-    "slug": "xyz.bubblycaps",
-    "name": "Bubbly Caps Dapp",
-    "category": "collectibles",
-    "href": "https://bubblycaps.xyz"
   },
   "https://velottery.vet": {
     "slug": "vet.velottery",
@@ -755,11 +641,17 @@
     "category": "collectibles",
     "href": "https://www.thevvall.xyz/"
   },
-  "https://www.velottery.xyz": {
-    "slug": "xyz.velottery",
-    "name": "VeLottery",
-    "category": "games",
-    "href": "https://www.velottery.xyz/"
+  "https://bubblycaps.xyz": {
+    "slug": "xyz.bubblycaps",
+    "name": "Bubbly Caps Dapp",
+    "category": "collectibles",
+    "href": "https://bubblycaps.xyz"
+  },
+  "https://st3pr.vet": {
+    "slug": "vet.st3pr",
+    "name": "ST3PR",
+    "category": "sustainability",
+    "href": "https://st3pr.vet"
   },
   "https://vaultx-nfts.xyz": {
     "slug": "xyz.vaultx-nfts",
@@ -772,5 +664,11 @@
     "name": "VESEMEN",
     "category": "collectibles",
     "href": "https://vesemen.xyz"
+  },
+  "https://www.velottery.xyz": {
+    "slug": "xyz.velottery",
+    "name": "VeLottery",
+    "category": "games",
+    "href": "https://www.velottery.xyz/"
   }
 }
